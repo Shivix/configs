@@ -13,15 +13,19 @@ return require("packer").startup(function(use)
 	use "hrsh7th/nvim-compe"
 	use "kevinhwang91/rnvimr"
 	use "jiangmiao/auto-pairs"
-	use "hoob3rt/lualine.nvim"
-	use "akinsho/nvim-bufferline.lua"
+	use "hoob3rt/lualine.nvim" -- bottom statusline
+	use "akinsho/nvim-bufferline.lua" -- buffer tabs
 	use {"npxbr/gruvbox.nvim", requires = {"rktjmp/lush.nvim"}}
 	use "mhinz/vim-startify"
-	use "airblade/vim-gitgutter"
-	use "easymotion/vim-easymotion"
+	use "nvim-lua/plenary.nvim"
+	use {"nvim-telescope/telescope.nvim", requires = {"nvim-lua/popup.nvim"}}
+	use "nvim-telescope/telescope-fzy-native.nvim"
+	use "lewis6991/gitsigns.nvim"
+	use	"phaazon/hop.nvim"
 	use "tweekmonster/startuptime.vim"
 	use "npxbr/glow.nvim"
 	use "norcalli/nvim-colorizer.lua"
 	use "nvim-treesitter/nvim-treesitter"
 	use "simrat39/rust-tools.nvim"
+	use "folke/todo-comments.nvim"
 end)

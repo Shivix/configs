@@ -21,7 +21,12 @@ vim.api.nvim_set_keymap('n', "<C-l>", "<C-w>l", {noremap = true})
 -- open ranger
 vim.api.nvim_set_keymap('n', "<leader>t", ":RnvimrToggle<CR>", {})
 
-vim.api.nvim_set_keymap('n', "s", "<Plug>(easymotion-s2)", {})
+vim.api.nvim_set_keymap('n', "s", ":HopChar2<CR>", {})
+
+vim.api.nvim_set_keymap('n', "<leader>ff", ":Telescope find_files<CR>", {})
+vim.api.nvim_set_keymap('n', "<leader>fg", ":Telescope live_grep<CR>", {})
+vim.api.nvim_set_keymap('n', "<leader>fd", ":Telescope lsp_definitions<CR>", {})
+vim.api.nvim_set_keymap('n', "<leader>fr", ":Telescope lsp_references<CR>", {})
 
 local options = {noremap=true, silent=true}
 vim.api.nvim_set_keymap('n', "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", options)

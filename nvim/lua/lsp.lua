@@ -5,12 +5,10 @@ require("lspconfig").html.setup{}
 require("lspconfig").rust_analyzer.setup{}
 require("lspconfig").pyright.setup{}
 
-require('rust-tools').setup()
-
 local sumneko_root_path = "/home/shivix/.lua-language-server"
 local sumneko_binary = sumneko_root_path .. "/bin/Linux/lua-language-server"
 
-require'lspconfig'.sumneko_lua.setup {
+require("lspconfig").sumneko_lua.setup{
     cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"},
     settings = {
         Lua = {
@@ -31,14 +29,16 @@ require'lspconfig'.sumneko_lua.setup {
     }
 }
 
+require("rust-tools").setup()
+
 vim.o.completeopt = "menuone,noselect"
 
-require'compe'.setup {
+require("compe").setup{
   enabled = true;
   autocomplete = true;
   debug = false;
   min_length = 1;
-  preselect = 'enable';
+  preselect = "enable";
   throttle_time = 80;
   source_timeout = 200;
   incomplete_delay = 400;

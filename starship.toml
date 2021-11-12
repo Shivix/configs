@@ -1,0 +1,16 @@
+# Don't print a new line at the start of the prompt
+add_newline = false
+
+[directory]
+truncation_length = 5
+truncate_to_repo = true
+
+[hostname]
+ssh_only = false
+style = "cyan"
+
+[gcloud]
+disabled = true
+
+[cmake]
+symbol = "△ "

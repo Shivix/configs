@@ -5,12 +5,10 @@ end
 vim.g.mapleader = escape("<Space>")
 vim.g.gruvbox_bold = 0
 vim.g.gruvbox_contrast_dark = "hard"
-vim.g.loaded_zipPlugin = 1
-vim.g.loaded_zip = 1
 
 vim.api.nvim_exec([[
+    au colorscheme * hi Normal guibg=NONE
     colorscheme gruvbox
-    hi Normal guibg=NONE
     command Bd bp|bd #
     au TextYankPost * lua vim.highlight.on_yank{higroup='IncSearch', timeout=150, on_visual=true}
     au TermOpen * setlocal nonumber norelativenumber showtabline=0
@@ -31,10 +29,31 @@ vim.opt.relativenumber = true
 vim.opt.number = true
 vim.opt.updatetime = 300
 vim.opt.timeoutlen = 500
-vim.opt.clipboard = "unnamedplus"
 vim.opt.cursorline = true
 vim.opt.undofile = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
+vim.opt.clipboard = "unnamedplus"
+vim.opt.completeopt = "menuone,noselect"
 vim.opt.iskeyword:remove('_'); -- treat underscores as word breaks
 
+--remove after 6.0
+vim.g.did_load_filetypes = 1
+
+local disabled_plugins = {
+    "getscript",
+    "getscriptPlugin",
+    "gzip",
+    "logipat",
+    "remote_plugins",
+    "rrhelper",
+    "tar",
+    "tarPlugin",
+    "vimball",
+    "vimballPlugin",
+    "zip",
+    "zipPlugin"
+}
+for _, plugin in pairs(disabled_plugins) do
+    vim.g["loaded_" .. plugin] = 1
+end

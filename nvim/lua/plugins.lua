@@ -10,10 +10,12 @@ vim.cmd("autocmd BufWritePost plugins.lua PackerCompile")
 
 local custom_gruvbox = require("lualine.themes.gruvbox")
 custom_gruvbox.normal.a.bg = "#CC8400"
+custom_gruvbox.insert.c.bg = custom_gruvbox.normal.c.bg
 
 return require("packer").startup(function(use)
 	use {"wbthomason/packer.nvim"}
 	use {"neovim/nvim-lspconfig"}
+	use {"nvim-lua/lsp_extensions.nvim"}
 	use {"hrsh7th/nvim-cmp",
         config = function()
             local cmp = require("cmp")
@@ -29,7 +31,7 @@ return require("packer").startup(function(use)
                     {name = "nvim_lua"},
                     {name = "buffer"},
                     {name = "path"},
-                }
+                },
             }
         end
     }
@@ -48,10 +50,11 @@ return require("packer").startup(function(use)
                 options = {
                     icons_enabled = false,
                     theme = custom_gruvbox,
+                    disabled_filetypes = {"alpha"},
                 },
                 sections = {
                     lualine_a = {"mode"},
-                    lualine_b = {"branch", "diff", {"diagnostics", sources={"nvim_lsp"}}},
+                    lualine_b = {"branch", "diff", {"diagnostics", sources={"nvim_diagnostic"}}},
                     lualine_c = {},
                     lualine_x = {"fileformat", "filetype"},
                     lualine_y = {"progress"},
@@ -69,6 +72,16 @@ return require("packer").startup(function(use)
                     right_trunc_marker = '>',
                 }
             }
+        end
+    }
+    use {"nvim-telescope/telescope.nvim",
+        cmd = "Telescope",
+        module = "telescope",
+        requires = "nvim-lua/popup.nvim",
+                   "nvim-telescope/telescope-file-browser.nvim",
+        config = function()
+            require("telescope").setup{}
+            require("telescope").load_extension("file_browser")
         end
     }
 	use {"Shivix/gruvbox.nvim", requires = "rktjmp/lush.nvim"}
@@ -90,9 +103,9 @@ return require("packer").startup(function(use)
             startify.section.top_buttons.val = {
                 startify.button('n', "New file" , ":ene <BAR> startinsert <CR>"),
                 startify.button('f', "Find file" , "<cmd>lua require('telescope.builtin').find_files{path_display={shorten=5}}<CR>"),
-                startify.button('b', "Browse files" , "<cmd>lua require('telescope.builtin').file_browser{cwd='~/'}<CR>"),
+                startify.button('b', "Browse files" , "<cmd>lua require('telescope').extensions.file_browser.file_browser{cwd='~/'}<CR>"),
                 startify.button('s', "Settings" , "<cmd>lua require('telescope.builtin').find_files{cwd='~/.config/nvim'}<CR>"),
-                startify.button('c', "Configs" , "<cmd>lua require('telescope.builtin').file_browser{cwd='~/.config'}<CR>"),
+                startify.button('c', "Configs" , "<cmd>lua require('telescope').extensions.file_browser.file_browser{cwd='~/.config'}<CR>"),
                 startify.button('t', "Terminal" , ":term <CR>"),
                 startify.button('u', "Update Plugins" , ":PackerUpdate <CR>"),
             }
@@ -141,12 +154,6 @@ return require("packer").startup(function(use)
             }
         end
     }
-	use {"nvim-telescope/telescope.nvim",
-        cmd = "Telescope",
-        module = "telescope",
-        requires = "nvim-lua/popup.nvim",
-        config = function() require("telescope").setup{} end
-    }
 	use {"lewis6991/gitsigns.nvim",
         config = function() require("gitsigns").setup{} end
     }
@@ -172,10 +179,10 @@ return require("packer").startup(function(use)
         end
     }
 	use {"nvim-treesitter/nvim-treesitter-refactor"}
-	use {"simrat39/rust-tools.nvim",
-        ft = "rust",
-        config = function() require("rust-tools").setup{} end
-    }
+	--use {"simrat39/rust-tools.nvim",
+    --    ft = "rust",
+    --    config = function() require("rust-tools").setup{} end
+    --}
     use {"ahmedkhalf/project.nvim",
         config = function() require("project_nvim").setup{} end
     }

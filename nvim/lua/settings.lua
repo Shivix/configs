@@ -12,7 +12,7 @@ vim.api.nvim_exec([[
     command Bd bp|bd #
     au TextYankPost * lua vim.highlight.on_yank{higroup='IncSearch', timeout=150, on_visual=true}
     au TermOpen * setlocal nonumber norelativenumber showtabline=0
-    au BufNew,BufRead *.yml.j2 set ft=yaml
+    au BufEnter,BufWinEnter,TabEnter *.yml.j2 set ft=yaml
 ]], true)
 
 vim.opt.termguicolors = true
@@ -34,7 +34,6 @@ vim.opt.undofile = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.clipboard = "unnamedplus"
-vim.opt.completeopt = "menuone,noselect"
 vim.opt.iskeyword:remove('_'); -- treat underscores as word breaks
 
 --remove after 6.0
@@ -43,7 +42,6 @@ vim.g.did_load_filetypes = 1
 local disabled_plugins = {
     "getscript",
     "getscriptPlugin",
-    "gzip",
     "logipat",
     "remote_plugins",
     "rrhelper",

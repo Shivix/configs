@@ -36,7 +36,7 @@ keymap('n', "<leader>fg", ":lua require('telescope.builtin').live_grep()<CR>", {
 keymap('n', "<leader>fd", ":lua require('telescope.builtin').lsp_definitions()<CR>", {})
 keymap('n', "<leader>fr", ":lua require('telescope.builtin').lsp_references()<CR>", {})
 keymap('n', "<leader>fh", ":lua require('telescope.builtin').help_tags()<CR>", {})
-keymap('n', "<leader>fb", ":lua require('telescope.builtin').file_browser()<CR>", {})
+keymap('n', "<leader>fb", ":lua require('telescope').extensions.file_browser.file_browser()<CR>", {})
 keymap('n', "<leader>fc", ":lua require('telescope').extensions.neoclip.default()<CR>", {})
 
 keymap('n', "gd", ":lua vim.lsp.buf.definition()<CR>", options)
@@ -49,6 +49,7 @@ keymap('n', "<C-n>", ":lua vim.lsp.diagnostic.goto_prev()<CR>", options)
 keymap('n', "<C-p>", ":lua vim.lsp.diagnostic.goto_next()<CR>", options)
 keymap('n', "<leader>qf", ":lua vim.lsp.buf.code_action()<CR>", options)
 keymap('n', "<leader>e", ":lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", options)
+keymap('n', "<leader>i", ":lua require('lsp_extensions').inlay_hints{ prefix = '=> ', highlight = 'Comment', enabled = {'TypeHint', 'ChainingHint'}}<CR>", options)
 
 keymap('n', "<leader>u", ":MundoToggle<CR>", {silent = true})
 

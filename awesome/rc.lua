@@ -19,10 +19,6 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 
--- Load Debian menu entries
-local debian = require("debian.menu")
-local has_fdo, freedesktop = pcall(require, "freedesktop")
-
 local lain = require("lain")
 
 -- notification settings
@@ -78,36 +74,6 @@ awful.layout.layouts = {
 -- }}}
 
 -- {{{ Menu
--- Create a launcher widget and a main menu
-myawesomemenu = {
-   { "hotkeys", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
-   { "manual", terminal .. " -e man awesome" },
-   { "edit config", editor .. " " .. awesome.conffile },
-   { "restart", awesome.restart },
-   { "quit", function() awesome.quit() end },
-}
-
-local menu_awesome = { "awesome", myawesomemenu, beautiful.awesome_icon }
-local menu_terminal = { "open terminal", terminal }
-
-if has_fdo then
-    mymainmenu = freedesktop.menu.build({
-        before = { menu_awesome },
-        after =  { menu_terminal }
-    })
-else
-    mymainmenu = awful.menu({
-        items = {
-                  menu_awesome,
-                  { "Debian", debian.menu.Debian_menu.Debian },
-                  menu_terminal,
-                }
-    })
-end
-
-
-mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
-                                     menu = mymainmenu })
 local delimeter = wibox.widget{
     text = "|",
     font = "Inconsolata 12",
@@ -189,42 +155,57 @@ awful.screen.connect_for_each_screen(function(s)
     s.mywibox = awful.wibar({ position = "top", screen = s })
 
     -- Add widgets to the wibox
-    s.mywibox:setup {
-        layout = wibox.layout.align.horizontal,
-        expand = "none",
-        { -- Left widgets
-            layout = wibox.layout.fixed.horizontal,
-            mylauncher,
-            s.mypromptbox,
-        },
-        { -- Center widgets
-            layout = wibox.layout.fixed.horizontal,
-            s.mytaglist,
-        },
-        { -- Right widgets
-            layout = wibox.layout.fixed.horizontal,
-            cpu_widget({
-                width = 70,
-                step_width = 2,
-                step_spacing = 0,
-                color = "#D3BC8D"
-            }),
-            delimeter,
-            mymem,
-            delimeter,
-            wibox.widget.systray(),
-            delimeter,
-            mytextclock,
-            s.mylayoutbox,
-        },
-    }
+    if s == screen.primary then
+        s.mywibox:setup {
+            layout = wibox.layout.align.horizontal,
+            expand = "none",
+            { -- Left widgets
+                layout = wibox.layout.fixed.horizontal,
+                s.mypromptbox,
+            },
+            { -- Center widgets
+                layout = wibox.layout.fixed.horizontal,
+                s.mytaglist,
+            },
+            { -- Right widgets
+                layout = wibox.layout.fixed.horizontal,
+                cpu_widget({
+                    width = 70,
+                    step_width = 2,
+                    step_spacing = 0,
+                    color = "#D3BC8D"
+                }),
+                delimeter,
+                mymem,
+                delimeter,
+                wibox.widget.systray(),
+                delimeter,
+                mytextclock,
+            },
+        }
+    else
+        s.mywibox:setup {
+            layout = wibox.layout.align.horizontal,
+            expand = "none",
+            { -- Left widgets
+                layout = wibox.layout.fixed.horizontal,
+                s.mypromptbox,
+            },
+            { -- Center widgets
+                layout = wibox.layout.fixed.horizontal,
+                s.mytaglist,
+            },
+            { -- Right widgets
+                layout = wibox.layout.fixed.horizontal,
+                wibox.widget.systray(),
+                mytextclock,
+            },
+        }
+    end
 end)
 -- }}}
 
 -- {{{ Mouse bindings
-root.buttons(gears.table.join(
-    awful.button({ }, 3, function () mymainmenu:toggle() end)
-))
 -- }}}
 
 -- {{{ Key bindings
@@ -250,8 +231,6 @@ globalkeys = gears.table.join(
         end,
         {description = "focus previous by index", group = "client"}
     ),
-    awful.key({ modkey,           }, "w", function () mymainmenu:show() end,
-              {description = "show main menu", group = "awesome"}),
 
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "l", function () awful.client.swap.byidx(  1)    end,
@@ -330,13 +309,13 @@ globalkeys = gears.table.join(
 
     -- Programs
     awful.key({ modkey }, "b", function()
-        awful.util.spawn("/opt/firefox/firefox") end,
+        awful.spawn("/usr/bin/firefox-developer-edition") end,
         {description = "Firefox Developer Edition", group = "launcher"}),
     awful.key({ modkey }, "g", function()
-        awful.util.spawn("gyazo") end,
+        awful.spawn("gyazo") end,
         {description = "Gyazo", group = "launcher"}),
     awful.key({ modkey }, "d", function()
-        awful.util.spawn("gromit-mpx") end,
+        awful.spawn("gromit-mpx") end,
         {description = "Draw on Screen", group = "launcher"})
 )
 

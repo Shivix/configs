@@ -3,10 +3,11 @@ require("lspconfig").clangd.setup{}
 require("lspconfig").cmake.setup{}
 require("lspconfig").html.setup{}
 require("lspconfig").pyright.setup{}
+require("lspconfig").rust_analyzer.setup{}
 -- rust analyzer setup through rust-tools plugin
 
 local sumneko_root_path = "/home/shivix/.lua-language-server"
-local sumneko_binary = sumneko_root_path .. "/bin/Linux/lua-language-server"
+local sumneko_binary = "/usr/bin/lua-language-server"
 
 require("lspconfig").sumneko_lua.setup{
     cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"},

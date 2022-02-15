@@ -14,3 +14,9 @@ disabled = true
 
 [cmake]
 symbol = "△ "
+
+[golang]
+symbol = "go "
+
+[python]
+symbol = "py "

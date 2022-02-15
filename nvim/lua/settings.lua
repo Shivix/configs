@@ -36,9 +36,6 @@ vim.opt.smartcase = true
 vim.opt.clipboard = "unnamedplus"
 vim.opt.iskeyword:remove('_'); -- treat underscores as word breaks
 
---remove after 6.0
-vim.g.did_load_filetypes = 1
-
 local disabled_plugins = {
     "getscript",
     "getscriptPlugin",

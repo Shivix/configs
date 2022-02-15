@@ -52,8 +52,6 @@ colors:
     cyan:    "#8ec07c"
     white:   "#ebdbb2"
 
-background_opacity: 0.88
-
 font:
   normal:
     family: JetBrains Mono
@@ -85,8 +83,7 @@ window:
   position:
     x: 550
     y: 200
-
-window.dynamic_title: true
+  opacity: 0.88
 
 # Vi mode cursor colors
 #

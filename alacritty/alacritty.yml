@@ -85,16 +85,6 @@ window:
     y: 200
   opacity: 0.88
 
-# Vi mode cursor colors
-#
-# Colors for the cursor when the vi mode is active.
-#
-# Allowed values are CellForeground and CellBackground, which reference the
-# affected cell, or hexadecimal colors like #ff00ff.
-#vi_mode_cursor:
-#  text: CellBackground
-#  cursor: CellForeground
-
 cursor:
   # Cursor style
   #
@@ -104,11 +94,7 @@ cursor:
   #   - | Beam
   style: Beam
 
-#Vi mode cursor style
-  
-  #If the vi mode cursor style is `None` or not specified, it will fall back to
-  #the style of the active value of the normal cursor.
-  
+#Vi mode
   #See `cursor.style` for available options.
   vi_mode_style: Block
 

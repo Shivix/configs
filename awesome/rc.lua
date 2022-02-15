@@ -208,6 +208,8 @@ end)
 -- {{{ Mouse bindings
 -- }}}
 
+local is_gromit_active = false
+
 -- {{{ Key bindings
 globalkeys = gears.table.join(
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
@@ -315,8 +317,16 @@ globalkeys = gears.table.join(
         awful.spawn("gyazo") end,
         {description = "Gyazo", group = "launcher"}),
     awful.key({ modkey }, "d", function()
-        awful.spawn("gromit-mpx") end,
-        {description = "Draw on Screen", group = "launcher"})
+        if (not is_gromit_active)
+        then
+            awful.spawn("gromit-mpx -a")
+            is_gromit_active = true
+        else
+            awful.spawn("gromit-mpx --quit")
+            is_gromit_active = false
+        end
+    end,
+    {description = "Draw on Screen", group = "launcher"})
 )
 
 clientkeys = gears.table.join(

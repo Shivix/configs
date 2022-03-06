@@ -4,6 +4,7 @@ require("lspconfig").cmake.setup{}
 require("lspconfig").html.setup{}
 require("lspconfig").pyright.setup{}
 require("lspconfig").rust_analyzer.setup{}
+require("lspconfig").gopls.setup{}
 -- rust analyzer setup through rust-tools plugin
 
 local sumneko_root_path = "/home/shivix/.lua-language-server"

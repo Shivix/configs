@@ -17,14 +17,20 @@ return require("packer").startup(function(use)
 	use {"neovim/nvim-lspconfig"}
 	use {"nvim-lua/lsp_extensions.nvim"}
 	use {"hrsh7th/nvim-cmp",
+        requires = {{"hrsh7th/cmp-nvim-lsp"},
+                   {"hrsh7th/cmp-nvim-lua"},
+                   {"hrsh7th/cmp-buffer"},
+                   {"hrsh7th/cmp-path"}},
         config = function()
             local cmp = require("cmp")
             cmp.setup{
+                preselect = cmp.PreselectMode.None,
                 mapping = {
                     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
                     ['<C-u>'] = cmp.mapping.scroll_docs(4),
-                    -- prevent enter from triggering completion
-                    ['<CR>'] = nil,
+                    ['<Down>'] = cmp.mapping.select_next_item(),
+                    ['<Up>'] = cmp.mapping.select_prev_item(),
+                    ['<CR>'] = cmp.config.disable,
                 },
                 sources = {
                     {name = "nvim_lsp"},
@@ -33,12 +39,8 @@ return require("packer").startup(function(use)
                     {name = "path"},
                 },
             }
-        end
+        end,
     }
-	use {"hrsh7th/cmp-nvim-lsp"}
-	use {"hrsh7th/cmp-nvim-lua"}
-	use {"hrsh7th/cmp-buffer"}
-	use {"hrsh7th/cmp-path"}
 	use {"windwp/nvim-autopairs",
         config = function()
             require("nvim-autopairs").setup{}
@@ -77,14 +79,14 @@ return require("packer").startup(function(use)
     use {"nvim-telescope/telescope.nvim",
         cmd = "Telescope",
         module = "telescope",
-        requires = "nvim-lua/popup.nvim",
-                   "nvim-telescope/telescope-file-browser.nvim",
+        requires = {{"nvim-lua/popup.nvim"},
+                   {"nvim-telescope/telescope-file-browser.nvim"}},
         config = function()
             require("telescope").setup{}
             require("telescope").load_extension("file_browser")
         end
     }
-	use {"Shivix/gruvbox.nvim", requires = "rktjmp/lush.nvim"}
+	use {"Shivix/gruvbox.nvim"}
     use {"goolord/alpha-nvim",
         config = function()
             local startify = require("alpha.themes.startify")
@@ -109,12 +111,7 @@ return require("packer").startup(function(use)
                 startify.button('t', "Terminal" , ":term <CR>"),
                 startify.button('u', "Update Plugins" , ":PackerUpdate <CR>"),
             }
-            startify.section.mru.val = {
-                --{type = "padding", val = 1},
-                --{type = "text", val = "Recent Files", opts = { hl = "SpecialComment" }},
-                --{type = "padding", val = 1},
-                --{type = "group", val = function() return { startify.mru(0) } end},
-            }
+            startify.section.mru.val = {}
             startify.section.mru_cwd.val = {
                 {type = "padding", val = 1},
                 {type = "text", val = "Recent Files" , opts = { hl = "SpecialComment", shrink_margin = false}},
@@ -179,15 +176,8 @@ return require("packer").startup(function(use)
         end
     }
 	use {"nvim-treesitter/nvim-treesitter-refactor"}
-	--use {"simrat39/rust-tools.nvim",
-    --    ft = "rust",
-    --    config = function() require("rust-tools").setup{} end
-    --}
     use {"ahmedkhalf/project.nvim",
         config = function() require("project_nvim").setup{} end
-    }
-    use {"simnalamburt/vim-mundo",
-        cmd = "MundoToggle"
     }
     use {"AckslD/nvim-neoclip.lua",
         config = function()

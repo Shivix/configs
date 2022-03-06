@@ -10,10 +10,11 @@ vim.api.nvim_exec([[
     au colorscheme * hi Normal guibg=NONE
     colorscheme gruvbox
     command Bd bp|bd #
-    au TextYankPost * lua vim.highlight.on_yank{higroup='IncSearch', timeout=150, on_visual=true}
-    au TermOpen * setlocal nonumber norelativenumber showtabline=0
-    au BufEnter,BufWinEnter,TabEnter *.yml.j2 set ft=yaml
 ]], true)
+
+vim.api.nvim_create_autocmd("TextYankPost", {callback = function() vim.highlight.on_yank{higroup='IncSearch', timeout=150, on_visual=true} end})
+vim.api.nvim_create_autocmd({"BufEnter","BufWinEnter","TabEnter"}, {pattern = "*.yml.j2", command = "set ft=yaml"})
+vim.api.nvim_create_autocmd("TermOpen", {command = "setlocal nonumber norelativenumber showtabline=0"})
 
 vim.opt.termguicolors = true
 vim.opt.showmode = false

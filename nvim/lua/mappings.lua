@@ -5,10 +5,9 @@ keymap('n', "<M-l>", ":bnext<CR>", options)
 keymap('n', "<M-h>", ":bprevious<CR>", options)
 keymap('n', "<C-w>", ":Bd<CR>", options)
 
--- escape be hard to press yo
 keymap('i', "jk", "<Esc>", {noremap = true})
 
--- Better tabbing
+-- stay in visual when tabbing
 keymap('v', "<", "<gv", {noremap = true})
 keymap('v', ">", ">gv", {noremap = true})
 
@@ -18,8 +17,7 @@ keymap('n', "<C-j>", "<C-w>j", {noremap = true})
 keymap('n', "<C-k>", "<C-w>k", {noremap = true})
 keymap('n', "<C-l>", "<C-w>l", {noremap = true})
 
-
--- enter normal mode in terminal mode
+-- make terminal mode mappings close to insert
 keymap('t', "jk", "<C-\\><C-n>", {})
 keymap('t', "<C-h>", "<C-\\><C-n><C-w>h", {noremap = true})
 keymap('t', "<C-j>", "<C-\\><C-n><C-w>j", {noremap = true})
@@ -49,4 +47,3 @@ keymap('n', "<leader>e", ":lua vim.diagnostic.open_float()<CR>", options)
 keymap('n', "<leader>i", ":lua require('lsp_extensions').inlay_hints{ prefix = '=> ', highlight = 'Comment', enabled = {'TypeHint', 'ChainingHint'}}<CR>", options)
 
 keymap('n', "<leader>s", ":set spell!<CR>", options)
-

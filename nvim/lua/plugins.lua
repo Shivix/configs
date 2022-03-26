@@ -13,10 +13,24 @@ custom_gruvbox.normal.a.bg = "#CC8400"
 custom_gruvbox.insert.c.bg = custom_gruvbox.normal.c.bg
 
 return require("packer").startup(function(use)
-	use {"wbthomason/packer.nvim"}
-	use {"neovim/nvim-lspconfig"}
-	use {"nvim-lua/lsp_extensions.nvim"}
-	use {"hrsh7th/nvim-cmp",
+    use {"wbthomason/packer.nvim"}
+    use {"neovim/nvim-lspconfig"}
+    use {"nvim-lua/lsp_extensions.nvim"}
+    use {"nvim-treesitter/nvim-treesitter",
+        config = function()
+            require("nvim-treesitter.configs").setup{
+                highlight = {enable = true},
+                refactor = {
+                    highlight_definitions = {enable = true},
+                    smart_rename = {
+                        enable = true, keymaps = {smart_rename = "<leader>r"}
+                    }
+                }
+            }
+        end
+    }
+    use {"nvim-treesitter/nvim-treesitter-refactor"}
+    use {"hrsh7th/nvim-cmp",
         requires = {{"hrsh7th/cmp-nvim-lsp"},
                    {"hrsh7th/cmp-nvim-lua"},
                    {"hrsh7th/cmp-buffer"},
@@ -41,18 +55,17 @@ return require("packer").startup(function(use)
             }
         end,
     }
-	use {"windwp/nvim-autopairs",
+    use {"windwp/nvim-autopairs",
         config = function()
             require("nvim-autopairs").setup{}
         end
     }
-	use {"hoob3rt/lualine.nvim",
+    use {"hoob3rt/lualine.nvim",
         config = function()
             require("lualine").setup{
                 options = {
                     icons_enabled = false,
                     theme = custom_gruvbox,
-                    disabled_filetypes = {"alpha"},
                 },
                 sections = {
                     lualine_a = {"mode"},
@@ -65,7 +78,7 @@ return require("packer").startup(function(use)
             }
         end
     }
-	use {"akinsho/bufferline.nvim",
+    use {"akinsho/bufferline.nvim",
         config = function()
             require("bufferline").setup{
                 options = {
@@ -82,11 +95,13 @@ return require("packer").startup(function(use)
         requires = {{"nvim-lua/popup.nvim"},
                    {"nvim-telescope/telescope-file-browser.nvim"}},
         config = function()
-            require("telescope").setup{}
+            require("telescope").setup{
+                defaults = { layout_strategy = "vertical" }
+            }
             require("telescope").load_extension("file_browser")
         end
     }
-	use {"Shivix/gruvbox.nvim"}
+    use {"Shivix/gruvbox.nvim"}
     use {"goolord/alpha-nvim",
         config = function()
             local startify = require("alpha.themes.startify")
@@ -94,12 +109,12 @@ return require("packer").startup(function(use)
             startify.nvim_web_devicons.highlight = false
             startify.section.header.val = {
                 [[        _   __         _    ___          ]],
-				[[       / | / /__  ____| |  / (_)___ ___  ]],
-				[[      /  |/ / _ \/ __ \ | / / / __ `__ \ ]],
-				[[     / /|  /  __/ /_/ / |/ / / / / / / / ]],
-				[[    /_/ |_/\___/\____/|___/_/_/ /_/ /_/  ]],
-				[[   ------------------------------------- ]],
-				[[    ]] ..
+                [[       / | / /__  ____| |  / (_)___ ___  ]],
+                [[      /  |/ / _ \/ __ \ | / / / __ `__ \ ]],
+                [[     / /|  /  __/ /_/ / |/ / / / / / / / ]],
+                [[    /_/ |_/\___/\____/|___/_/_/ /_/ /_/  ]],
+                [[   ------------------------------------- ]],
+                [[    ]] ..
                 #vim.tbl_keys(packer_plugins) .. " plugins | " .. os.date("%d-%m-%Y | %H:%M:%S")
             }
             startify.section.top_buttons.val = {
@@ -125,7 +140,7 @@ return require("packer").startup(function(use)
             require("alpha").setup(startify.opts)
         end
     }
-	use {"nvim-lua/plenary.nvim", module = "plenary"}
+    use {"nvim-lua/plenary.nvim", module = "plenary"}
     use {"Saecki/crates.nvim",
         event = { "BufRead Cargo.toml" },
         config = function()
@@ -151,31 +166,17 @@ return require("packer").startup(function(use)
             }
         end
     }
-	use {"lewis6991/gitsigns.nvim",
+    use {"lewis6991/gitsigns.nvim",
         config = function() require("gitsigns").setup{} end
     }
-	use	{"phaazon/hop.nvim",
+    use	{"phaazon/hop.nvim",
         cmd = "HopChar2",
-        config = function () require("hop").setup{} end
+        config = function() require("hop").setup{} end
     }
-	use {"norcalli/nvim-colorizer.lua",
+    use {"norcalli/nvim-colorizer.lua",
         cmd = "ColorizerToggle",
         config = function() require("colorizer").setup{} end
     }
-	use {"nvim-treesitter/nvim-treesitter",
-        config = function()
-            require("nvim-treesitter.configs").setup{
-                highlight = {enable = true},
-                refactor = {
-                    highlight_definitions = {enable = true},
-                    smart_rename = {
-                        enable = true, keymaps = {smart_rename = "<leader>r"}
-                    }
-                }
-            }
-        end
-    }
-	use {"nvim-treesitter/nvim-treesitter-refactor"}
     use {"ahmedkhalf/project.nvim",
         config = function() require("project_nvim").setup{} end
     }
@@ -186,4 +187,3 @@ return require("packer").startup(function(use)
     }
     use {"nathom/filetype.nvim"}
 end)
-

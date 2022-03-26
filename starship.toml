@@ -20,3 +20,6 @@ symbol = "go "
 
 [python]
 symbol = "py "
+
+[rust]
+symbol = "rs "

@@ -12,9 +12,22 @@ vim.api.nvim_exec([[
     command Bd bp|bd #
 ]], true)
 
-vim.api.nvim_create_autocmd("TextYankPost", {callback = function() vim.highlight.on_yank{higroup='IncSearch', timeout=150, on_visual=true} end})
-vim.api.nvim_create_autocmd({"BufEnter","BufWinEnter","TabEnter"}, {pattern = "*.yml.j2", command = "set ft=yaml"})
-vim.api.nvim_create_autocmd("TermOpen", {command = "setlocal nonumber norelativenumber showtabline=0"})
+vim.api.nvim_create_augroup("main_group", {})
+vim.api.nvim_create_autocmd("TextYankPost", {
+    callback = function()
+        vim.highlight.on_yank{higroup='IncSearch', timeout=150, on_visual=true}
+    end,
+    group = "main_group"
+})
+vim.api.nvim_create_autocmd({"BufEnter","BufWinEnter","TabEnter"}, {
+    pattern = "*.yml.j2",
+    command = "set ft=yaml",
+    group = "main_group"
+})
+vim.api.nvim_create_autocmd("TermOpen", {
+    command = "setlocal nonumber norelativenumber showtabline=0",
+    group = "main_group"
+})
 
 vim.opt.termguicolors = true
 vim.opt.showmode = false

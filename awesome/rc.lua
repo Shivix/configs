@@ -57,6 +57,7 @@ beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
 terminal = "alacritty"
 editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
+filemanager = "thunar"
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.

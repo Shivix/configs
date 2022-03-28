@@ -40,10 +40,7 @@ font:
   bold_italic:
     family: JetBrains Mono
     style: Bold Italic
-
-  # Point size
   size: 15
-
   offset:
     x: 0
     y: 0

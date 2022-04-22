@@ -1,43 +1,46 @@
 local function escape(str)
-	return vim.api.nvim_replace_termcodes(str, true, true, true)
+    return vim.api.nvim_replace_termcodes(str, true, true, true)
 end
 
 vim.g.mapleader = escape("<Space>")
 vim.g.gruvbox_bold = 0
 vim.g.gruvbox_contrast_dark = "hard"
 
-vim.api.nvim_exec([[
+vim.api.nvim_exec(
+    [[
     au colorscheme * hi Normal guibg=NONE
     colorscheme gruvbox
     command Bd bp|bd #
-]], true)
+]],
+    true
+)
 
 vim.api.nvim_create_augroup("main_group", {})
 vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function()
-        vim.highlight.on_yank{higroup='IncSearch', timeout=150, on_visual=true}
+        vim.highlight.on_yank { higroup = "IncSearch", timeout = 150, on_visual = true }
     end,
-    group = "main_group"
+    group = "main_group",
 })
-vim.api.nvim_create_autocmd({"BufEnter","BufWinEnter","TabEnter"}, {
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter", "TabEnter" }, {
     pattern = "*.yml.j2",
     command = "set ft=yaml",
-    group = "main_group"
+    group = "main_group",
 })
 vim.api.nvim_create_autocmd("TermOpen", {
     command = "setlocal nonumber norelativenumber showtabline=0",
-    group = "main_group"
+    group = "main_group",
 })
 
 vim.g.clipboard = {
     name = "xsel",
     copy = {
-        ['+'] = "xsel -ib",
-        ['*'] = "xsel -ib",
+        ["+"] = "xsel -ib",
+        ["*"] = "xsel -ib",
     },
     paste = {
-        ['+'] = "xsel -ob",
-        ['*'] = "xsel -ob",
+        ["+"] = "xsel -ob",
+        ["*"] = "xsel -ob",
     },
     cache_enabled = 0,
 }
@@ -61,7 +64,7 @@ vim.opt.undofile = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.clipboard = "unnamedplus"
-vim.opt.iskeyword:remove('_'); -- treat underscores as word breaks
+vim.opt.iskeyword:remove("_") -- treat underscores as word breaks
 
 local disabled_plugins = {
     "getscript",
@@ -74,7 +77,7 @@ local disabled_plugins = {
     "vimball",
     "vimballPlugin",
     "zip",
-    "zipPlugin"
+    "zipPlugin",
 }
 for _, plugin in pairs(disabled_plugins) do
     vim.g["loaded_" .. plugin] = 1

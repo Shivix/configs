@@ -29,6 +29,19 @@ vim.api.nvim_create_autocmd("TermOpen", {
     group = "main_group"
 })
 
+vim.g.clipboard = {
+    name = "xsel",
+    copy = {
+        ['+'] = "xsel -ib",
+        ['*'] = "xsel -ib",
+    },
+    paste = {
+        ['+'] = "xsel -ob",
+        ['*'] = "xsel -ob",
+    },
+    cache_enabled = 0,
+}
+
 vim.opt.termguicolors = true
 vim.opt.showmode = false
 vim.opt.hidden = true

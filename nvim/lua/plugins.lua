@@ -8,10 +8,6 @@ end
 -- Auto compile when there are changes in plugins.lua
 vim.cmd("autocmd BufWritePost plugins.lua PackerCompile")
 
-local custom_gruvbox = require("lualine.themes.gruvbox")
-custom_gruvbox.normal.a.bg = "#CC8400"
-custom_gruvbox.insert.c.bg = custom_gruvbox.normal.c.bg
-
 return require("packer").startup(function(use)
     use {"wbthomason/packer.nvim"}
     use {"neovim/nvim-lspconfig"}
@@ -62,6 +58,9 @@ return require("packer").startup(function(use)
     }
     use {"hoob3rt/lualine.nvim",
         config = function()
+        local custom_gruvbox = require("lualine.themes.gruvbox")
+        custom_gruvbox.normal.a.bg = "#CC8400"
+        custom_gruvbox.insert.c.bg = custom_gruvbox.normal.c.bg
             require("lualine").setup{
                 options = {
                     icons_enabled = false,
@@ -129,7 +128,7 @@ return require("packer").startup(function(use)
             startify.section.mru.val = {}
             startify.section.mru_cwd.val = {
                 {type = "padding", val = 1},
-                {type = "text", val = "Recent Files" , opts = { hl = "SpecialComment", shrink_margin = false}},
+                {type = "text", val = "Recent Files" , opts = {hl = "SpecialComment", shrink_margin = false}},
                 {type = "padding", val = 1},
                 {type = "group", val = function() return { startify.mru(0, vim.fn.getcwd(), 16) } end, opts = {shrink_margin = false}},
             }
@@ -142,7 +141,7 @@ return require("packer").startup(function(use)
     }
     use {"nvim-lua/plenary.nvim", module = "plenary"}
     use {"Saecki/crates.nvim",
-        event = { "BufRead Cargo.toml" },
+        event = {"BufRead Cargo.toml"},
         config = function()
             require("crates").setup{
                 text = {
@@ -181,9 +180,7 @@ return require("packer").startup(function(use)
         config = function() require("project_nvim").setup{} end
     }
     use {"AckslD/nvim-neoclip.lua",
-        config = function()
-            require("neoclip").setup{}
-        end
+        config = function() require("neoclip").setup{} end
     }
     use {"nathom/filetype.nvim"}
     use {"lewis6991/impatient.nvim"}

@@ -1,6 +1,5 @@
 require("lspconfig").clangd.setup {}
 require("lspconfig").bashls.setup {}
-require("lspconfig").html.setup {}
 require("lspconfig").pyright.setup {}
 require("lspconfig").rust_analyzer.setup {}
 require("lspconfig").gopls.setup {}

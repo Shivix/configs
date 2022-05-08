@@ -143,12 +143,12 @@ return require("packer").startup(function(use)
                 startify.button(
                     "f",
                     "Find file",
-                    "<cmd>lua require('telescope.builtin').find_files{path_display={shorten=5}}<CR>"
+                    "<leader>ff"
                 ),
                 startify.button(
                     "b",
                     "Browse files",
-                    "<cmd>lua require('telescope').extensions.file_browser.file_browser{cwd='~/'}<CR>"
+                    "<leader>fb"
                 ),
                 startify.button(
                     "s",
@@ -231,12 +231,6 @@ return require("packer").startup(function(use)
         cmd = "ColorizerToggle",
         config = function()
             require("colorizer").setup {}
-        end,
-    }
-    use {
-        "ahmedkhalf/project.nvim",
-        config = function()
-            require("project_nvim").setup {}
         end,
     }
     use {

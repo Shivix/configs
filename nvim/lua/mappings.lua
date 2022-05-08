@@ -11,7 +11,6 @@ keymap("i", "jk", "<Esc>", { noremap = true })
 keymap("v", "<", "<gv", { noremap = true })
 keymap("v", ">", ">gv", { noremap = true })
 
--- switch between divided windows
 keymap("n", "<C-h>", "<C-w>h", { noremap = true })
 keymap("n", "<C-j>", "<C-w>j", { noremap = true })
 keymap("n", "<C-k>", "<C-w>k", { noremap = true })
@@ -25,6 +24,8 @@ keymap("t", "<C-k>", "<C-\\><C-n><C-w>k", { noremap = true })
 keymap("t", "<C-l>", "<C-\\><C-n><C-w>l", { noremap = true })
 
 keymap("n", "s", ":HopChar2<CR>", { noremap = true })
+
+keymap("n", "<leader>s", ":set spell!<CR>", options)
 
 keymap(
     "n",
@@ -60,5 +61,3 @@ keymap(
     ":lua require('lsp_extensions').inlay_hints{ prefix = '=> ', highlight = 'Comment', enabled = {'TypeHint', 'ChainingHint'}}<CR>",
     options
 )
-
-keymap("n", "<leader>s", ":set spell!<CR>", options)

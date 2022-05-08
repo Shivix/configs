@@ -74,26 +74,20 @@ for _, plugin in pairs(disabled_plugins) do
     vim.g["loaded_" .. plugin] = 1
 end
 
-local root_patterns = {
-    ".git",
-    "Makefile",
-    "CMakeLists.txt",
-    "go.mod",
-    "Cargo.toml",
-}
-local function root_dir()
+--[[local function root_dir()
     local current_dir = vim.fn.expand("%:p:h")
     local home_dir = os.getenv("HOME")
 
-    while current_dir:find(home_dir) do
-        for _, dir in pairs(root_patterns) do
-            local file_name = current_dir .. "/" .. dir
-            local file = io.open(file_name, "r")
-            if file ~= nil then
-                io.close(file)
-                vim.api.nvim_set_current_dir(current_dir)
-                return
-            end
+    if not current_dir:find(home_dir) then
+        return
+    end
+
+    while current_dir ~= home_dir do
+        local file = io.open(current_dir .. "/.git", "r")
+        if file ~= nil then
+            io.close(file)
+            vim.api.nvim_set_current_dir(current_dir)
+            return
         end
         -- set to parent directory
         current_dir = current_dir:sub(1, current_dir:match(".*/()") - 2)
@@ -103,4 +97,4 @@ end
 vim.api.nvim_create_autocmd("BufEnter", {
     callback = root_dir,
     group = "main_group",
-})
+})]]--

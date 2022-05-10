@@ -27,24 +27,6 @@ keymap("n", "s", ":HopChar2<CR>", { noremap = true })
 
 keymap("n", "<leader>s", ":set spell!<CR>", options)
 
-keymap(
-    "n",
-    "<leader>ff",
-    ":lua require('telescope.builtin').find_files({path_display={shorten = 5}})<CR>",
-    options
-)
-keymap("n", "<leader>fg", ":lua require('telescope.builtin').live_grep()<CR>", options)
-keymap("n", "<leader>fd", ":lua require('telescope.builtin').lsp_definitions()<CR>", options)
-keymap("n", "<leader>fr", ":lua require('telescope.builtin').lsp_references()<CR>", options)
-keymap("n", "<leader>fh", ":lua require('telescope.builtin').help_tags()<CR>", options)
-keymap(
-    "n",
-    "<leader>fb",
-    ":lua require('telescope').extensions.file_browser.file_browser()<CR>",
-    options
-)
-keymap("n", "<leader>fc", ":lua require('telescope').extensions.neoclip.default()<CR>", options)
-
 keymap("n", "gd", ":lua vim.lsp.buf.definition()<CR>", options)
 keymap("n", "gD", ":lua vim.lsp.buf.declaration()<CR>", options)
 keymap("n", "gr", ":lua vim.lsp.buf.references()<CR>", options)
@@ -55,9 +37,3 @@ keymap("n", "<C-n>", ":lua vim.diagnostic.goto_prev()<CR>", options)
 keymap("n", "<C-p>", ":lua vim.diagnostic.goto_next()<CR>", options)
 keymap("n", "<leader>qf", ":lua vim.lsp.buf.code_action()<CR>", options)
 keymap("n", "<leader>e", ":lua vim.diagnostic.open_float()<CR>", options)
-keymap(
-    "n",
-    "<leader>i",
-    ":lua require('lsp_extensions').inlay_hints{ prefix = '=> ', highlight = 'Comment', enabled = {'TypeHint', 'ChainingHint'}}<CR>",
-    options
-)

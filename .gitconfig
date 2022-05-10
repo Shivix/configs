@@ -1,0 +1,22 @@
+[credential]
+	helper = store
+[core]
+	autocrlf = input
+	editor = nvim
+    pager = delta
+[alias]
+	grep = grep -i
+[commit]
+	gpgsign = true
+[grep]
+	linenumber = true
+[merge]
+    conflictstyle = diff3
+[rebase]
+	autosquash = true
+[interactive]
+    diffFilter = delta --color-only
+[delta]
+    navigate = true
+    side-by-side = true
+    syntax-theme = gruvbox-dark

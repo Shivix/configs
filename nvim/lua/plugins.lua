@@ -11,7 +11,6 @@ vim.cmd("autocmd BufWritePost plugins.lua PackerCompile")
 return require("packer").startup(function(use)
     use { "wbthomason/packer.nvim" }
     use { "neovim/nvim-lspconfig" }
-    use { "nvim-lua/lsp_extensions.nvim" }
     use {
         "nvim-treesitter/nvim-treesitter",
         config = function()
@@ -105,21 +104,6 @@ return require("packer").startup(function(use)
             }
         end,
     }
-    use {
-        "nvim-telescope/telescope.nvim",
-        cmd = "Telescope",
-        module = "telescope",
-        requires = {
-            { "nvim-lua/popup.nvim" },
-            { "nvim-telescope/telescope-file-browser.nvim" },
-        },
-        config = function()
-            require("telescope").setup {
-                defaults = { layout_strategy = "vertical" },
-            }
-            require("telescope").load_extension("file_browser")
-        end,
-    }
     use { "Shivix/gruvbox.nvim" }
     use {
         "goolord/alpha-nvim",
@@ -140,28 +124,8 @@ return require("packer").startup(function(use)
             }
             startify.section.top_buttons.val = {
                 startify.button("n", "New file", ":ene <BAR> startinsert <CR>"),
-                startify.button(
-                    "f",
-                    "Find file",
-                    "<leader>ff"
-                ),
-                startify.button(
-                    "b",
-                    "Browse files",
-                    "<leader>fb"
-                ),
-                startify.button(
-                    "s",
-                    "Settings",
-                    "<cmd>lua require('telescope.builtin').find_files{cwd='~/.config/nvim'}<CR>"
-                ),
-                startify.button(
-                    "c",
-                    "Configs",
-                    "<cmd>lua require('telescope').extensions.file_browser.file_browser{cwd='~/.config'}<CR>"
-                ),
-                startify.button("t", "Terminal", ":term <CR>"),
                 startify.button("u", "Update Plugins", ":PackerUpdate <CR>"),
+                startify.button("t", "Terminal", ":term <CR>"),
             }
             startify.section.mru.val = {}
             startify.section.mru_cwd.val = {
@@ -186,33 +150,6 @@ return require("packer").startup(function(use)
             require("alpha").setup(startify.opts)
         end,
     }
-    use { "nvim-lua/plenary.nvim", module = "plenary" }
-    use {
-        "Saecki/crates.nvim",
-        event = { "BufRead Cargo.toml" },
-        config = function()
-            require("crates").setup {
-                text = {
-                    loading = "=> Loading",
-                    version = "=> %s",
-                    prerelease = "=> %s",
-                    yanked = "=> %s",
-                    nomatch = "=> No match",
-                    update = "=> %s",
-                    error = "=> Error fetching crate",
-                },
-                highlight = {
-                    loading = "CratesNvimLoading",
-                    version = "CratesNvimVersion",
-                    prerelease = "CratesNvimPreRelease",
-                    yanked = "CratesNvimYanked",
-                    nomatch = "CratesNvimNoMatch",
-                    update = "CratesNvimUpdate",
-                    error = "CratesNvimError",
-                },
-            }
-        end,
-    }
     use {
         "lewis6991/gitsigns.nvim",
         config = function()
@@ -231,12 +168,6 @@ return require("packer").startup(function(use)
         cmd = "ColorizerToggle",
         config = function()
             require("colorizer").setup {}
-        end,
-    }
-    use {
-        "AckslD/nvim-neoclip.lua",
-        config = function()
-            require("neoclip").setup {}
         end,
     }
     use { "nathom/filetype.nvim" }

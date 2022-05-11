@@ -1,17 +1,17 @@
 starship init fish | source
+zoxide init fish | source
 
-alias mr="make -j -C ./cmake-build-release"
-alias md="make -j -C ./cmake-build-debug"
-alias mrc="make -j -C ./cmake-build-release-clang"
-alias make="make -j"
-alias nvimr="nvim --listen ~/.cache/nvim/server.pipe"
+alias make="make -j12"
 alias rg="rg --smart-case --line-number"
 alias rm="rm -i"
 alias mv="mv -i"
 
 fzf_key_bindings
 alias fzh="fzf-history-widget"
-alias fzcd="fzf-cd-widget"
+
+set -gx NVIM_PIPE "~/.cache/nvim/server.pipe"
+alias nvimr="nvim --listen $NVIM_PIPE"
+alias nvimfzf="nvim (fzf --multi)"
 
 set -gx VISUAL nvim
 set -gx EDITOR nvim
@@ -47,6 +47,12 @@ function mkcd --wraps mkdir --description "creates directory and cds into it"
     mkdir $argv && cd $argv
 end
 
+alias fix2pipe="sed -e 's/\x01/|/g'"
+
+function config_diff
+    nvim -d ~/GitHub/configs/$argv ~/.config/$argv
+end
+
 function fzk8slogs --wraps "kubectl logs" --description "Fuzzy search kubectl logs"
     kubectl logs $argv | sed -e 's/\x01/|/g' | fzf --delimiter : --preview 'echo {} | cut -f2- -d":" | prefix -v' --preview-window up:50%:wrap --multi
 end
@@ -54,9 +60,13 @@ alias fzl="fzk8slogs"
 
 function fznvim --description "Fuzzy find files and open them in nvim"
     set files (fzf --multi)
+    if not type -q $NVIM_PIPE
+        nvim $files --listen $NVIM_PIPE
+        return
+    end
     for i in $files
         set file (fd --absolute-path --type f --full-path $i)
-        nvim --server ~/.cache/nvim/server.pipe --remote-silent $file
+        nvim --server $NVIM_PIPE --remote-silent $file
     end
 end
 alias fzn="fznvim"
@@ -71,9 +81,12 @@ function fzgrep --description "Grep string and open selection in nvim"
         --preview-window "up,60%,border-bottom,+{2}+3/3,~3" \
         | awk -F ":" '{print $1"\n"$2}')
     set FZF_DEFAULT_COMMAND $old_FZF_DEFAULT_COMMAND
+    if test -z "$match"
+        return
+    end
     set file (fd --absolute-path --type f --full-path $match[1])
-    nvim --server ~/.cache/nvim/server.pipe --remote-silent $file
-    nvim --server ~/.cache/nvim/server.pipe --remote-send ":$match[2]<CR>"
+    nvim --server  --remote-silent $file
+    nvim --server NVIM_PIPE --remote-send ":$match[2]<CR>"
 end
 alias fzg="fzgrep"
 

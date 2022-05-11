@@ -1,25 +1,30 @@
 # Don't print a new line at the start of the prompt
 add_newline = false
 
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$git_metrics\
+$git_status\
+$docker_context\
+$container\
+$env_var\
+$custom\
+$cmd_duration\
+$status\
+$line_break\
+$shell\
+$jobs\
+$character"""
+
 [directory]
 truncation_length = 5
-truncate_to_repo = true
+truncate_to_repo = false
 
 [hostname]
 ssh_only = false
 style = "cyan"
-
-[gcloud]
-disabled = true
-
-[cmake]
-symbol = "△ "
-
-[golang]
-symbol = "go "
-
-[python]
-symbol = "py "
-
-[rust]
-symbol = "rs "

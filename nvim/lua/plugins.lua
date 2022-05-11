@@ -106,51 +106,6 @@ return require("packer").startup(function(use)
     }
     use { "Shivix/gruvbox.nvim" }
     use {
-        "goolord/alpha-nvim",
-        config = function()
-            local startify = require("alpha.themes.startify")
-            startify.nvim_web_devicons.enabled = false
-            startify.nvim_web_devicons.highlight = false
-            startify.section.header.val = {
-                [[        _   __         _    ___          ]],
-                [[       / | / /__  ____| |  / (_)___ ___  ]],
-                [[      /  |/ / _ \/ __ \ | / / / __ `__ \ ]],
-                [[     / /|  /  __/ /_/ / |/ / / / / / / / ]],
-                [[    /_/ |_/\___/\____/|___/_/_/ /_/ /_/  ]],
-                [[   ------------------------------------- ]],
-                [[    ]] .. #vim.tbl_keys(packer_plugins) .. " plugins | " .. os.date(
-                    "%d-%m-%Y | %H:%M:%S"
-                ),
-            }
-            startify.section.top_buttons.val = {
-                startify.button("n", "New file", ":ene <BAR> startinsert <CR>"),
-                startify.button("u", "Update Plugins", ":PackerUpdate <CR>"),
-                startify.button("t", "Terminal", ":term <CR>"),
-            }
-            startify.section.mru.val = {}
-            startify.section.mru_cwd.val = {
-                { type = "padding", val = 1 },
-                {
-                    type = "text",
-                    val = "Recent Files",
-                    opts = { hl = "SpecialComment", shrink_margin = false },
-                },
-                { type = "padding", val = 1 },
-                {
-                    type = "group",
-                    val = function()
-                        return { startify.mru(0, vim.fn.getcwd(), 16) }
-                    end,
-                    opts = { shrink_margin = false },
-                },
-            }
-            startify.section.bottom_buttons.val = {}
-            startify.section.footer.type = "text"
-            startify.section.footer.val = require("alpha.fortune")(80)
-            require("alpha").setup(startify.opts)
-        end,
-    }
-    use {
         "lewis6991/gitsigns.nvim",
         config = function()
             require("gitsigns").setup {}

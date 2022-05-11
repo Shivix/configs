@@ -1,5 +1,5 @@
 starship init fish | source
-zoxide init fish | source
+zoxide init --cmd=cd fish | source
 
 alias make="make -j12"
 alias rg="rg --smart-case --line-number"
@@ -9,9 +9,12 @@ alias mv="mv -i"
 fzf_key_bindings
 alias fzh="fzf-history-widget"
 
-set -gx NVIM_PIPE "~/.cache/nvim/server.pipe"
+set -gx NVIM_PIPE "$HOME/.cache/nvim/server.pipe"
 alias nvimr="nvim --listen $NVIM_PIPE"
 alias nvimfzf="nvim (fzf --multi)"
+alias nvimscratch="nvim ~/Documents/Notes/scratch.md"
+alias nvimpipe="nvim --server $NVIM_PIPE --remote"
+alias nvimsend="nvim --server $NVIM_PIPE --remote-send"
 
 set -gx VISUAL nvim
 set -gx EDITOR nvim
@@ -60,10 +63,6 @@ alias fzl="fzk8slogs"
 
 function fznvim --description "Fuzzy find files and open them in nvim"
     set files (fzf --multi)
-    if not type -q $NVIM_PIPE
-        nvim $files --listen $NVIM_PIPE
-        return
-    end
     for i in $files
         set file (fd --absolute-path --type f --full-path $i)
         nvim --server $NVIM_PIPE --remote-silent $file
@@ -85,8 +84,8 @@ function fzgrep --description "Grep string and open selection in nvim"
         return
     end
     set file (fd --absolute-path --type f --full-path $match[1])
-    nvim --server  --remote-silent $file
-    nvim --server NVIM_PIPE --remote-send ":$match[2]<CR>"
+    nvim --server $NVIM_PIPE --remote-silent $file
+    nvim --server $NVIM_PIPE --remote-send ":$match[2]<CR>"
 end
 alias fzg="fzgrep"
 

@@ -1,6 +1,5 @@
 vim.g.mapleader = " "
 vim.g.gruvbox_bold = 0
-vim.g.gruvbox_contrast_dark = "hard"
 
 -- stylua: ignore
 vim.api.nvim_exec( [[
@@ -24,7 +23,9 @@ vim.opt.undofile = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.clipboard = "unnamed"
+vim.opt.laststatus = 3
 vim.opt.iskeyword:remove("_") -- treat underscores as word breaks
+vim.opt.path:append("**")
 
 -- nvim can auto detect this on startup, we do it manually to improve startup time
 vim.g.clipboard = {
@@ -73,28 +74,3 @@ local disabled_plugins = {
 for _, plugin in pairs(disabled_plugins) do
     vim.g["loaded_" .. plugin] = 1
 end
-
---[[local function root_dir()
-    local current_dir = vim.fn.expand("%:p:h")
-    local home_dir = os.getenv("HOME")
-
-    if not current_dir:find(home_dir) then
-        return
-    end
-
-    while current_dir ~= home_dir do
-        local file = io.open(current_dir .. "/.git", "r")
-        if file ~= nil then
-            io.close(file)
-            vim.api.nvim_set_current_dir(current_dir)
-            return
-        end
-        -- set to parent directory
-        current_dir = current_dir:sub(1, current_dir:match(".*/()") - 2)
-    end
-end
-
-vim.api.nvim_create_autocmd("BufEnter", {
-    callback = root_dir,
-    group = "main_group",
-})]]--

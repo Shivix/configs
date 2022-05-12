@@ -5,6 +5,7 @@ alias make="make -j12"
 alias rg="rg --smart-case --line-number"
 alias rm="rm -i"
 alias mv="mv -i"
+alias wt="git worktree"
 
 fzf_key_bindings
 alias fzh="fzf-history-widget"
@@ -70,7 +71,7 @@ function fznvim --description "Fuzzy find files and open them in nvim"
 end
 alias fzn="fznvim"
 
-function fzgrep --description "Grep string and open selection in nvim"
+function fzgrep --description "Grep string and open selection in remote nvim"
     set old_FZF_DEFAULT_COMMAND $FZF_DEFAULT_COMMAND
     set FZF_DEFAULT_COMMAND $RG_PREFIX
     set match (fzf --disabled --ansi \
@@ -88,6 +89,30 @@ function fzgrep --description "Grep string and open selection in nvim"
     nvim --server $NVIM_PIPE --remote-send ":$match[2]<CR>"
 end
 alias fzg="fzgrep"
+
+function nvimrg --description "Grep string and open selection in new nvim"
+    set old_FZF_DEFAULT_COMMAND $FZF_DEFAULT_COMMAND
+    set FZF_DEFAULT_COMMAND $RG_PREFIX
+    set match (fzf --disabled --ansi \
+        --bind "change:reload:$RG_PREFIX {q} || true" \
+        --delimiter : \
+        --preview "bat --color=always {1} --highlight-line {2}" \
+        --preview-window "up,60%,border-bottom,+{2}+3/3,~3" \
+        | awk -F ":" '{print $1"\n"$2}')
+    set FZF_DEFAULT_COMMAND $old_FZF_DEFAULT_COMMAND
+    if test -z "$match"
+        return
+    end
+    set file (fd --absolute-path --type f --full-path $match[1])
+    nvim +$match[2] $file
+end
+
+function update_copyright --description "Increment the copyright year on any modified files"
+    set files (git diff --name-only --ignore-submodules)
+    for file in $files
+        sed -i "0,/2020\|2021\|2022/ s//2022/g" $file
+    end
+end
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f "$HOME/google-cloud-sdk/path.fish.inc" ]; . "$HOME/google-cloud-sdk/path.fish.inc"; end

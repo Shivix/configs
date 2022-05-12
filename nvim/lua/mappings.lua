@@ -1,11 +1,11 @@
 local keymap = vim.api.nvim_set_keymap
 local options = { noremap = true, silent = true }
 
-keymap("n", "<M-l>", ":bnext<CR>", options)
-keymap("n", "<M-h>", ":bprevious<CR>", options)
-keymap("n", "<C-w>", ":Bd<CR>", options)
+keymap("n", "<C-b>", "<C-^>", options)
 
 keymap("i", "jk", "<Esc>", { noremap = true })
+
+keymap("n", "<leader>r", ":%s/<C-r><C-w>/<C-r><C-w>/gc<Left><Left><Left>", { noremap = true })
 
 -- stay in visual when tabbing
 keymap("v", "<", "<gv", { noremap = true })
@@ -31,6 +31,7 @@ keymap("n", "gd", ":lua vim.lsp.buf.definition()<CR>", options)
 keymap("n", "gD", ":lua vim.lsp.buf.declaration()<CR>", options)
 keymap("n", "gr", ":lua vim.lsp.buf.references()<CR>", options)
 keymap("n", "gi", ":lua vim.lsp.buf.implementation()<CR>", options)
+keymap("n", "gh", ":ClangdSwitchSourceHeader<CR>", options)
 keymap("n", "K", ":lua vim.lsp.buf.hover()<CR>", options)
 keymap("n", "<leader>k", ":lua vim.lsp.buf.signature_help()<CR>", options)
 keymap("n", "<C-n>", ":lua vim.diagnostic.goto_prev()<CR>", options)

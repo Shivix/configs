@@ -13,11 +13,11 @@ return require("packer").startup(function(use)
     use { "neovim/nvim-lspconfig" }
     use {
         "nvim-treesitter/nvim-treesitter",
+        --requires = { "nvim-treesitter/nvim-treesitter-refactor" },
         config = function()
             require("nvim-treesitter.configs").setup {
                 highlight = { enable = true },
                 refactor = {
-                    highlight_definitions = { enable = true },
                     smart_rename = {
                         enable = true,
                         keymaps = { smart_rename = "<leader>r" },
@@ -26,7 +26,6 @@ return require("packer").startup(function(use)
             }
         end,
     }
-    use { "nvim-treesitter/nvim-treesitter-refactor" }
     use {
         "hrsh7th/nvim-cmp",
         requires = {
@@ -62,20 +61,26 @@ return require("packer").startup(function(use)
         end,
     }
     use {
-        "hoob3rt/lualine.nvim",
+        "nvim-lualine/lualine.nvim",
         config = function()
             local custom_gruvbox = require("lualine.themes.gruvbox")
             custom_gruvbox.normal.a.bg = "#CC8400"
             custom_gruvbox.insert.c.bg = custom_gruvbox.normal.c.bg
+            custom_gruvbox.insert.c.fg = custom_gruvbox.normal.c.fg
+            custom_gruvbox.command.c.bg = custom_gruvbox.normal.c.bg
+            custom_gruvbox.command.c.fg = custom_gruvbox.normal.c.fg
+            custom_gruvbox.visual.c.bg = custom_gruvbox.normal.c.bg
+            custom_gruvbox.visual.c.fg = custom_gruvbox.normal.c.fg
             require("lualine").setup {
                 options = {
                     icons_enabled = false,
                     theme = custom_gruvbox,
+                    globalstatus = true,
                 },
                 sections = {
                     lualine_a = { "mode" },
-                    lualine_b = {
-                        "branch",
+                    lualine_b = { "filename" },
+                    lualine_c = {
                         "diff",
                         {
                             "diagnostics",
@@ -83,23 +88,11 @@ return require("packer").startup(function(use)
                                 "nvim_diagnostic",
                             },
                         },
+                        "branch",
                     },
-                    lualine_c = {},
-                    lualine_x = { "fileformat", "filetype" },
+                    lualine_x = { "filetype" },
                     lualine_y = { "progress" },
                     lualine_z = { "location" },
-                },
-            }
-        end,
-    }
-    use {
-        "akinsho/bufferline.nvim",
-        config = function()
-            require("bufferline").setup {
-                options = {
-                    show_buffer_close_icons = false,
-                    left_trunc_marker = "<",
-                    right_trunc_marker = ">",
                 },
             }
         end,

@@ -13,16 +13,28 @@ return require("packer").startup(function(use)
     use { "neovim/nvim-lspconfig" }
     use {
         "nvim-treesitter/nvim-treesitter",
-        --requires = { "nvim-treesitter/nvim-treesitter-refactor" },
         config = function()
             require("nvim-treesitter.configs").setup {
-                highlight = { enable = true },
-                refactor = {
-                    smart_rename = {
-                        enable = true,
-                        keymaps = { smart_rename = "<leader>r" },
-                    },
+                --install cpp through TSInstallFromGammar
+                ensure_installed = {
+                    "lua",
+                    "rust",
+                    "toml",
+                    "go",
+                    "gomod",
+                    "fish",
+                    "bash",
+                    "cmake",
+                    "dockerfile",
+                    "latex",
+                    "make",
+                    "markdown",
+                    "python",
+                    "regex",
+                    "vim",
+                    "yaml",
                 },
+                highlight = { enable = true },
             }
         end,
     }

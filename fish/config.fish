@@ -2,10 +2,19 @@ starship init fish | source
 zoxide init --cmd=cd fish | source
 
 alias make="make -j12"
-alias rg="rg --smart-case --line-number"
+alias md="make -j12 -C cmake-build-debug"
+alias mr="make -j12 -C cmake-build-release"
+alias mdc="make -j12 -C cmake-build-debug-clang"
+alias mrd="make -j12 -C cmake-build-release-clang"
+alias ctd="ctest --test-dir cmake-build-debug"
+alias ctr="ctest --test-dir cmake-build-release"
+alias ctdc="ctest --test-dir cmake-build-debug"
+alias ctrc="ctest --test-dir cmake-build-release"
+alias rg="rg --smart-case --line-number --fixed-strings"
 alias rm="rm -i"
 alias mv="mv -i"
 alias wt="git worktree"
+alias tree="tree --gitignore"
 
 fzf_key_bindings
 alias fzh="fzf-history-widget"

@@ -111,12 +111,6 @@ return require("packer").startup(function(use)
     }
     use { "Shivix/gruvbox.nvim" }
     use {
-        "lewis6991/gitsigns.nvim",
-        config = function()
-            require("gitsigns").setup {}
-        end,
-    }
-    use {
         "phaazon/hop.nvim",
         cmd = "HopChar2",
         config = function()

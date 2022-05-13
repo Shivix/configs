@@ -1,10 +1,9 @@
 require("lspconfig").clangd.setup {}
-require("lspconfig").bashls.setup {}
 require("lspconfig").pyright.setup {}
 require("lspconfig").rust_analyzer.setup {}
 require("lspconfig").gopls.setup {}
 
-local sumneko_root_path = "/home/shivix/.lua-language-server"
+local sumneko_root_path = "~/.lua-language-server"
 local sumneko_binary = "/usr/bin/lua-language-server"
 
 require("lspconfig").sumneko_lua.setup {

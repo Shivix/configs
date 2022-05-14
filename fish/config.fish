@@ -14,6 +14,7 @@ alias rg="rg --smart-case --line-number --fixed-strings"
 alias rm="rm -i"
 alias mv="mv -i"
 alias wt="git worktree"
+alias gs="git status"
 alias tree="tree --gitignore"
 
 fzf_key_bindings
@@ -21,7 +22,7 @@ alias fzh="fzf-history-widget"
 
 set -gx NVIM_PIPE "$HOME/.cache/nvim/server.pipe"
 alias nvimr="nvim --listen $NVIM_PIPE"
-alias nvimfzf="nvim (fzf --multi)"
+alias nvf="nvim (fzf --multi)"
 alias nvimscratch="nvim ~/Documents/Notes/scratch.md"
 alias nvimpipe="nvim --server $NVIM_PIPE --remote"
 alias nvimsend="nvim --server $NVIM_PIPE --remote-send"
@@ -115,9 +116,13 @@ function nvimrg --description "Grep string and open selection in new nvim"
     set file (fd --absolute-path --type f --full-path $match[1])
     nvim +$match[2] $file
 end
+alias nvrg="nvimrg"
 
 function update_copyright --description "Increment the copyright year on any modified files"
     set files (git diff --name-only --ignore-submodules)
+    if test -z "$files"
+        set files (git show --pretty="" --name-only --ignore-submodules)
+    end
     for file in $files
         sed -i "0,/2020\|2021\|2022/ s//2022/g" $file
     end

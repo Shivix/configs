@@ -20,6 +20,8 @@ alias gf="git fetch upstream"
 alias tree="tree --gitignore"
 alias rg="rg --smart-case --line-number --fixed-strings"
 
+alias gitformat="git ls-files '*.cpp' '*.hpp' '*.cxx' '*.hxx' | xargs clang-format -i"
+
 set -gx scratchfile "$HOME/Documents/Notes/scratch.md"
 alias scratch="nvim $scratchfile"
 

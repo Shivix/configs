@@ -6,24 +6,28 @@ alias md="make -j12 -C cmake-build-debug"
 alias mr="make -j12 -C cmake-build-release"
 alias mdc="make -j12 -C cmake-build-debug-clang"
 alias mrd="make -j12 -C cmake-build-release-clang"
+
 alias ctd="ctest --test-dir cmake-build-debug"
 alias ctr="ctest --test-dir cmake-build-release"
 alias ctdc="ctest --test-dir cmake-build-debug"
 alias ctrc="ctest --test-dir cmake-build-release"
-alias rg="rg --smart-case --line-number --fixed-strings"
+
 alias rm="rm -i"
 alias mv="mv -i"
 alias wt="git worktree"
 alias gs="git status"
+alias gf="git fetch upstream"
 alias tree="tree --gitignore"
+alias rg="rg --smart-case --line-number --fixed-strings"
+
+set -gx scratchfile "$HOME/Documents/Notes/scratch.md"
+alias scratch="nvim $scratchfile"
 
 fzf_key_bindings
 alias fzh="fzf-history-widget"
 
 set -gx NVIM_PIPE "$HOME/.cache/nvim/server.pipe"
 alias nvimr="nvim --listen $NVIM_PIPE"
-alias nvf="nvim (fzf --multi)"
-alias nvimscratch="nvim ~/Documents/Notes/scratch.md"
 alias nvimpipe="nvim --server $NVIM_PIPE --remote"
 alias nvimsend="nvim --server $NVIM_PIPE --remote-send"
 
@@ -100,7 +104,16 @@ function fzgrep --description "Grep string and open selection in remote nvim"
 end
 alias fzg="fzgrep"
 
-function nvimrg --description "Grep string and open selection in new nvim"
+function nvimfzf --description "fzf files and open in new nvim instance"
+    set files (fzf --multi)
+    if test -z "$files"
+        return
+    end
+    nvim $files
+end
+alias nvf="nvimfzf"
+
+function nvimrg --description "Grep string and open selection in new nvim instance"
     set old_FZF_DEFAULT_COMMAND $FZF_DEFAULT_COMMAND
     set FZF_DEFAULT_COMMAND $RG_PREFIX
     set match (fzf --disabled --ansi \
@@ -121,7 +134,7 @@ alias nvrg="nvimrg"
 function update_copyright --description "Increment the copyright year on any modified files"
     set files (git diff --name-only --ignore-submodules)
     if test -z "$files"
-        set files (git show --pretty="" --name-only --ignore-submodules)
+        set files (git show $argv --pretty="" --name-only --ignore-submodules)
     end
     for file in $files
         sed -i "0,/2020\|2021\|2022/ s//2022/g" $file

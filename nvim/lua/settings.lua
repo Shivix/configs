@@ -3,10 +3,9 @@ vim.g.gruvbox_bold = 0
 
 -- stylua: ignore
 vim.api.nvim_exec( [[
-    au colorscheme * hi Normal guibg=NONE
     colorscheme gruvbox
-    command -nargs=1 Fd args `fd <args>`
 ]], true)
+vim.api.nvim_set_hl(0, "Normal", { bg = "NONE" })
 
 vim.opt.termguicolors = true
 vim.opt.showmode = false
@@ -26,6 +25,8 @@ vim.opt.clipboard = "unnamed"
 vim.opt.laststatus = 3
 vim.opt.signcolumn = "no"
 vim.opt.iskeyword:remove("_") -- treat underscores as word breaks
+
+vim.api.nvim_create_user_command("Fd", "args `fd <args>`", { nargs = 1 })
 
 vim.api.nvim_create_augroup("main_group", {})
 vim.api.nvim_create_autocmd("TextYankPost", {

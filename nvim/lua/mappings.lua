@@ -34,3 +34,7 @@ keymap("n", "<C-n>", ":lua vim.diagnostic.goto_prev()<CR>", options)
 keymap("n", "<C-p>", ":lua vim.diagnostic.goto_next()<CR>", options)
 keymap("n", "<leader>qf", ":lua vim.lsp.buf.code_action()<CR>", options)
 keymap("n", "<leader>e", ":lua vim.diagnostic.open_float()<CR>", options)
+
+keymap("n", "<leader>ff", ":lua require('fzf-lua').files()<CR>", options)
+keymap("n", "<leader>fg", ":lua require('fzf-lua').live_grep()<CR>", options)
+keymap("n", "<leader>fh", ":lua require('fzf-lua').help_tags()<CR>", options)

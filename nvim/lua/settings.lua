@@ -24,7 +24,27 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.clipboard = "unnamed"
 vim.opt.laststatus = 3
+vim.opt.signcolumn = "no"
 vim.opt.iskeyword:remove("_") -- treat underscores as word breaks
+
+vim.api.nvim_create_augroup("main_group", {})
+vim.api.nvim_create_autocmd("TextYankPost", {
+    callback = function()
+        vim.highlight.on_yank { higroup = "IncSearch", timeout = 150, on_visual = true }
+    end,
+    group = "main_group",
+})
+local function deduce_filetype()
+    local filename = vim.api.nvim_buf_get_name(0)
+    local begin_pos = filename:find("[.]") + 1
+    local end_pos = filename:find(".j2") - 1
+    vim.bo.filetype = filename:sub(begin_pos, end_pos)
+end
+vim.api.nvim_create_autocmd("BufEnter", {
+    pattern = "*.j2",
+    callback = deduce_filetype,
+    group = "main_group",
+})
 
 -- nvim can auto detect this on startup, we do it manually to improve startup time
 vim.g.clipboard = {
@@ -39,37 +59,3 @@ vim.g.clipboard = {
     },
     cache_enabled = 0,
 }
-
-vim.api.nvim_create_augroup("main_group", {})
-vim.api.nvim_create_autocmd("TextYankPost", {
-    callback = function()
-        vim.highlight.on_yank { higroup = "IncSearch", timeout = 150, on_visual = true }
-    end,
-    group = "main_group",
-})
-vim.api.nvim_create_autocmd("BufEnter", {
-    pattern = "*.yml.j2",
-    command = "set ft=yaml",
-    group = "main_group",
-})
-vim.api.nvim_create_autocmd("TermOpen", {
-    command = "setlocal nonumber norelativenumber showtabline=0",
-    group = "main_group",
-})
-
-local disabled_plugins = {
-    "getscript",
-    "getscriptPlugin",
-    "logipat",
-    "remote_plugins",
-    "rrhelper",
-    "tar",
-    "tarPlugin",
-    "vimball",
-    "vimballPlugin",
-    "zip",
-    "zipPlugin",
-}
-for _, plugin in pairs(disabled_plugins) do
-    vim.g["loaded_" .. plugin] = 1
-end

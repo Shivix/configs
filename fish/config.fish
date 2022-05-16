@@ -2,10 +2,10 @@ starship init fish | source
 zoxide init --cmd=cd fish | source
 
 alias make="make -j12"
-alias md="make -j12 -C cmake-build-debug"
-alias mr="make -j12 -C cmake-build-release"
-alias mdc="make -j12 -C cmake-build-debug-clang"
-alias mrd="make -j12 -C cmake-build-release-clang"
+alias md="make --no-print-directory -j12 -C cmake-build-debug"
+alias mr="make --no-print-directory -j12 -C cmake-build-release"
+alias mdc="make --no-print-directory -j12 -C cmake-build-debug-clang"
+alias mrd="make --no-print-directory -j12 -C cmake-build-release-clang"
 
 alias ctd="ctest --test-dir cmake-build-debug"
 alias ctr="ctest --test-dir cmake-build-release"

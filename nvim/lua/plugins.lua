@@ -5,9 +5,6 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
     vim.api.nvim_command("packadd packer.nvim")
 end
 
--- Auto compile when there are changes in plugins.lua
-vim.cmd("autocmd BufWritePost plugins.lua PackerCompile")
-
 return require("packer").startup(function(use)
     use { "wbthomason/packer.nvim" }
     use { "neovim/nvim-lspconfig" }
@@ -38,6 +35,7 @@ return require("packer").startup(function(use)
             }
         end,
     }
+    use { "Shivix/gruvbox.nvim" }
     use {
         "hrsh7th/nvim-cmp",
         requires = {
@@ -67,9 +65,28 @@ return require("packer").startup(function(use)
         end,
     }
     use {
-        "windwp/nvim-autopairs",
+        "ibhagwan/fzf-lua",
+        module = "fzf-lua",
         config = function()
-            require("nvim-autopairs").setup {}
+            require("fzf-lua").setup {
+                fzf_opts = { ["--layout"] = "default" },
+                winopts = {
+                    border = { "", "─", "", "", "", "", "", "" },
+                    fullscreen = true,
+                    preview = {
+                        vertical = "up:60%",
+                        scrollbar = false,
+                    },
+                },
+                files = {
+                    git_icons = false,
+                    file_icons = false,
+                },
+                grep = {
+                    git_icons = false,
+                    file_icons = false,
+                },
+            }
         end,
     }
     use {
@@ -109,7 +126,12 @@ return require("packer").startup(function(use)
             }
         end,
     }
-    use { "Shivix/gruvbox.nvim" }
+    use {
+        "windwp/nvim-autopairs",
+        config = function()
+            require("nvim-autopairs").setup {}
+        end,
+    }
     use {
         "phaazon/hop.nvim",
         cmd = "HopChar2",

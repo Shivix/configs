@@ -5,7 +5,7 @@ alias make="make -j12"
 alias md="make --no-print-directory -j12 -C cmake-build-debug"
 alias mr="make --no-print-directory -j12 -C cmake-build-release"
 alias mdc="make --no-print-directory -j12 -C cmake-build-debug-clang"
-alias mrd="make --no-print-directory -j12 -C cmake-build-release-clang"
+alias mrc="make --no-print-directory -j12 -C cmake-build-release-clang"
 
 alias ctd="ctest --test-dir cmake-build-debug"
 alias ctr="ctest --test-dir cmake-build-release"
@@ -53,14 +53,10 @@ fish_add_path /usr/local/go/bin
 fish_add_path ~/go/bin
 fish_add_path ~/.local/bin
 
-function man --wraps man
-    set -x LESS_TERMCAP_md (set_color --bold yellow)
-    set -x LESS_TERMCAP_me (set_color normal)
-    set -x LESS_TERMCAP_so (set_color --reverse cyan)
-    set -x LESS_TERMCAP_se (set_color normal)
-    set -x LESS_TERMCAP_us (set_color --underline bryellow)
-    set -x LESS_TERMCAP_ue (set_color normal)
-    command man $argv
+function rund
+# fd argv to get path
+# call path.
+# args for running it? - <args>?
 end
 
 function mkcd --wraps mkdir --description "creates directory and cds into it"

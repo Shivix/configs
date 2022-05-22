@@ -74,6 +74,7 @@ return require("packer").startup(function(use)
                     border = { "", "─", "", "", "", "", "", "" },
                     fullscreen = true,
                     preview = {
+                        default = "bat",
                         vertical = "up:60%",
                         scrollbar = false,
                     },

@@ -54,9 +54,8 @@ fish_add_path ~/go/bin
 fish_add_path ~/.local/bin
 
 function rund
-# fd argv to get path
-# call path.
-# args for running it? - <args>?
+    set file (fd -1 --type x --full-path $argv[1] cmake-build-debug)
+    $file $argv[2..]
 end
 
 function mkcd --wraps mkdir --description "creates directory and cds into it"

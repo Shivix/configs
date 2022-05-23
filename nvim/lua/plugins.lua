@@ -91,43 +91,6 @@ return require("packer").startup(function(use)
         end,
     }
     use {
-        "nvim-lualine/lualine.nvim",
-        config = function()
-            local custom_gruvbox = require("lualine.themes.gruvbox")
-            custom_gruvbox.normal.a.bg = "#CC8400"
-            custom_gruvbox.insert.c.bg = custom_gruvbox.normal.c.bg
-            custom_gruvbox.insert.c.fg = custom_gruvbox.normal.c.fg
-            custom_gruvbox.command.c.bg = custom_gruvbox.normal.c.bg
-            custom_gruvbox.command.c.fg = custom_gruvbox.normal.c.fg
-            custom_gruvbox.visual.c.bg = custom_gruvbox.normal.c.bg
-            custom_gruvbox.visual.c.fg = custom_gruvbox.normal.c.fg
-            require("lualine").setup {
-                options = {
-                    icons_enabled = false,
-                    theme = custom_gruvbox,
-                    globalstatus = true,
-                },
-                sections = {
-                    lualine_a = { "mode" },
-                    lualine_b = { "filename" },
-                    lualine_c = {
-                        "diff",
-                        {
-                            "diagnostics",
-                            sources = {
-                                "nvim_diagnostic",
-                            },
-                        },
-                        "branch",
-                    },
-                    lualine_x = { "filetype" },
-                    lualine_y = { "progress" },
-                    lualine_z = { "location" },
-                },
-            }
-        end,
-    }
-    use {
         "windwp/nvim-autopairs",
         config = function()
             require("nvim-autopairs").setup {}

@@ -1,7 +1,6 @@
 vim.g.mapleader = " "
 vim.g.gruvbox_bold = 0
 
--- stylua: ignore
 vim.api.nvim_exec("colorscheme gruvbox", true)
 vim.api.nvim_set_hl(0, "Normal", { bg = "NONE" })
 
@@ -22,33 +21,7 @@ vim.opt.smartcase = true
 vim.opt.clipboard = "unnamed"
 vim.opt.laststatus = 3
 vim.opt.signcolumn = "no"
-vim.opt.iskeyword:remove("_") -- treat underscores as word breaks
-
-vim.api.nvim_create_user_command("Fd", "args `fd <args>`", { nargs = 1 })
-
-vim.api.nvim_create_augroup("main_group", {})
-vim.api.nvim_create_autocmd("TextYankPost", {
-    callback = function()
-        vim.highlight.on_yank { higroup = "IncSearch", timeout = 150, on_visual = true }
-    end,
-    group = "main_group",
-})
-local function deduce_filetype()
-    local filename = vim.api.nvim_buf_get_name(0)
-    local _, dot_count = filename:gsub("[.]","")
-    local begin_pos = 0
-    for _ = 1, dot_count - 1 do
-        begin_pos = filename:find("[.]", begin_pos) + 1
-    end
-    print(begin_pos)
-    local end_pos = filename:find(".j2") - 1
-    vim.bo.filetype = filename:sub(begin_pos, end_pos)
-end
-vim.api.nvim_create_autocmd("BufEnter", {
-    pattern = "*.j2",
-    callback = deduce_filetype,
-    group = "main_group",
-})
+vim.opt.iskeyword:remove("_")
 
 -- nvim can auto detect this on startup, we do it manually to improve startup time
 vim.g.clipboard = {

@@ -100,7 +100,7 @@ return require("packer").startup(function(use)
         "phaazon/hop.nvim",
         cmd = "HopChar2",
         config = function()
-            require("hop").setup {}
+            require("hop").setup { keys = "hjkl;sdfga" }
         end,
     }
     use {

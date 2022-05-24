@@ -12,12 +12,14 @@ local modes = {
     ["t"] = "TERMINAL",
 }
 
+vim.api.nvim_set_hl(0, "StatusLine", { fg = "#fabd2f", bg = "#32302f" })
+
 function StatusLine()
     local current_mode = vim.api.nvim_get_mode().mode
     local pretty_mode = modes[current_mode] or current_mode
     local warnings = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
     local errors = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
-    return "%#Normal# "
+    return " "
         .. pretty_mode
         .. " | W:"
         .. #warnings

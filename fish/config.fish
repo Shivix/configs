@@ -42,11 +42,12 @@ set -gx fish_greeting "Welcome to fish, the friendly interactive shell"
 set -gx fish_browser "firefox-developer-edition"
 
 set -gx FZF_DEFAULT_OPTS "--tiebreak=index --bind=ctrl-d:page-down,ctrl-u:page-up"
-set -gx FZF_DEFAULT_COMMAND "fd --type f"
+set -gx FZF_DEFAULT_COMMAND "fd --type f --full-path --strip-cwd-prefix"
 
 set -gx RG_PREFIX "rg --column --no-heading --color=always"
 
 set -gx BAT_THEME "gruvbox-dark"
+set -gx MANPAGER "sh -c 'col -b | nvim -c Man!'"
 
 set -gx PYTHONPATH ~/cpp/python
 fish_add_path /usr/local/go/bin
@@ -102,11 +103,11 @@ end
 alias fzg="fzgrep"
 
 function nvimfzf --description "fzf files and open in new nvim instance"
-    set files (fzf --multi)
-    if test -z "$files"
+    set file (fzf)
+    if test -z "$file"
         return
     end
-    nvim $files
+    nvim $file
 end
 alias nvf="nvimfzf"
 

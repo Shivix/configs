@@ -5,9 +5,12 @@ local function deduce_j2_filetype()
     for _ = 1, dot_count - 1 do
         begin_pos = filename:find("[.]", begin_pos) + 1
     end
-    print(begin_pos)
     local end_pos = filename:find(".j2") - 1
-    vim.bo.filetype = filename:sub(begin_pos, end_pos)
+    local filetype = filename:sub(begin_pos, end_pos)
+    if filetype == "yml" then
+        filetype = "yaml"
+    end
+    vim.bo.filetype = filetype
 end
 
 vim.api.nvim_create_augroup("main_group", {})

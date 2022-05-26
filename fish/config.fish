@@ -103,7 +103,7 @@ end
 alias fzg="fzgrep"
 
 function nvimfzf --description "fzf files and open in new nvim instance"
-    set file (fzf)
+    set file (fzf --query $argv)
     if test -z "$file"
         return
     end
@@ -114,9 +114,9 @@ alias nvf="nvimfzf"
 function nvimrg --description "Grep string and open selection in new nvim instance"
     set old_FZF_DEFAULT_COMMAND $FZF_DEFAULT_COMMAND
     set FZF_DEFAULT_COMMAND $RG_PREFIX
-    set match (fzf --disabled --ansi \
+    set match (fzf --disabled --ansi --delimiter : \
+        --query $argv \
         --bind "change:reload:$RG_PREFIX {q} || true" \
-        --delimiter : \
         --preview "bat --color=always {1} --highlight-line {2}" \
         --preview-window "up,60%,border-bottom,+{2}+3/3,~3" \
         | awk -F ":" '{print $1"\n"$2}')

@@ -25,7 +25,7 @@ function StatusLine()
         .. #warnings
         .. " E:"
         .. #errors
-        .. " |%m %.50f %= %Y | %l:%c "
+        .. "%= %m %.40F %= %Y | %l:%c "
 end
 
 vim.opt.statusline = "%!luaeval('StatusLine()')"

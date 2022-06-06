@@ -87,6 +87,12 @@ return require("packer").startup(function(use)
                     git_icons = false,
                     file_icons = false,
                 },
+                keymap = {
+                    fzf = {
+                        ["ctrl-d"] = "preview-half-page-down",
+                        ["ctrl-u"] = "preview-half-page-up",
+                    },
+                },
             }
         end,
     }
@@ -94,13 +100,6 @@ return require("packer").startup(function(use)
         "windwp/nvim-autopairs",
         config = function()
             require("nvim-autopairs").setup {}
-        end,
-    }
-    use {
-        "phaazon/hop.nvim",
-        cmd = "HopChar2",
-        config = function()
-            require("hop").setup { keys = "hjkl;sdfga" }
         end,
     }
     use {

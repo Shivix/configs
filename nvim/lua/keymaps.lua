@@ -21,8 +21,6 @@ keymap("n", "<C-l>", "<C-w>l", { noremap = true })
 -- make terminal mode mappings close to insert
 keymap("t", "jk", "<C-\\><C-n>", {})
 
-keymap("n", "s", ":HopChar2<CR>", { noremap = true })
-
 keymap("n", "<leader>s", ":set spell!<CR>", options)
 
 keymap("n", "gd", ":lua vim.lsp.buf.definition()<CR>", options)
@@ -39,3 +37,4 @@ keymap("n", "<leader>r", ":lua vim.lsp.buf.rename()<CR>", options)
 keymap("n", "<leader>ff", ":lua require('fzf-lua').files()<CR>", options)
 keymap("n", "<leader>fg", ":lua require('fzf-lua').live_grep()<CR>", options)
 keymap("n", "<leader>fh", ":lua require('fzf-lua').help_tags()<CR>", options)
+keymap("n", "<leader>fj", ":lua require('fzf-lua').jumps()<CR>", options)

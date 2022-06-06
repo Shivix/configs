@@ -15,18 +15,19 @@ alias ctrc="ctest --test-dir cmake-build-release"
 alias rm="rm -i"
 alias mv="mv -i"
 alias wt="git worktree"
-alias gs="git status"
-alias gf="git fetch upstream"
+alias gstatus="git status"
+alias gfetch="git fetch upstream"
+alias grebase="git rebase -i upstream/master"
 alias tree="tree --gitignore"
 alias rg="rg --smart-case --line-number --fixed-strings"
 
 alias gitformat="git ls-files '*.cpp' '*.hpp' '*.cxx' '*.hxx' | xargs clang-format -i"
+alias gittidy="git ls-files '*.cpp' '*.hpp' '*.cxx' '*.hxx' | xargs clang-tidy"
 
 set -gx scratchfile "$HOME/Documents/Notes/scratch.md"
 alias scratch="nvim $scratchfile"
 
 fzf_key_bindings
-alias fzh="fzf-history-widget"
 
 set -gx NVIM_PIPE "$HOME/.cache/nvim/server.pipe"
 alias nvimr="nvim --listen $NVIM_PIPE"
@@ -41,7 +42,7 @@ set -gx GPG_TTY (tty)
 set -gx fish_greeting "Welcome to fish, the friendly interactive shell"
 set -gx fish_browser "firefox-developer-edition"
 
-set -gx FZF_DEFAULT_OPTS "--tiebreak=index --bind=ctrl-d:page-down,ctrl-u:page-up"
+set -gx FZF_DEFAULT_OPTS "--tiebreak=index --bind=ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up"
 set -gx FZF_DEFAULT_COMMAND "fd --type f --full-path --strip-cwd-prefix"
 
 set -gx RG_PREFIX "rg --column --no-heading --color=always"
@@ -74,37 +75,11 @@ function fzk8slogs --wraps "kubectl logs" --description "Fuzzy search kubectl lo
 end
 alias fzl="fzk8slogs"
 
-function fznvim --description "Fuzzy find files and open them in nvim"
-    set files (fzf --multi)
-    for i in $files
-        set file (fd --absolute-path --type f --full-path $i)
-        nvim --server $NVIM_PIPE --remote-silent $file
-    end
-end
-alias fzn="fznvim"
-
-function fzgrep --description "Grep string and open selection in remote nvim"
-    set old_FZF_DEFAULT_COMMAND $FZF_DEFAULT_COMMAND
-    set FZF_DEFAULT_COMMAND $RG_PREFIX
-    set match (fzf --disabled --ansi \
-        --bind "change:reload:$RG_PREFIX {q} || true" \
-        --delimiter : \
-        --preview "bat --color=always {1} --highlight-line {2}" \
-        --preview-window "up,60%,border-bottom,+{2}+3/3,~3" \
-        | awk -F ":" '{print $1"\n"$2}')
-    set FZF_DEFAULT_COMMAND $old_FZF_DEFAULT_COMMAND
-    if test -z "$match"
-        return
-    end
-    set file (fd --absolute-path --type f --full-path $match[1])
-    nvim --server $NVIM_PIPE --remote-silent $file
-    nvim --server $NVIM_PIPE --remote-send ":$match[2]<CR>"
-end
-alias fzg="fzgrep"
-
 function nvimfzf --description "fzf files and open in new nvim instance"
     if test -z "$argv"
-        set file (fzf)
+        set file (fzf \
+        --preview "bat --color=always {1}" \
+        --preview-window "up,50%,border-bottom")
     else
         set file (fzf --query $argv)
     end
@@ -121,7 +96,7 @@ function nvimrg --description "Grep string and open selection in new nvim instan
     set match (fzf --disabled --ansi --delimiter : \
         --bind "change:reload:$RG_PREFIX {q} || true" \
         --preview "bat --color=always {1} --highlight-line {2}" \
-        --preview-window "up,60%,border-bottom,+{2}+3/3,~3" \
+        --preview-window "up,60%,border-bottom,+{2}" \
         | awk -F ":" '{print $1"\n"$2}')
     set FZF_DEFAULT_COMMAND $old_FZF_DEFAULT_COMMAND
     if test -z "$match"

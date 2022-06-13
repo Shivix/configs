@@ -1,6 +1,17 @@
 starship init fish | source
 zoxide init --cmd=cd fish | source
 
+fzf_key_bindings
+fish_vi_key_bindings
+set fish_cursor_insert line
+bind \cd --erase
+bind \cr -M default "redo"
+bind U -M visual "togglecase-selection"
+bind _ -M default "beginning-of-line"
+for mode in insert replace
+    bind jk -M $mode -m default ""
+end
+
 alias make="make -j12"
 alias md="make --no-print-directory -j12 -C cmake-build-debug"
 alias mr="make --no-print-directory -j12 -C cmake-build-release"
@@ -20,19 +31,21 @@ alias gfetch="git fetch upstream"
 alias grebase="git rebase -i upstream/master"
 alias tree="tree --gitignore"
 alias rg="rg --smart-case --line-number --fixed-strings"
+alias ssh="env TERM=xterm-256color ssh"
 
-alias gitformat="git ls-files '*.cpp' '*.hpp' '*.cxx' '*.hxx' | xargs clang-format -i"
-alias gittidy="git ls-files '*.cpp' '*.hpp' '*.cxx' '*.hxx' | xargs clang-tidy"
+alias gitlscpp="git ls-files '*.cpp' '*.hpp' '*.cxx' '*.hxx'"
+alias gitformat="gitlscpp | xargs clang-format -i"
+alias gittidy="gitlscpp | xargs clang-tidy"
 
 set -gx scratchfile "$HOME/Documents/Notes/scratch.md"
 alias scratch="nvim $scratchfile"
-
-fzf_key_bindings
 
 set -gx NVIM_PIPE "$HOME/.cache/nvim/server.pipe"
 alias nvimr="nvim --listen $NVIM_PIPE"
 alias nvimpipe="nvim --server $NVIM_PIPE --remote"
 alias nvimsend="nvim --server $NVIM_PIPE --remote-send"
+
+alias countincludes="gitcppfiles | xargs cat | awk -F '[\"<>]' '/#include/ { arr[\$2]++ } END { for (i in arr) print i, arr[i] }' | sort"
 
 set -gx VISUAL nvim
 set -gx EDITOR nvim

@@ -4,7 +4,9 @@ zoxide init --cmd=cd fish | source
 fzf_key_bindings
 fish_vi_key_bindings
 set fish_cursor_insert line
-bind \cd --erase
+for mode in insert default
+bind \cd -M $mode ""
+end
 bind \cr -M default "redo"
 bind U -M visual "togglecase-selection"
 bind _ -M default "beginning-of-line"

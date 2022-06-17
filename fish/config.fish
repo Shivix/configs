@@ -37,13 +37,9 @@ alias gitformat="gitlscpp | xargs clang-format -i"
 alias gittidy="gitlscpp | xargs clang-tidy"
 
 alias gamend="git commit --amend"
-alias gcommit="git commit"
-alias gdiff="git diff"
 alias gfetch="git fetch upstream"
 alias gpush="git push origin"
 alias grebase="git rebase -i upstream/master"
-alias gstash="git stash"
-alias gstatus="git status"
 
 set -gx scratchfile "$HOME/Documents/Notes/scratch.md"
 alias scratch="nvim $scratchfile"
@@ -53,7 +49,7 @@ alias nvimr="nvim --listen $NVIM_PIPE"
 alias nvimpipe="nvim --server $NVIM_PIPE --remote"
 alias nvimsend="nvim --server $NVIM_PIPE --remote-send"
 
-alias countincludes="gitcppfiles | xargs cat | awk -F '[\"<>]' '/#include/ { arr[\$2]++ } END { for (i in arr) print i, arr[i] }' | sort"
+alias countincludes="gitlscpp | xargs cat | awk -F '[\"<>]' '/#include/ { arr[\$2]++ } END { for (i in arr) print i, arr[i] }' | sort"
 
 set -gx VISUAL nvim
 set -gx EDITOR nvim
@@ -136,6 +132,26 @@ function update_copyright --description "Increment the copyright year on any mod
     for file in $files
         sed -i "0,/2020\|2021\|2022/ s//2022/g" $file
     end
+end
+
+function wt_status
+    set worktrees (git worktree list | awk '{print $1}')
+    set num_wt (count $worktrees)
+    set prev_dir (pwd)
+    if test $num_wt -le 1
+        return
+    end
+    for worktree in $worktrees
+        if test "$worktree" = "$worktrees[1]"
+            continue
+        end
+        set_color green
+        echo $worktree
+        set_color normal
+        builtin cd $worktree
+        git status -s
+    end
+    cd $prev_dir
 end
 
 # The next line updates PATH for the Google Cloud SDK.

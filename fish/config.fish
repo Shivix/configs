@@ -1,4 +1,3 @@
-starship init fish | source
 zoxide init --cmd=cd fish | source
 
 fzf_key_bindings
@@ -7,6 +6,7 @@ set fish_cursor_insert line
 for mode in insert default
 bind \cd -M $mode ""
 end
+bind k -M default ""
 bind \cr -M default "redo"
 bind U -M visual "togglecase-selection"
 bind _ -M default "beginning-of-line"
@@ -38,6 +38,7 @@ alias gittidy="gitlscpp | xargs clang-tidy"
 
 alias gamend="git commit --amend"
 alias gfetch="git fetch upstream"
+alias gfetchall="git fetch --all --prune --jobs=8"
 alias gpush="git push origin"
 alias grebase="git rebase -i upstream/master"
 
@@ -71,6 +72,18 @@ set -gx PYTHONPATH ~/cpp/python
 fish_add_path /usr/local/go/bin
 fish_add_path ~/go/bin
 fish_add_path ~/.local/bin
+
+function fish_mode_prompt; end
+function fish_prompt
+    set branch (git branch --show-current 2>/dev/null)
+    if test -n "$branch"
+        set branch "| $branch"
+    end
+    printf '%s | %s %s \n%s%s%s$ ' (set_color yellow)(hostname) \
+    (set_color bryellow)(prompt_pwd -d 3 -D 2) \
+    (set_color yellow)$branch \
+    (jobs | awk 'NR==1{ print $1 }') (set_color bryellow)
+end
 
 function rund
     set file (fd -1 --type x --full-path $argv[1] cmake-build-debug)

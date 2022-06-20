@@ -79,7 +79,7 @@ function fish_prompt
     if test -n "$branch"
         set branch "| $branch"
     end
-    printf '%s | %s %s \n%s%s%s$ ' (set_color yellow)(hostname) \
+    printf '%s | %s %s\n%s%s%s$ ' (set_color yellow)(hostname) \
     (set_color bryellow)(prompt_pwd -d 3 -D 2) \
     (set_color yellow)$branch \
     (jobs | awk 'NR==1{ print $1 }') (set_color bryellow)

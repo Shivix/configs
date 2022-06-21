@@ -6,7 +6,6 @@ set fish_cursor_insert line
 for mode in insert default
 bind \cd -M $mode ""
 end
-bind k -M default ""
 bind \cr -M default "redo"
 bind U -M visual "togglecase-selection"
 bind _ -M default "beginning-of-line"
@@ -73,9 +72,12 @@ fish_add_path /usr/local/go/bin
 fish_add_path ~/go/bin
 fish_add_path ~/.local/bin
 
+alias fix2pipe="sed -e 's/\x01/|/g'"
+alias fix_vwap="awk '/MdEntryPx/ { price = \$2 } /MdEntrySize/ { size = \$2; vwap += price * size; total += size; i++; print i\": \" vwap / total }'"
+
 function fish_mode_prompt; end
 function fish_prompt
-    set branch (git branch --show-current 2>/dev/null)
+    set branch (git branch --show-current 2>/dev/null || echo "")
     if test -n "$branch"
         set branch "| $branch"
     end
@@ -93,8 +95,6 @@ end
 function mkcd --wraps mkdir --description "creates directory and cds into it"
     mkdir $argv && cd $argv
 end
-
-alias fix2pipe="sed -e 's/\x01/|/g'"
 
 function config_diff
     nvim -d ~/GitHub/configs/$argv ~/.config/$argv
@@ -162,7 +162,7 @@ function wt_status
         echo $worktree
         set_color normal
         builtin cd $worktree
-        git status -s
+        git status -s --show-stash
     end
     cd $prev_dir
 end

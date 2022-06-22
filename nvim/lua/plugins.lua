@@ -71,7 +71,7 @@ return require("packer").startup(function(use)
             require("fzf-lua").setup {
                 fzf_opts = { ["--layout"] = "default" },
                 winopts = {
-                    border = { "", "─", "", "", "", "", "", "" },
+                    border = { "", "", "", "", "", "", "", "" },
                     fullscreen = true,
                     preview = {
                         default = "bat",
@@ -108,6 +108,16 @@ return require("packer").startup(function(use)
         config = function()
             require("colorizer").setup {}
         end,
+    }
+    use {
+        "j-hui/fidget.nvim",
+        config = function()
+            require("fidget").setup {
+                window = {
+                    blend = 0
+                }
+            }
+        end
     }
     use { "nathom/filetype.nvim" }
     use { "lewis6991/impatient.nvim" }

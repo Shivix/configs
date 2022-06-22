@@ -25,3 +25,10 @@ vim.api.nvim_create_autocmd("BufEnter", {
     callback = deduce_j2_filetype,
     group = "main_group",
 })
+vim.api.nvim_create_autocmd("BufEnter", {
+    pattern = "*.rs",
+    callback = function()
+        vim.opt.errorformat = '%Eerror: %m,'..'%Wwarning: %m,'..'%Inote: %m,'..'%C %#--> %f:%l:%c'
+    end,
+    group = "main_group",
+})

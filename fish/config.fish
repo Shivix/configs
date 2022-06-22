@@ -28,7 +28,7 @@ alias rm="rm -i"
 alias mv="mv -i"
 alias wt="git worktree"
 alias tree="tree --gitignore"
-alias rg="rg --smart-case --line-number --fixed-strings"
+alias rg="rg --smart-case --fixed-strings"
 alias ssh="env TERM=xterm-256color ssh"
 
 alias gitlscpp="git ls-files '*.cpp' '*.hpp' '*.cxx' '*.hxx'"
@@ -61,9 +61,7 @@ set -gx fish_browser "firefox-developer-edition"
 
 set -gx FZF_DEFAULT_OPTS "--tiebreak=index --bind=ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up"
 set -gx FZF_DEFAULT_COMMAND "fd --type f --full-path --strip-cwd-prefix"
-
 set -gx RG_PREFIX "rg --column --no-heading --color=always"
-
 set -gx BAT_THEME "gruvbox-dark"
 set -gx MANPAGER "sh -c 'col -b | nvim -c Man!'"
 
@@ -73,7 +71,6 @@ fish_add_path ~/go/bin
 fish_add_path ~/.local/bin
 
 alias fix2pipe="sed -e 's/\x01/|/g'"
-alias fix_vwap="awk '/MdEntryPx/ { price = \$2 } /MdEntrySize/ { size = \$2; vwap += price * size; total += size; i++; print i\": \" vwap / total }'"
 
 function fish_mode_prompt; end
 function fish_prompt
@@ -85,6 +82,13 @@ function fish_prompt
     (set_color bryellow)(prompt_pwd -d 3 -D 2) \
     (set_color yellow)$branch \
     (jobs | awk 'NR==1{ print $1 }') (set_color bryellow)
+end
+
+function fix_vwap
+    sed "s/\\\u0001/|/g" | prefix | awk -v args=$argv '\
+    /MDEntryPx/ { price = $3 }\
+    /MDEntrySize/ { size = $3; vwap += price * size; total += size; i++;\
+    if (i == args) print vwap / total }'
 end
 
 function rund

@@ -49,8 +49,6 @@ alias nvimr="nvim --listen $NVIM_PIPE"
 alias nvimpipe="nvim --server $NVIM_PIPE --remote"
 alias nvimsend="nvim --server $NVIM_PIPE --remote-send"
 
-alias countincludes="gitlscpp | xargs cat | awk -F '[\"<>]' '/#include/ { arr[\$2]++ } END { for (i in arr) print i, arr[i] }' | sort"
-
 set -gx VISUAL nvim
 set -gx EDITOR nvim
 
@@ -71,6 +69,7 @@ fish_add_path ~/go/bin
 fish_add_path ~/.local/bin
 
 alias fix2pipe="sed -e 's/\x01/|/g'"
+alias count_includes="gitlscpp | xargs cat | awk -F '[\"<>]' '/#include/ { arr[\$2]++ } END { for (i in arr) print i, arr[i] }' | sort"
 
 function fish_mode_prompt; end
 function fish_prompt
@@ -89,6 +88,10 @@ function fix_vwap
     /MDEntryPx/ { price = $3 }\
     /MDEntrySize/ { size = $3; vwap += price * size; total += size; i++;\
     if (i == args) print vwap / total }'
+end
+
+function find_func
+    rg -A 200 $argv | awk '{ print $0; } /^}/ { exit 0 }'
 end
 
 function rund

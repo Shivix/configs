@@ -1,0 +1,4 @@
+CompileFlags:
+  CompilationDatabase: cmake-build-debug-clang/
+Diagnostics:
+  UnusedIncludes: Strict

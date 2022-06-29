@@ -1,15 +1,6 @@
 local keymap = vim.api.nvim_set_keymap
 local options = { noremap = true, silent = true }
 
-function Qfix_toggle()
-    Qfix_open = not Qfix_open
-    if Qfix_open then
-        vim.api.nvim_command("copen 20")
-    else
-        vim.api.nvim_command("cclose")
-    end
-end
-
 vim.api.nvim_create_user_command("Fd", "args `fd <args>`", { nargs = 1 })
 vim.api.nvim_create_user_command("Run", "cexpr execute('!<args>')", { nargs = 1 })
 vim.api.nvim_create_user_command("Todo", "vimgrep /TODO/g %", { nargs = 0 })
@@ -41,7 +32,7 @@ keymap("n", "<C-n>", ":lua vim.diagnostic.goto_prev()<CR>", options)
 keymap("n", "<C-p>", ":lua vim.diagnostic.goto_next()<CR>", options)
 keymap("n", "<leader>e", ":lua vim.diagnostic.open_float()<CR>", options)
 keymap("n", "<leader>qf", ":lua vim.lsp.buf.code_action()<CR>", options)
-keymap("n", "<leader>o", "", { callback = Qfix_toggle })
+keymap("n", "<leader>o", ":lua vim.api.nvim_command('copen 20')<CR>", options)
 keymap("n", "<leader>r", ":lua vim.lsp.buf.rename()<CR>", options)
 
 keymap("n", "<leader>ff", ":lua require('fzf-lua').files()<CR>", options)

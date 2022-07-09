@@ -73,7 +73,7 @@ alias count_includes="gitlscpp | xargs cat | awk -F '[\"<>]' '/#include/ { arr[\
 
 function fish_mode_prompt; end
 function fish_prompt
-    set branch (git branch --show-current 2>/dev/null || echo "")
+    set branch (git branch 2>/dev/null | rg \* | cut -c 3- || echo "")
     if test -n "$branch"
         set branch "| $branch"
     end

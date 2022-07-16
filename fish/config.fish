@@ -71,11 +71,12 @@ fish_add_path ~/.local/bin
 alias fix2pipe="sed -e 's/\x01/|/g'"
 alias count_includes="gitlscpp | xargs cat | awk -F '[\"<>]' '/#include/ { arr[\$2]++ } END { for (i in arr) print i, arr[i] }' | sort"
 alias findrej="awk '\
-/35=V/ && match(\$0, /262=([^\\|]*)/, key) { arr[key[1]] = \$0 }\
-/35=Y/ && match(\$0, /262=([^\\|]*)/, id) {\
-    match(arr[id[1]], /55=([^\\|]*)/, instr);\
-    match(arr[id[1]], /([^:]*)->/, stream);\
-    print stream[1]\" \"instr[1];\
+/35=V/ && match(\$0, /262=([^\x01|]*)/, key) { arr[key[1]] = \$0 }\
+/35=Y/ && match(\$0, /262=([^\x01|]*)/, id) {\
+    match(arr[id[1]], /55=([^\x01|]*)/, instr);\
+    match(arr[id[1]], /([^:]*),/, stream);\
+    match(\$0, /58=([^\x01|]*)/, reason);\
+    printf(\"%s | %s | %s\n\", stream[1], instr[1], reason[1]);\
 }'"
 
 function fish_mode_prompt; end

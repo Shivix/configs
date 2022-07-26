@@ -96,6 +96,15 @@ function fix_vwap
     if (i == args) print vwap / total }'
 end
 
+function quickdiff
+    if test $argv[1] = "store"
+        echo $argv[2..] >"$HOME/.cache/quickdiff_store.txt"
+    else
+        echo $argv[1..] >"$HOME/.cache/quickdiff_compare.txt"
+        delta "$HOME/.cache/quickdiff_store.txt" "$HOME/.cache/quickdiff_compare.txt"
+    end
+end
+
 function find_func
     rg -A 200 $argv | awk '{ print $0; } /^}/ { exit 0 }'
 end

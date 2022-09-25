@@ -29,6 +29,15 @@ vim.api.nvim_create_autocmd("BufEnter", {
     pattern = "*.rs",
     callback = function()
         vim.opt.errorformat = '%Eerror: %m,'..'%Wwarning: %m,'..'%Inote: %m,'..'%C %#--> %f:%l:%c'
+        vim.cmd("packadd termdebug")
+        vim.g.termdebugger = "rust-gdb"
+    end,
+    group = "main_group",
+})
+vim.api.nvim_create_autocmd("BufEnter", {
+    pattern = "*.cpp,*.hpp,*.c,*.h,*.cxx,*.hxx",
+    callback = function()
+        vim.cmd("packadd termdebug")
     end,
     group = "main_group",
 })

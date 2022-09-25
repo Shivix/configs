@@ -2,7 +2,7 @@ local keymap = vim.api.nvim_set_keymap
 local options = { noremap = true, silent = true }
 
 vim.api.nvim_create_user_command("Fd", "args `fd <args>`", { nargs = 1 })
-vim.api.nvim_create_user_command("Run", "cexpr execute('!<args>')", { nargs = 1 })
+vim.api.nvim_create_user_command("QFRun", "cexpr execute('!<args>')", { nargs = 1 })
 vim.api.nvim_create_user_command("Todo", "vimgrep /TODO/g %", { nargs = 0 })
 
 keymap("n", "<C-b>", "<C-^>", options)

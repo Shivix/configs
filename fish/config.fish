@@ -31,6 +31,8 @@ alias tree="tree --gitignore"
 alias rg="rg --smart-case --fixed-strings"
 alias ssh="env TERM=xterm-256color ssh"
 
+alias godebug="go build -gcflags=all='-N -l'"
+
 alias gitlscpp="git ls-files '*.cpp' '*.hpp' '*.cxx' '*.hxx'"
 alias gitformat="gitlscpp | xargs clang-format -i"
 alias gittidy="gitlscpp | xargs clang-tidy"
@@ -122,6 +124,16 @@ function config_diff
     nvim -d ~/GitHub/configs/$argv ~/.config/$argv
 end
 
+function config_repo_diff
+    set files (fd --type file)
+    for file in $files
+        set diff (diff $file ~/.config/$file 2>/dev/null)
+        if test -n "$diff"
+            echo $file
+        end
+    end
+end
+
 function fzk8slogs --wraps "kubectl logs" --description "Fuzzy search kubectl logs"
     kubectl logs $argv | sed -e 's/\x01/|/g' | fzf --delimiter : --preview 'echo {} | cut -f2- -d":" | prefix -v' --preview-window up:50%:wrap --multi
 end
@@ -185,6 +197,7 @@ function wt_status
         set_color normal
         builtin cd $worktree
         git status -s --show-stash
+        git log | awk 'NR == 5'
     end
     cd $prev_dir
 end

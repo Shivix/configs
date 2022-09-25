@@ -28,7 +28,7 @@ alias rm="rm -i"
 alias mv="mv -i"
 alias wt="git worktree"
 alias tree="tree --gitignore"
-alias rg="rg --smart-case --fixed-strings"
+alias rg="rg --smart-case"
 alias ssh="env TERM=xterm-256color ssh"
 
 alias godebug="go build -gcflags=all='-N -l'"
@@ -114,6 +114,13 @@ end
 function rund
     set file (fd -1 --type x --full-path $argv[1] cmake-build-debug)
     $file $argv[2..]
+end
+
+function cat_between
+    awk -v start=$argv[1] -v end=$argv[2] '
+    $0 ~ start { x = 1 }
+    $0 ~ end { x = 0 }
+    { if (x == 1) print $0 }'
 end
 
 function mkcd --wraps mkdir --description "creates directory and cds into it"

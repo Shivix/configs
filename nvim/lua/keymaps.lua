@@ -41,3 +41,6 @@ keymap("n", "<leader>fh", ":lua require('fzf-lua').help_tags()<CR>", options)
 keymap("n", "<leader>fj", ":lua require('fzf-lua').jumps()<CR>", options)
 keymap("n", "<leader>fq", ":lua require('fzf-lua').quickfix()<CR>", options)
 keymap("n", "<leader>fr", ":lua require('fzf-lua').live_grep_resume()<CR>", options)
+
+keymap("n", "<F5>", ":Over<CR>", options)
+keymap("n", "<F6>", ":Step<CR>", options)

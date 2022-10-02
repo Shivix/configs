@@ -109,15 +109,5 @@ return require("packer").startup(function(use)
             require("colorizer").setup {}
         end,
     }
-    use {
-        "j-hui/fidget.nvim",
-        config = function()
-            require("fidget").setup {
-                window = {
-                    blend = 0
-                }
-            }
-        end
-    }
     use { "lewis6991/impatient.nvim" }
 end)

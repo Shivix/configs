@@ -28,6 +28,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 vim.api.nvim_create_autocmd("BufEnter", {
     pattern = "*.rs",
     callback = function()
+        vim.opt.makeprg = "cargo build"
         vim.opt.errorformat = '%Eerror: %m,'..'%Wwarning: %m,'..'%Inote: %m,'..'%C %#--> %f:%l:%c'
         vim.cmd("packadd termdebug")
         vim.g.termdebugger = "rust-gdb"

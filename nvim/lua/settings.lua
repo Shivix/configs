@@ -1,8 +1,4 @@
-vim.g.gruvbox_bold = 0
 vim.g.mapleader = " "
-
-vim.api.nvim_exec("colorscheme gruvbox", true)
-vim.api.nvim_set_hl(0, "Normal", { bg = "NONE" })
 
 vim.opt.clipboard = "unnamed"
 vim.opt.cmdheight = 0

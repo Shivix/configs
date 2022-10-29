@@ -35,7 +35,21 @@ return require("packer").startup(function(use)
             }
         end,
     }
-    use { "Shivix/gruvbox.nvim" }
+    use { "ellisonleao/gruvbox.nvim",
+        config = function()
+            require("gruvbox").setup {
+                bold = false,
+                italic = false,
+                overrides = {
+                    Identifier = { fg = "#ebdbb2" },
+                    Typedef = { fg = "#fabd2f" },
+                    StatusLine = { fg = "#fabd2f", bg = "#32302f", reverse = false },
+                },
+                transparent_mode = true,
+            }
+            vim.api.nvim_exec("colorscheme gruvbox", true)
+        end,
+    }
     use {
         "hrsh7th/nvim-cmp",
         requires = {
@@ -100,13 +114,6 @@ return require("packer").startup(function(use)
         "windwp/nvim-autopairs",
         config = function()
             require("nvim-autopairs").setup {}
-        end,
-    }
-    use {
-        "norcalli/nvim-colorizer.lua",
-        cmd = "ColorizerToggle",
-        config = function()
-            require("colorizer").setup {}
         end,
     }
     use { "lewis6991/impatient.nvim" }

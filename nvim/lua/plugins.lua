@@ -44,6 +44,9 @@ return require("packer").startup(function(use)
                     Identifier = { fg = "#ebdbb2" },
                     Typedef = { fg = "#fabd2f" },
                     StatusLine = { fg = "#fabd2f", bg = "#32302f", reverse = false },
+                    Function = { fg = "#8ec07c" },
+                    Include = { fg = "#d3869b" },
+                    PreProc = { fg = "#d3869b" },
                 },
                 transparent_mode = true,
             }

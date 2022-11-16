@@ -35,7 +35,8 @@ return require("packer").startup(function(use)
             }
         end,
     }
-    use { "ellisonleao/gruvbox.nvim",
+    use {
+        "ellisonleao/gruvbox.nvim",
         config = function()
             require("gruvbox").setup {
                 bold = false,

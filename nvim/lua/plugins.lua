@@ -1,14 +1,19 @@
-local install_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
-
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-    vim.api.nvim_command("!git clone https://github.com/wbthomason/packer.nvim " .. install_path)
-    vim.api.nvim_command("packadd packer.nvim")
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+    vim.fn.system {
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "--single-branch",
+        "https://github.com/folke/lazy.nvim.git",
+        lazypath,
+    }
 end
+vim.opt.runtimepath:prepend(lazypath)
 
-return require("packer").startup(function(use)
-    use { "wbthomason/packer.nvim" }
-    use { "neovim/nvim-lspconfig" }
-    use {
+require("lazy").setup {
+    "neovim/nvim-lspconfig",
+    {
         "nvim-treesitter/nvim-treesitter",
         config = function()
             require("nvim-treesitter.configs").setup {
@@ -34,8 +39,8 @@ return require("packer").startup(function(use)
                 highlight = { enable = true },
             }
         end,
-    }
-    use {
+    },
+    {
         "ellisonleao/gruvbox.nvim",
         config = function()
             require("gruvbox").setup {
@@ -53,10 +58,10 @@ return require("packer").startup(function(use)
             }
             vim.api.nvim_exec("colorscheme gruvbox", true)
         end,
-    }
-    use {
+    },
+    {
         "hrsh7th/nvim-cmp",
-        requires = {
+        dependencies = {
             { "hrsh7th/cmp-nvim-lsp" },
             { "hrsh7th/cmp-nvim-lua" },
             { "hrsh7th/cmp-buffer" },
@@ -81,10 +86,9 @@ return require("packer").startup(function(use)
                 },
             }
         end,
-    }
-    use {
+    },
+    {
         "ibhagwan/fzf-lua",
-        module = "fzf-lua",
         config = function()
             require("fzf-lua").setup {
                 fzf_opts = { ["--layout"] = "default" },
@@ -113,12 +117,11 @@ return require("packer").startup(function(use)
                 },
             }
         end,
-    }
-    use {
+    },
+    {
         "windwp/nvim-autopairs",
         config = function()
             require("nvim-autopairs").setup {}
         end,
-    }
-    use { "lewis6991/impatient.nvim" }
-end)
+    },
+}

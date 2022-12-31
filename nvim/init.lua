@@ -1,8 +1,6 @@
-require("impatient")
-
 require("settings")
+require("plugins")
 require("autocmds")
 require("statusline")
 require("keymaps")
-require("plugins")
 require("lsp")

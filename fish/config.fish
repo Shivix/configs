@@ -51,6 +51,8 @@ alias nvimr="nvim --listen $NVIM_PIPE"
 alias nvimpipe="nvim --server $NVIM_PIPE --remote"
 alias nvimsend="nvim --server $NVIM_PIPE --remote-send"
 
+alias trim_whitespace="git ls-files | xargs sed -i 's/[[:space:]]*\$//'"
+
 set -gx VISUAL nvim
 set -gx EDITOR nvim
 

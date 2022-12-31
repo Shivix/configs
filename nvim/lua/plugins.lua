@@ -11,7 +11,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.runtimepath:prepend(lazypath)
 
-require("lazy").setup {
+require("lazy").setup({
     "neovim/nvim-lspconfig",
     {
         "nvim-treesitter/nvim-treesitter",
@@ -117,5 +117,19 @@ require("lazy").setup {
                 },
             }
         end,
+        lazy = true,
     },
-}
+}, {
+    performance = {
+        rtp = {
+            disabled_plugins = {
+                "gzip",
+                "netrwPlugin",
+                "tarPlugin",
+                "tohtml",
+                "tutor",
+                "zipPlugin",
+            },
+        },
+    },
+})

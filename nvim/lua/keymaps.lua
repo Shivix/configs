@@ -37,7 +37,7 @@ vim.keymap.set("i", "<BS>", function()
     return if_pair_else("<BS><Del>", "<BS>")
 end, expr)
 vim.keymap.set("i", "<CR>", function()
-    return if_pair_else("<CR><ESC>O", "<CR>")
+    return if_pair_else("<CR><ESC>==O", "<CR>")
 end, expr)
 
 vim.api.nvim_create_user_command("Fd", "args `fd <args>`", { nargs = 1 })

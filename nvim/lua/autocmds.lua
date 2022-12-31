@@ -46,7 +46,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
     group = "main_group",
 })
 vim.api.nvim_create_autocmd("BufEnter", {
-    pattern = "*.md",
+    pattern = "scratch.md",
     callback = function()
         vim.opt.foldmethod = "expr"
         vim.wo.foldexpr = "nvim_treesitter#foldexpr()"

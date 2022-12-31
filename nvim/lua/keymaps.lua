@@ -1,5 +1,44 @@
-local keymap = vim.api.nvim_set_keymap
 local options = { noremap = true, silent = true }
+local expr = { expr = true, silent = true }
+local keymap = vim.api.nvim_set_keymap
+
+local key_sets = {
+    ["("] = ")",
+    ["["] = "]",
+    ["{"] = "}",
+}
+
+for open, close in pairs(key_sets) do
+    keymap("i", open, open .. close .. "<Left>", options)
+    vim.keymap.set("i", close, function()
+        local pos = vim.api.nvim_win_get_cursor(0)[2] + 1
+        local next_char = vim.api.nvim_get_current_line():sub(pos, pos)
+
+        if next_char == close then
+            return "<Right>"
+        end
+        return close
+    end, expr)
+end
+
+local function if_pair_else(lhs, rhs)
+    local pos = vim.api.nvim_win_get_cursor(0)[2]
+    local pair = vim.api.nvim_get_current_line():sub(pos, pos + 1)
+
+    for open, close in pairs(key_sets) do
+        if pair == open .. close then
+            return lhs
+        end
+    end
+    return rhs
+end
+
+vim.keymap.set("i", "<BS>", function()
+    return if_pair_else("<BS><Del>", "<BS>")
+end, expr)
+vim.keymap.set("i", "<CR>", function()
+    return if_pair_else("<CR><ESC>O", "<CR>")
+end, expr)
 
 vim.api.nvim_create_user_command("Fd", "args `fd <args>`", { nargs = 1 })
 vim.api.nvim_create_user_command("QFRun", "cexpr execute('!<args>')", { nargs = 1 })

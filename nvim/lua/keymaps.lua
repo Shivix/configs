@@ -1,7 +1,3 @@
-local options = { noremap = true, silent = true }
-local expr = { expr = true, silent = true }
-local keymap = vim.api.nvim_set_keymap
-
 local key_sets = {
     ["("] = ")",
     ["["] = "]",
@@ -9,7 +5,7 @@ local key_sets = {
 }
 
 for open, close in pairs(key_sets) do
-    keymap("i", open, open .. close .. "<Left>", options)
+    vim.keymap.set("i", open, open .. close .. "<Left>", {})
     vim.keymap.set("i", close, function()
         local pos = vim.api.nvim_win_get_cursor(0)[2] + 1
         local next_char = vim.api.nvim_get_current_line():sub(pos, pos)
@@ -18,7 +14,7 @@ for open, close in pairs(key_sets) do
             return "<Right>"
         end
         return close
-    end, expr)
+    end, { expr = true })
 end
 
 local function if_pair_else(lhs, rhs)
@@ -35,51 +31,52 @@ end
 
 vim.keymap.set("i", "<BS>", function()
     return if_pair_else("<BS><Del>", "<BS>")
-end, expr)
+end, { expr = true })
 vim.keymap.set("i", "<CR>", function()
     return if_pair_else("<CR><ESC>==O", "<CR>")
-end, expr)
+end, { expr = true })
 
 vim.api.nvim_create_user_command("Fd", "args `fd <args>`", { nargs = 1 })
 vim.api.nvim_create_user_command("QFRun", "cexpr execute('!<args>')", { nargs = 1 })
 vim.api.nvim_create_user_command("Todo", "vimgrep /TODO/g %", { nargs = 0 })
 
-keymap("n", "<C-b>", "<C-^>", options)
+vim.keymap.set("n", "<C-b>", "<C-^>", {})
 
-keymap("i", "jk", "<Esc>", { noremap = true })
+vim.keymap.set("i", "jk", "<Esc>", {})
 
 -- stay in visual when tabbing
-keymap("v", "<", "<gv", { noremap = true })
-keymap("v", ">", ">gv", { noremap = true })
+vim.keymap.set("v", "<", "<gv", {})
+vim.keymap.set("v", ">", ">gv", {})
 
-keymap("n", "<C-h>", "<C-w>h", { noremap = true })
-keymap("n", "<C-j>", "<C-w>j", { noremap = true })
-keymap("n", "<C-k>", "<C-w>k", { noremap = true })
-keymap("n", "<C-l>", "<C-w>l", { noremap = true })
+vim.keymap.set("n", "<C-h>", "<C-w>h", {})
+vim.keymap.set("n", "<C-j>", "<C-w>j", {})
+vim.keymap.set("n", "<C-k>", "<C-w>k", {})
+vim.keymap.set("n", "<C-l>", "<C-w>l", {})
 
 -- make terminal mode mappings close to insert
-keymap("t", "jk", "<C-\\><C-n>", {})
+vim.keymap.set("t", "jk", "<C-\\><C-n>", {})
 
-keymap("n", "<leader>s", ":set spell!<CR>", options)
+vim.keymap.set("n", "<leader>s", ":set spell!<CR>", {})
 
-keymap("n", "gd", ":lua vim.lsp.buf.definition()<CR>", options)
-keymap("n", "gr", ":lua require('fzf-lua').lsp_references()<CR>", options)
-keymap("n", "gh", ":ClangdSwitchSourceHeader<CR>", options)
-keymap("n", "K", ":lua vim.lsp.buf.hover()<CR>", options)
-keymap("n", "<leader>k", ":lua vim.lsp.buf.signature_help()<CR>", options)
-keymap("n", "<C-n>", ":lua vim.diagnostic.goto_prev()<CR>", options)
-keymap("n", "<C-p>", ":lua vim.diagnostic.goto_next()<CR>", options)
-keymap("n", "<leader>e", ":lua vim.diagnostic.open_float()<CR>", options)
-keymap("n", "<leader>qf", ":lua vim.lsp.buf.code_action()<CR>", options)
-keymap("n", "<leader>o", ":lua vim.api.nvim_command('copen 20')<CR>", options)
-keymap("n", "<leader>r", ":lua vim.lsp.buf.rename()<CR>", options)
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, {})
+vim.keymap.set("n", "gr", require("fzf-lua").lsp_references, {})
+vim.keymap.set("n", "gh", ":ClangdSwitchSourceHeader<CR>", {})
+vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
+vim.keymap.set("n", "<leader>k", vim.lsp.buf.signature_help, {})
+vim.keymap.set("n", "<C-n>", vim.diagnostic.goto_prev, {})
+vim.keymap.set("n", "<C-p>", vim.diagnostic.goto_next, {})
+vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, {})
+vim.keymap.set("n", "<leader>qf", vim.lsp.buf.code_action, {})
+vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, {})
+vim.keymap.set("n", "<leader>ql", ":copen 20<CR>", {})
 
-keymap("n", "<leader>ff", ":lua require('fzf-lua').files()<CR>", options)
-keymap("n", "<leader>fg", ":lua require('fzf-lua').live_grep()<CR>", options)
-keymap("n", "<leader>fh", ":lua require('fzf-lua').help_tags()<CR>", options)
-keymap("n", "<leader>fj", ":lua require('fzf-lua').jumps()<CR>", options)
-keymap("n", "<leader>fq", ":lua require('fzf-lua').quickfix()<CR>", options)
-keymap("n", "<leader>fr", ":lua require('fzf-lua').live_grep_resume()<CR>", options)
+local fzf = require("fzf-lua")
+vim.keymap.set("n", "<leader>ff", fzf.files, {})
+vim.keymap.set("n", "<leader>fg", fzf.live_grep, {})
+vim.keymap.set("n", "<leader>fh", fzf.help_tags, {})
+vim.keymap.set("n", "<leader>fj", fzf.jumps, {})
+vim.keymap.set("n", "<leader>fq", fzf.quickfix, {})
+vim.keymap.set("n", "<leader>fr", fzf.live_grep_resume, {})
 
-keymap("n", "<F5>", ":Over<CR>", options)
-keymap("n", "<F6>", ":Step<CR>", options)
+vim.keymap.set("n", "<F5>", ":Over<CR>", {})
+vim.keymap.set("n", "<F6>", ":Step<CR>", {})

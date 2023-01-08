@@ -17,22 +17,22 @@ require("lazy").setup({
         "nvim-treesitter/nvim-treesitter",
         config = function()
             require("nvim-treesitter.configs").setup {
-                --install cpp through TSInstallFromGammar
                 ensure_installed = {
-                    "lua",
-                    "rust",
-                    "toml",
-                    "go",
-                    "gomod",
-                    "fish",
                     "bash",
                     "cmake",
+                    "cpp",
                     "dockerfile",
+                    "fish",
+                    "go",
+                    "gomod",
                     "latex",
+                    "lua",
                     "make",
                     "markdown",
                     "python",
                     "regex",
+                    "rust",
+                    "toml",
                     "vim",
                     "yaml",
                 },
@@ -117,7 +117,6 @@ require("lazy").setup({
                 },
             }
         end,
-        lazy = true,
     },
 }, {
     performance = {

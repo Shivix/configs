@@ -2,6 +2,7 @@ vim.g.mapleader = " "
 
 vim.opt.clipboard = "unnamed"
 vim.opt.cmdheight = 0
+vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
 vim.opt.cursorline = true
 vim.opt.expandtab = true
 vim.opt.icm = "split"

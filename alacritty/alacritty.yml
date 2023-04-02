@@ -52,9 +52,6 @@ window:
   padding:
     x: 2
     y: 2
-  position:
-    x: 550
-    y: 200
   opacity: 0.88
   disable_vsync: true
 

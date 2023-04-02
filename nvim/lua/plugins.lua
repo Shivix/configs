@@ -45,7 +45,11 @@ require("lazy").setup({
         config = function()
             require("gruvbox").setup {
                 bold = false,
-                italic = false,
+                italic = {
+                    strings = false,
+                    operators = false,
+                    comments = false,
+                },
                 overrides = {
                     Identifier = { fg = "#ebdbb2" },
                     Typedef = { fg = "#fabd2f" },

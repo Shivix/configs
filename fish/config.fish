@@ -42,6 +42,7 @@ alias gfetch="git fetch upstream"
 alias gfetchall="git fetch --all --prune --jobs=8"
 alias gpush="git push origin"
 alias grebase="git rebase -i upstream/master"
+alias gs="git status"
 
 set -gx scratchfile "$HOME/Documents/Notes/scratch.md"
 alias scratch="nvim $scratchfile"
@@ -206,9 +207,16 @@ function wt_status
         set_color normal
         builtin cd $worktree
         git status -s --show-stash
+        git submodule foreach git branch --show-current | rg -v Entering
         git log | awk 'NR == 5'
     end
     cd $prev_dir
+end
+
+function gstashrebase
+    git stash
+    grebase
+    git stash pop
 end
 
 # The next line updates PATH for the Google Cloud SDK.

@@ -73,7 +73,7 @@ fish_add_path /usr/local/go/bin
 fish_add_path ~/go/bin
 fish_add_path ~/.local/bin
 
-alias fix2pipe="sed -e 's/\x01/|/g'"
+alias fix2pipe="sed 's/\x01/|/g'"
 alias count_includes="gitlscpp | xargs cat | awk -F '[\"<>]' '/#include/ { arr[\$2]++ } END { for (i in arr) print i, arr[i] }' | sort"
 alias findrej="awk '\
 /35=V/ && match(\$0, /262=([^\x01|]*)/, key) { arr[key[1]] = \$0 }\
@@ -145,7 +145,7 @@ function config_repo_diff
 end
 
 function fzk8slogs --wraps "kubectl logs" --description "Fuzzy search kubectl logs"
-    kubectl logs $argv | sed -e 's/\x01/|/g' | fzf --delimiter : --preview 'echo {} | cut -f2- -d":" | prefix -v' --preview-window up:50%:wrap --multi
+    kubectl logs $argv | sed 's/\x01/|/g' | fzf --delimiter : --preview 'echo {} | cut -f2- -d":" | prefix -v' --preview-window up:50%:wrap --multi
 end
 alias fzl="fzk8slogs"
 
@@ -187,7 +187,7 @@ function update_copyright --description "Increment the copyright year on any mod
         set files (git show $argv --pretty="" --name-only --ignore-submodules)
     end
     for file in $files
-        sed -i "0,/2020\|2021\|2022/ s//2022/g" $file
+        sed -i "0,/2020\|2021\|2022/ s//2023/g" $file
     end
 end
 
@@ -217,6 +217,21 @@ function gstashrebase
     git stash
     grebase
     git stash pop
+end
+
+function docker-gdb
+    set container_id (docker container ps -a | rg $argv | awk '{print $1; exit}')
+    docker exec -i -t $container_id gdb -p 1
+end
+
+function step
+    cargo run --bin moxi_step -- $argv
+    src
+end
+function src
+    set source (cargo run --bin moxi_source) 
+    set source (string split ":" $source)
+    bat $source[1] --highlight-line $source[2]
 end
 
 # The next line updates PATH for the Google Cloud SDK.

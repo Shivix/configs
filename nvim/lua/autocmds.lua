@@ -35,6 +35,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
             .. "%C %#--> %f:%l:%c"
         vim.cmd("packadd termdebug")
         vim.g.termdebugger = "rust-gdb"
+        Formatter = "rustfmt"
     end,
     group = "main_group",
 })
@@ -42,6 +43,23 @@ vim.api.nvim_create_autocmd("BufEnter", {
     pattern = "*.cpp,*.hpp,*.c,*.h,*.cxx,*.hxx",
     callback = function()
         vim.cmd("packadd termdebug")
+        Formatter = "clang-format -i"
+    end,
+    group = "main_group",
+})
+vim.api.nvim_create_autocmd("BufEnter", {
+    pattern = "*.go",
+    callback = function()
+        vim.cmd("packadd termdebug")
+        --vim.g.termdebugger = "dlv"
+        Formatter = "go fmt"
+    end,
+    group = "main_group",
+})
+vim.api.nvim_create_autocmd("BufEnter", {
+    pattern = "*.lua",
+    callback = function()
+        Formatter = "stylua"
     end,
     group = "main_group",
 })

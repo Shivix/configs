@@ -43,6 +43,9 @@ vim.api.nvim_create_user_command("Blame", function()
     local pos = vim.api.nvim_win_get_cursor(0)[1]
     vim.cmd("!git blame % -L" .. pos .. "," .. pos)
 end , { nargs = 0 })
+vim.api.nvim_create_user_command("Format", function()
+    vim.cmd("!" .. Formatter .. " %")
+end , { nargs = 0 })
 
 vim.keymap.set("n", "<C-b>", "<C-^>", {})
 

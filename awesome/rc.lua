@@ -6,7 +6,6 @@ pcall(require, "luarocks.loader")
 local gears = require("gears")
 local awful = require("awful")
 require("awful.autofocus")
-awful.spawn.with_shell("picom -b --config ~/.config/picom/picom.conf")
 -- Widget and layout library
 local wibox = require("wibox")
 -- Theme handling library
@@ -51,8 +50,7 @@ end
 
 beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
 
--- This is used later as the default terminal and editor to run.
-local terminal = "alacritty"
+local terminal = "st"
 local editor = os.getenv("EDITOR")
 local filemanager = "thunar"
 
@@ -275,7 +273,7 @@ local globalkeys = gears.table.join(
 
     -- Prompt
     awful.key({ modkey }, "r", function()
-        awful.spawn("dmenu_run -sf '#222222' -sb '#FF8F00'")
+        awful.spawn("dmenu_run -sf '#161616' -sb '#ebdbb2'")
     end, { description = "run dmenu", group = "launcher" }),
 
     awful.key({ modkey }, "x", function()

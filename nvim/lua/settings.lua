@@ -1,8 +1,6 @@
 vim.g.mapleader = " "
 
 vim.opt.clipboard = "unnamed"
-vim.opt.cmdheight = 0
-vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
 vim.opt.cursorline = true
 vim.opt.expandtab = true
 vim.opt.icm = "split"
@@ -13,6 +11,7 @@ vim.opt.mouse = nil
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.shiftwidth = 4
+vim.opt.showmode = false
 vim.opt.signcolumn = "no"
 vim.opt.smartcase = true
 vim.opt.smartindent = true

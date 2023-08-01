@@ -1,5 +1,11 @@
 zoxide init --cmd=cd fish | source
 
+if status is-login
+    if test -z "$DISPLAY" -a "$XDG_VTNR" = 1
+        #exec startx
+    end
+end
+
 fzf_key_bindings
 fish_vi_key_bindings
 set fish_cursor_insert line
@@ -13,53 +19,53 @@ for mode in insert replace
     bind jk -M $mode -m default ""
 end
 
-alias make="make -j12"
-alias md="make --no-print-directory -j12 -C cmake-build-debug"
-alias mr="make --no-print-directory -j12 -C cmake-build-release"
-alias mdc="make --no-print-directory -j12 -C cmake-build-debug-clang"
-alias mrc="make --no-print-directory -j12 -C cmake-build-release-clang"
+alias make "make -j12"
+alias md "make --no-print-directory -j12 -C cmake-build-debug"
+alias mr "make --no-print-directory -j12 -C cmake-build-release"
+alias mdc "make --no-print-directory -j12 -C cmake-build-debug-clang"
+alias mrc "make --no-print-directory -j12 -C cmake-build-release-clang"
 
-alias ctd="ctest --test-dir cmake-build-debug"
-alias ctr="ctest --test-dir cmake-build-release"
-alias ctdc="ctest --test-dir cmake-build-debug-clang"
-alias ctrc="ctest --test-dir cmake-build-release-clang"
+alias ctd "ctest --test-dir cmake-build-debug"
+alias ctr "ctest --test-dir cmake-build-release"
+alias ctdc "ctest --test-dir cmake-build-debug-clang"
+alias ctrc "ctest --test-dir cmake-build-release-clang"
 
-alias rm="rm -i"
-alias mv="mv -i"
-alias wt="git worktree"
-alias tree="tree --gitignore"
-alias rg="rg --smart-case"
-alias ssh="env TERM=xterm-256color ssh"
+alias rm "rm -i"
+alias mv "mv -i"
+alias wt "git worktree"
+alias tree "tree --gitignore"
+alias rg "rg --smart-case"
+alias ssh "env TERM=xterm-256color ssh"
 
-alias godebug="go build -gcflags=all='-N -l'"
+alias godebug "go build -gcflags=all='-N -l'"
 
-alias gitlscpp="git ls-files '*.cpp' '*.hpp' '*.cxx' '*.hxx'"
-alias gitformat="gitlscpp | xargs clang-format -i"
-alias gittidy="gitlscpp | xargs clang-tidy"
+alias gitlscpp "git ls-files '*.cpp' '*.hpp' '*.cxx' '*.hxx'"
+alias gitformat "gitlscpp | xargs clang-format -i"
+alias gittidy "gitlscpp | xargs clang-tidy"
 
-alias gamend="git commit --amend"
-alias gfetch="git fetch upstream"
-alias gfetchall="git fetch --all --prune --jobs=8"
-alias gpush="git push origin"
-alias grebase="git rebase -i upstream/master"
-alias gs="git status"
+alias gamend "git commit --amend"
+alias gfetch "git fetch upstream"
+alias gfetchall "git fetch --all --prune --jobs=8"
+alias gpush "git push origin"
+alias grebase "git rebase -i upstream/master"
+alias gs "git status"
 
 set -gx scratchfile "$HOME/Documents/Notes/scratch.md"
-alias scratch="nvim $scratchfile"
+alias scratch "nvim $scratchfile"
 
 set -gx NVIM_PIPE "$HOME/.cache/nvim/server.pipe"
-alias nvimr="nvim --listen $NVIM_PIPE"
-alias nvimpipe="nvim --server $NVIM_PIPE --remote"
-alias nvimsend="nvim --server $NVIM_PIPE --remote-send"
+alias nvimr "nvim --listen $NVIM_PIPE"
+alias nvimpipe "nvim --server $NVIM_PIPE --remote"
+alias nvimsend "nvim --server $NVIM_PIPE --remote-send"
 
-alias trim_whitespace="git ls-files | xargs sed -i 's/[[:space:]]*\$//'"
+alias trim_whitespace "git ls-files | xargs sed -i 's/[[:space:]]*\$//'"
 
 set -gx VISUAL nvim
 set -gx EDITOR nvim
 
 set -gx GPG_TTY (tty)
 
-set -gx fish_greeting "Welcome to fish, the friendly interactive shell"
+set -gx fish_greeting
 set -gx fish_browser "firefox-developer-edition"
 
 set -gx FZF_DEFAULT_OPTS "--tiebreak=index --bind=ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up"
@@ -68,14 +74,13 @@ set -gx RG_PREFIX "rg --column --no-heading --color=always"
 set -gx BAT_THEME "gruvbox-dark"
 set -gx MANPAGER "sh -c 'col -b | nvim -c Man!'"
 
-set -gx PYTHONPATH ~/cpp/python
 fish_add_path /usr/local/go/bin
 fish_add_path ~/go/bin
 fish_add_path ~/.local/bin
 
-alias fix2pipe="sed 's/\x01/|/g'"
-alias count_includes="gitlscpp | xargs cat | awk -F '[\"<>]' '/#include/ { arr[\$2]++ } END { for (i in arr) print i, arr[i] }' | sort"
-alias findrej="awk '\
+alias fix2pipe "sed 's/\x01/|/g'"
+alias count_includes "gitlscpp | xargs cat | awk -F '[\"<>]' '/#include/ { arr[\$2]++ } END { for (i in arr) print i, arr[i] }' | sort"
+alias findrej "awk '\
 /35=V/ && match(\$0, /262=([^\x01|]*)/, key) { arr[key[1]] = \$0 }\
 /35=Y/ && match(\$0, /262=([^\x01|]*)/, id) {\
     match(arr[id[1]], /55=([^\x01|]*)/, instr);\
@@ -147,7 +152,7 @@ end
 function fzk8slogs --wraps "kubectl logs" --description "Fuzzy search kubectl logs"
     kubectl logs $argv | sed 's/\x01/|/g' | fzf --delimiter : --preview 'echo {} | cut -f2- -d":" | prefix -v' --preview-window up:50%:wrap --multi
 end
-alias fzl="fzk8slogs"
+alias fzl "fzk8slogs"
 
 function nvimfzf --description "fzf files and open in new nvim instance"
     if test -z "$argv"
@@ -162,7 +167,7 @@ function nvimfzf --description "fzf files and open in new nvim instance"
     end
     nvim $file
 end
-alias nvf="nvimfzf"
+alias nvf "nvimfzf"
 
 function nvimrg --description "Grep string and open selection in new nvim instance"
     set old_FZF_DEFAULT_COMMAND $FZF_DEFAULT_COMMAND
@@ -179,7 +184,7 @@ function nvimrg --description "Grep string and open selection in new nvim instan
     set file (fd --absolute-path --type f --full-path $match[1])
     nvim +$match[2] $file
 end
-alias nvrg="nvimrg"
+alias nvrg "nvimrg"
 
 function update_copyright --description "Increment the copyright year on any modified files"
     set files (git diff --name-only --ignore-submodules)
@@ -214,9 +219,12 @@ function wt_status
 end
 
 function gstashrebase
+    set stashed (git status --short)
     git stash
     grebase
-    git stash pop
+    if test -z "$stashed"
+        git stash pop
+    end
 end
 
 function docker-gdb
@@ -233,6 +241,3 @@ function src
     set source (string split ":" $source)
     bat $source[1] --highlight-line $source[2]
 end
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f "$HOME/google-cloud-sdk/path.fish.inc" ]; . "$HOME/google-cloud-sdk/path.fish.inc"; end

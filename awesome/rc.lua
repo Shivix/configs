@@ -273,7 +273,7 @@ local globalkeys = gears.table.join(
 
     -- Prompt
     awful.key({ modkey }, "r", function()
-        awful.spawn("dmenu_run -sf '#161616' -sb '#ebdbb2'")
+        awful.spawn("dmenu_run -sf '#161616' -sb '#efe2c1'")
     end, { description = "run dmenu", group = "launcher" }),
 
     awful.key({ modkey }, "x", function()

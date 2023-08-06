@@ -5,7 +5,7 @@ env:
 colors:
   primary:
     background: "#161616"
-    foreground: "#ebdbb2"
+    foreground: "#efe2c1"
 
   normal:
     black:   "#161616"
@@ -25,7 +25,7 @@ colors:
     blue:    "#83a598"
     magenta: "#d3869b"
     cyan:    "#8ec07c"
-    white:   "#ebdbb2"
+    white:   "#efe2c1"
 
 font:
   normal:

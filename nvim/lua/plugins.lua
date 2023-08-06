@@ -1,5 +1,5 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
     vim.fn.system {
         "git",
         "clone",
@@ -17,6 +17,7 @@ require("lazy").setup({
         "nvim-treesitter/nvim-treesitter",
         config = function()
             require("nvim-treesitter.configs").setup {
+                auto_install = false,
                 ensure_installed = {
                     "bash",
                     "cmake",
@@ -51,7 +52,7 @@ require("lazy").setup({
                     comments = false,
                 },
                 overrides = {
-                    Identifier = { fg = "#ebdbb2" },
+                    Identifier = { fg = "#efe2c1" },
                     Typedef = { fg = "#fabd2f" },
                     StatusLine = { fg = "#fabd2f", bg = "#32302f", reverse = false },
                     Function = { fg = "#8ec07c" },
@@ -60,7 +61,7 @@ require("lazy").setup({
                 },
                 transparent_mode = true,
             }
-            vim.api.nvim_exec("colorscheme gruvbox", true)
+            vim.api.nvim_exec2("colorscheme gruvbox", { output = true })
         end,
     },
     {

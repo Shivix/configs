@@ -47,7 +47,6 @@ alias gamend "git commit --amend"
 alias gfetch "git fetch upstream"
 alias gfetchall "git fetch --all --prune --jobs=8"
 alias gpush "git push origin"
-alias grebase "git rebase -i upstream/master"
 alias gs "git status"
 
 set -gx scratchfile "$HOME/Documents/Notes/scratch.md"
@@ -218,11 +217,13 @@ function wt_status
     cd $prev_dir
 end
 
-function gstashrebase
-    set stashed (git status --short)
-    git stash
-    grebase
-    if test -z "$stashed"
+function grebase
+    set should_stash (git status --short --ignore-submodules --untracked=no)
+    if test -n "$should_stash"
+        git stash
+    end
+    git rebase -i upstream/master
+    if test -n "$should_stash"
         git stash pop
     end
 end

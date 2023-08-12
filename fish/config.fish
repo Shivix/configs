@@ -71,7 +71,7 @@ set -gx FZF_DEFAULT_OPTS "--tiebreak=index --bind=ctrl-d:preview-half-page-down,
 set -gx FZF_DEFAULT_COMMAND "fd --type f --full-path --strip-cwd-prefix"
 set -gx RG_PREFIX "rg --column --no-heading --color=always"
 set -gx BAT_THEME "gruvbox-dark"
-set -gx MANPAGER "sh -c 'col -b | nvim -c Man!'"
+set -gx MANPAGER "nvim -c Man!"
 
 fish_add_path /usr/local/go/bin
 fish_add_path ~/go/bin
@@ -222,7 +222,8 @@ function grebase
     if test -n "$should_stash"
         git stash
     end
-    git rebase -i upstream/master
+    set master (git branch -l master main | cut -c 3-)
+    git rebase -i upstream/$master
     if test -n "$should_stash"
         git stash pop
     end

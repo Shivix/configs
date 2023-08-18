@@ -168,22 +168,7 @@ function nvimfzf --description "fzf files and open in new nvim instance"
 end
 alias nvf "nvimfzf"
 
-function nvimrg --description "Grep string and open selection in new nvim instance"
-    set old_FZF_DEFAULT_COMMAND $FZF_DEFAULT_COMMAND
-    set FZF_DEFAULT_COMMAND $RG_PREFIX
-    set match (fzf --disabled --ansi --delimiter : \
-        --bind "change:reload:$RG_PREFIX {q} || true" \
-        --preview "bat --color=always {1} --highlight-line {2}" \
-        --preview-window "up,60%,border-bottom,+{2}" \
-        | awk -F ":" '{print $1"\n"$2}')
-    set FZF_DEFAULT_COMMAND $old_FZF_DEFAULT_COMMAND
-    if test -z "$match"
-        return
-    end
-    set file (fd --absolute-path --type f --full-path $match[1])
-    nvim +$match[2] $file
-end
-alias nvrg "nvimrg"
+alias nvrg "nvim -c lua require'fzf-lua'.live_grep()"
 
 function update_copyright --description "Increment the copyright year on any modified files"
     set files (git diff --name-only --ignore-submodules)

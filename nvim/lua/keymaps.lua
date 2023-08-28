@@ -50,6 +50,7 @@ end, { nargs = 0 })
 vim.keymap.set("n", "<C-b>", "<C-^>", {})
 
 vim.keymap.set("i", "jk", "<Esc>", {})
+vim.keymap.set("i", "kj", "<Esc>", {})
 
 -- stay in visual when tabbing
 vim.keymap.set("v", "<", "<gv", {})

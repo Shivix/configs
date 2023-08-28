@@ -17,6 +17,7 @@ bind U -M visual "togglecase-selection"
 bind _ -M default "beginning-of-line"
 for mode in insert replace
     bind jk -M $mode -m default ""
+    bind kj -M $mode -m default ""
 end
 
 alias make "make -j12"
@@ -168,7 +169,7 @@ function nvimfzf --description "fzf files and open in new nvim instance"
 end
 alias nvf "nvimfzf"
 
-alias nvrg "nvim -c lua require'fzf-lua'.live_grep()"
+alias nvrg "nvim -c \"lua require('fzf-lua').live_grep()\""
 
 function update_copyright --description "Increment the copyright year on any modified files"
     set files (git diff --name-only --ignore-submodules)

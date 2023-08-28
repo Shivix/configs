@@ -32,7 +32,7 @@ function StatusLine()
     return " "
         .. pretty_mode
         .. lsp_info
-        .. " |%m %.40F %= %Y | %l:%c "
+        .. " |%m %<%.40F %= %Y | %l:%c "
 end
 
 vim.opt.statusline = "%!luaeval('StatusLine()')"

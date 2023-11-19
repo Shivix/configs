@@ -9,4 +9,5 @@ sed -i 's/\x0//g' "$tmpfile"
 prompt="$(grep "\S" "$tmpfile" | tail -n 1 | sed 's/^\s*//')"
 chosen="$(grep -F "$prompt" "$tmpfile" | sed '$d' | tac | dmenu -sf "#161616" -sb "#efe2c1" -p "Copy which command's output?" -i -l 10 | sed 's/[^^]/[&]/g; s/\^/\\^/g')"
 prompt="$(echo "$prompt" | sed 's/[^^]/[&]/g; s/\^/\\^/g')"
-awk "/^$chosen$/{p=1;print;next} p&&/$prompt/{p=0};p" "$tmpfile" | sed '$d' | xsel --input --clipboard
+# This will print only the first occurance of chosen
+awk "/^$chosen$/{p=1;print;next} p&&/$prompt/{exit};p" "$tmpfile" | sed '$d' | xsel --input --clipboard

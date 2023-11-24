@@ -76,7 +76,6 @@ vim.keymap.set("n", "<C-p>", vim.diagnostic.goto_next, {})
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, {})
 vim.keymap.set("n", "<leader>qf", vim.lsp.buf.code_action, {})
 vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, {})
-vim.keymap.set("n", "<leader>ql", ":copen 20<CR>", {})
 
 local fzf = require("fzf-lua")
 vim.keymap.set("n", "<leader>ff", fzf.files, {})

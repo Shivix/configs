@@ -6,18 +6,21 @@ if status is-login
     end
 end
 
-fzf_key_bindings
-fish_vi_key_bindings
-set fish_cursor_insert line
-for mode in insert default
-bind \cd -M $mode ""
-end
-bind \cr -M default "redo"
-bind U -M visual "togglecase-selection"
-bind _ -M default "beginning-of-line"
-for mode in insert replace
-    bind jk -M $mode -m default ""
-    bind kj -M $mode -m default ""
+if status --is-interactive
+    fzf_key_bindings
+    fish_vi_key_bindings
+    set fish_cursor_insert line
+    for mode in insert default
+        bind \cl -M $mode ""
+        bind \cd -M $mode ""
+    end
+    bind \cr -M default "redo"
+    bind U -M visual "togglecase-selection"
+    bind _ -M default "beginning-of-line"
+    for mode in insert replace
+        bind jk -M $mode -m default ""
+        bind kj -M $mode -m default ""
+    end
 end
 
 alias make "make -j12"

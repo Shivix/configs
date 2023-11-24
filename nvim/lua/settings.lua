@@ -19,6 +19,7 @@ vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.tabstop = 4
 vim.opt.undofile = true
+vim.g.c_syntax_for_h = true
 
 -- nvim can auto detect this on startup, we do it manually to improve startup time
 vim.g.clipboard = {

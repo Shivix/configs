@@ -218,6 +218,30 @@ function grebase
     end
 end
 
+function condense_logs
+    awk 'match($0, /[\||](35=[^|]+)[\||]/, capture) {
+        if (!(capture[1] in fix_messages)) {
+            fix_messages[capture[1]] = 1
+        } else {
+            fix_messages[capture[1]] += 1
+        }
+        next
+    }
+    {
+        # strip time stamp
+        sub(/[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3} */, "", $0)
+        if (!($0 in array)) {
+            array[$0] = 1
+        } else {
+            array[$0] += 1
+        }
+     }
+    END {
+        for (i in fix_messages) { print i, fix_messages[i] }
+        for (i in array) { print i, array[i] }
+    }'
+end
+
 function docker-gdb
     set container_id (docker container ps -a | rg $argv | awk '{print $1; exit}')
     docker exec -i -t $container_id gdb -p 1

@@ -58,6 +58,7 @@ require("lazy").setup({
                     Function = { fg = "#8ec07c" },
                     Include = { fg = "#d3869b" },
                     PreProc = { fg = "#d3869b" },
+                    Delimiter = { fg = "#fe8019" },
                 },
                 transparent_mode = true,
             }

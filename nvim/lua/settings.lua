@@ -7,6 +7,8 @@ vim.opt.icm = "split"
 vim.opt.ignorecase = true
 vim.opt.iskeyword:remove("_")
 vim.opt.laststatus = 3
+vim.opt.list = true
+vim.opt.listchars = "tab:» ,trail:*"
 vim.opt.mouse = nil
 vim.opt.number = true
 vim.opt.relativenumber = true

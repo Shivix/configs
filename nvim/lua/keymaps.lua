@@ -44,6 +44,10 @@ vim.api.nvim_create_user_command("Blame", function()
     vim.cmd("!git blame % -L" .. pos .. "," .. pos)
 end, { nargs = 0 })
 vim.api.nvim_create_user_command("Format", function()
+    if vim.bo.modified then
+        print("Please save the buffer before formatting")
+        return
+    end
     vim.cmd("!" .. Formatter .. " %")
 end, { nargs = 0 })
 
@@ -84,6 +88,3 @@ vim.keymap.set("n", "<leader>fh", fzf.help_tags, {})
 vim.keymap.set("n", "<leader>fj", fzf.jumps, {})
 vim.keymap.set("n", "<leader>fq", fzf.quickfix, {})
 vim.keymap.set("n", "<leader>fr", fzf.live_grep_resume, {})
-
-vim.keymap.set("n", "<F5>", ":Over<CR>", {})
-vim.keymap.set("n", "<F6>", ":Step<CR>", {})

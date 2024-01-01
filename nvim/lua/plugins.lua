@@ -35,6 +35,7 @@ require("lazy").setup({
                     "rust",
                     "toml",
                     "vim",
+                    "vimdoc",
                     "yaml",
                 },
                 highlight = { enable = true },
@@ -86,7 +87,12 @@ require("lazy").setup({
                     ["<CR>"] = cmp.config.disable,
                 },
                 sources = {
-                    { name = "nvim_lsp" },
+                    {
+                        name = "nvim_lsp",
+                        entry_filter = function(entry)
+                            return entry:get_kind() ~= cmp.lsp.CompletionItemKind.Snippet
+                        end,
+                    },
                     { name = "nvim_lua" },
                     { name = "buffer" },
                     { name = "path" },

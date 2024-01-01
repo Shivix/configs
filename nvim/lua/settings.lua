@@ -3,6 +3,8 @@ vim.g.mapleader = " "
 vim.opt.clipboard = "unnamed"
 vim.opt.cursorline = true
 vim.opt.expandtab = true
+vim.opt.grepformat = "%f:%l:%c:%m"
+vim.opt.grepprg = "rg --vimgrep"
 vim.opt.icm = "split"
 vim.opt.ignorecase = true
 vim.opt.iskeyword:remove("_")

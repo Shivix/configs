@@ -4,7 +4,9 @@ local dpi = xresources.apply_dpi
 
 local theme = {}
 
-theme.font = "sans 8"
+theme.font = "sans 10"
+theme.hotkeys_font = "sans 12"
+theme.hotkeys_description_font = "sans 12"
 
 theme.bg_normal = "#161616"
 theme.bg_focus = "#333333cb"

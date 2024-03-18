@@ -1,6 +1,10 @@
 local function deduce_j2_filetype()
     local filename = vim.api.nvim_buf_get_name(0)
     local _, dot_count = filename:gsub("[.]", "")
+    if dot_count == 1 then
+        vim.bo.filetype = "j2"
+        return
+    end
     local begin_pos = 0
     for _ = 1, dot_count - 1 do
         begin_pos = filename:find("[.]", begin_pos) + 1

@@ -1,5 +1,3 @@
-zoxide init --cmd=cd fish | source
-
 if status is-login
     if test -z "$DISPLAY" -a "$XDG_VTNR" = 1
         #exec startx
@@ -22,6 +20,8 @@ if status --is-interactive
         bind kj -M $mode -m default ""
     end
 end
+
+zua.lua --init | source
 
 alias make "make -j12"
 alias md "make --no-print-directory -j12 -C cmake-build-debug"

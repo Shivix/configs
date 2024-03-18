@@ -36,21 +36,6 @@ vim.keymap.set("i", "<CR>", function()
     return if_pair_else("<CR><ESC>==O", "<CR>")
 end, { expr = true })
 
-vim.api.nvim_create_user_command("Fd", "args `fd <args>`", { nargs = 1 })
-vim.api.nvim_create_user_command("QFRun", "cexpr execute('!<args>')", { nargs = 1 })
-vim.api.nvim_create_user_command("Todo", "vimgrep /TODO/g %", { nargs = 0 })
-vim.api.nvim_create_user_command("Blame", function()
-    local pos = vim.api.nvim_win_get_cursor(0)[1]
-    vim.cmd("!git blame % -L" .. pos .. "," .. pos)
-end, { nargs = 0 })
-vim.api.nvim_create_user_command("Format", function()
-    if vim.bo.modified then
-        print("Please save the buffer before formatting")
-        return
-    end
-    vim.cmd("!" .. Formatter .. " %")
-end, { nargs = 0 })
-
 vim.keymap.set("n", "<C-b>", "<C-^>", {})
 
 vim.keymap.set("i", "jk", "<Esc>", {})
@@ -88,4 +73,5 @@ vim.keymap.set("n", "<leader>fh", fzf.help_tags, {})
 vim.keymap.set("n", "<leader>fj", fzf.jumps, {})
 vim.keymap.set("n", "<leader>fq", fzf.quickfix, {})
 vim.keymap.set("n", "<leader>fr", fzf.live_grep_resume, {})
-vim.keymap.set("n", "<leader>fe", fzf.diagnostics_workspace, {})
+vim.keymap.set("n", "<leader>fe", fzf.lsp_workspace_diagnostics, {})
+vim.keymap.set("n", "<leader>fs", fzf.lsp_live_workspace_symbols, {})

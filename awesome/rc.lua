@@ -13,9 +13,6 @@ local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
 local hotkeys_popup = require("awful.hotkeys_popup")
--- Enable hotkeys help widget for VIM and other apps
--- when client with a matching name is opened:
-require("awful.hotkeys_popup.keys")
 
 local lain = require("lain")
 
@@ -502,10 +499,3 @@ client.connect_signal("unfocus", function(c)
     c.border_color = beautiful.border_normal
 end)
 -- }}}
-
--- Autostart programs
-
-function GetMemory()
-    local memory = os.execute("free -m")
-    awful.prompt(memory)
-end

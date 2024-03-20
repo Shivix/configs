@@ -14,10 +14,10 @@ local modes = {
 
 local lsp_status
 
-vim.lsp.handlers['$/progress'] = (function(_, progress, _)
+vim.lsp.handlers["$/progress"] = function(_, progress, _)
     lsp_status = progress
-    vim.api.nvim_command('redrawstatus!')
-end)
+    vim.api.nvim_command("redrawstatus!")
+end
 
 function StatusLine()
     local warnings = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
@@ -28,10 +28,7 @@ function StatusLine()
     end
     local current_mode = vim.api.nvim_get_mode().mode
     local pretty_mode = modes[current_mode] or current_mode
-    return " "
-        .. pretty_mode
-        .. lsp_info
-        .. " |%m %<%.40F %= %Y | %l:%c "
+    return " " .. pretty_mode .. lsp_info .. " |%m %<%.40F %= %Y | %l:%c "
 end
 
 vim.opt.statusline = "%!luaeval('StatusLine()')"

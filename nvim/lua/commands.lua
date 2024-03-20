@@ -22,11 +22,11 @@ vim.api.nvim_create_user_command("Source", function()
 end, { nargs = 0 })
 vim.api.nvim_create_user_command("GdbB", function()
     -- Assumes you're calling from project root, this way it works better with containers.
-    local gdb_cmd = "b " .. vim.fn.expand("%") .. ":" .. vim.fn.line('.')
+    local gdb_cmd = "b " .. vim.fn.expand("%") .. ":" .. vim.fn.line(".")
     vim.fn.system("echo " .. gdb_cmd .. " | " .. vim.g.clipboard.copy["+"] .. " --trim")
 end, { nargs = 0 })
 
 function GetLine(offset)
-    local cur_line = vim.fn.line('.')
+    local cur_line = vim.fn.line(".")
     return vim.fn.getline(cur_line + offset)
 end

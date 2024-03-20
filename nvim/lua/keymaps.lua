@@ -5,13 +5,14 @@ local key_sets = {
 }
 
 for open, close in pairs(key_sets) do
-    vim.keymap.set("i", open, open .. close .. "<Left>", {})
+    -- Ctrl-G U will prevent <Left> from breaking with . repeat
+    vim.keymap.set("i", open, open .. close .. "<C-g>U<Left>", {})
     vim.keymap.set("i", close, function()
         local pos = vim.api.nvim_win_get_cursor(0)[2] + 1
         local next_char = vim.api.nvim_get_current_line():sub(pos, pos)
 
         if next_char == close then
-            return "<Right>"
+            return "<C-g>U<Right>"
         end
         return close
     end, { expr = true })

@@ -19,9 +19,8 @@ if status --is-interactive
         bind jk -M $mode -m default ""
         bind kj -M $mode -m default ""
     end
+    zua.lua --init | source
 end
-
-zua.lua --init | source
 
 alias make "make -j12"
 alias md "make --no-print-directory -j12 -C cmake-build-debug"

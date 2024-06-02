@@ -131,6 +131,7 @@ require("lazy").setup({
                 },
             }
         end,
+        lazy = true,
     },
 }, {
     performance = {

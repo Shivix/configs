@@ -1,49 +1,67 @@
 local plugin_path = vim.fn.stdpath("data") .. "/local/plugins/"
 vim.opt.runtimepath:prepend(plugin_path)
-local plugin_list = {}
 
-local function install_plugin(repo)
-    local slash_pos = repo:find("/")
-    local plugin_name = repo:sub(slash_pos + 1, -1)
-    local install_path = plugin_path .. plugin_name
+local plugins = {
+    "ellisonleao/gruvbox.nvim",
+    "ibhagwan/fzf-lua",
+    "hrsh7th/nvim-cmp",
+    "hrsh7th/cmp-nvim-lsp",
+    "hrsh7th/cmp-buffer",
+    "hrsh7th/cmp-cmdline",
+    "hrsh7th/cmp-path",
+    "hrsh7th/cmp-nvim-lsp-signature-help",
+    "neovim/nvim-lspconfig",
+    "nvim-treesitter/nvim-treesitter",
+}
+
+for _, plugin in ipairs(plugins) do
+    local install_path = plugin_path .. plugin
+    vim.opt.runtimepath:prepend(install_path)
     if vim.uv.fs_stat(install_path) == nil then
-        print("Installing plugin: " .. repo)
+        print("Installing plugin: " .. plugin)
         vim.fn.system {
             "git",
             "clone",
             "--depth=1",
             "--filter=blob:none",
-            "https://github.com/" .. repo .. ".git",
+            "https://github.com/" .. plugin .. ".git",
             install_path,
         }
     end
-    vim.opt.runtimepath:prepend(install_path)
-    table.insert(plugin_list, { path = install_path, name = plugin_name })
 end
 
 vim.api.nvim_create_user_command("UpdatePlugins", function()
-    for _, plugin in ipairs(plugin_list) do
-        print("Updating plugin: " .. plugin.name)
-        local pull = vim.fn.system("git -C " .. plugin.path .. " pull")
+    local new_commits = {}
+    for _, plugin in ipairs(plugins) do
+        print("Updating plugin: " .. plugin)
+        local install_path = plugin_path .. plugin
+        local pull = vim.fn.system("git -C " .. install_path .. " pull")
         if not pull:find("up to date") then
-            local new_commits = vim.fn.system(
-                "git -C " .. plugin.path .. " log HEAD@{1}..HEAD --pretty=reference 2>/dev/null"
-            )
-            print(new_commits)
+            table.insert(new_commits, plugin .. "\n" .. vim.fn.system {
+                "git",
+                "-C",
+                install_path,
+                "log",
+                "HEAD@{1}..HEAD",
+                "--pretty=reference",
+            })
         end
+    end
+    if #new_commits > 0 then
+        if vim.fn.bufname("%") ~= "" then
+            vim.cmd("new")
+        end
+        vim.bo.filetype = "gitrebase"
+        vim.api.nvim_buf_set_lines(
+            vim.api.nvim_get_current_buf(),
+            0,
+            -1,
+            false,
+            vim.split(table.concat(new_commits, "\n"), "\n")
+        )
     end
 end, { nargs = 0 })
 
-install_plugin("ellisonleao/gruvbox.nvim")
-install_plugin("ibhagwan/fzf-lua")
-install_plugin("hrsh7th/nvim-cmp")
-install_plugin("hrsh7th/cmp-nvim-lsp")
-install_plugin("hrsh7th/cmp-buffer")
-install_plugin("hrsh7th/cmp-cmdline")
-install_plugin("hrsh7th/cmp-path")
-install_plugin("hrsh7th/cmp-nvim-lsp-signature-help")
-install_plugin("neovim/nvim-lspconfig")
-install_plugin("nvim-treesitter/nvim-treesitter")
 local cmp = require("cmp")
 cmp.setup {
     preselect = cmp.PreselectMode.None,
@@ -66,7 +84,7 @@ cmp.setup {
         { name = "path" },
     },
 }
-cmp.register_source("buffer", require("cmp_buffer"))
+cmp.register_source("buffer", require("cmp_buffer").new())
 cmp.register_source("cmdline", require("cmp_cmdline").new())
 cmp.register_source("nvim_lsp_signature_help", require("cmp_nvim_lsp_signature_help").new())
 cmp.register_source("path", require("cmp_path").new())
@@ -84,6 +102,7 @@ cmp.setup.cmdline(":", {
         { name = "cmdline" },
     },
 })
+
 require("gruvbox").setup {
     bold = false,
     italic = {
@@ -103,6 +122,7 @@ require("gruvbox").setup {
     transparent_mode = true,
 }
 vim.api.nvim_exec2("colorscheme gruvbox", { output = true })
+
 require("fzf-lua").setup {
     fzf_opts = {
         ["--layout"] = "default",
@@ -131,6 +151,7 @@ require("fzf-lua").setup {
         },
     },
 }
+
 require("nvim-treesitter.configs").setup {
     auto_install = false,
     ensure_installed = {
@@ -141,7 +162,7 @@ require("nvim-treesitter.configs").setup {
         "fish",
         "go",
         "gomod",
-        -- "latex", requires node to install
+        -- "latex", requires treesitter-cli and Node
         "lua",
         "make",
         "markdown",

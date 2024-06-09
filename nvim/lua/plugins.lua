@@ -45,41 +45,40 @@ install_plugin("hrsh7th/cmp-nvim-lsp-signature-help")
 install_plugin("neovim/nvim-lspconfig")
 install_plugin("nvim-treesitter/nvim-treesitter")
 local cmp = require("cmp")
-local cmp_mapping = {
-    ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-    ["<C-u>"] = cmp.mapping.scroll_docs(4),
-    ["<Down>"] = cmp.mapping.select_next_item(),
-    ["<Up>"] = cmp.mapping.select_prev_item(),
-    ["<CR>"] = cmp.config.disable,
-}
 cmp.setup {
     preselect = cmp.PreselectMode.None,
-    mapping = cmp_mapping,
+    mapping = {
+        ["<C-d>"] = cmp.mapping.scroll_docs(-4),
+        ["<C-u>"] = cmp.mapping.scroll_docs(4),
+        ["<Down>"] = cmp.mapping.select_next_item(),
+        ["<Up>"] = cmp.mapping.select_prev_item(),
+        ["<CR>"] = cmp.config.disable,
+    },
     sources = {
+        { name = "buffer" },
         {
             name = "nvim_lsp",
             entry_filter = function(entry)
                 return entry:get_kind() ~= cmp.lsp.CompletionItemKind.Snippet
             end,
         },
-        { name = "buffer" },
-        { name = "path" },
         { name = "nvim_lsp_signature_help" },
+        { name = "path" },
     },
 }
 cmp.register_source("buffer", require("cmp_buffer"))
+cmp.register_source("cmdline", require("cmp_cmdline").new())
 cmp.register_source("nvim_lsp_signature_help", require("cmp_nvim_lsp_signature_help").new())
 cmp.register_source("path", require("cmp_path").new())
-cmp.register_source("cmdline", require("cmp_cmdline").new())
 require("cmp_nvim_lsp").setup()
 cmp.setup.cmdline({ "/", "?" }, {
-    mapping = cmp_mapping,
+    mapping = cmp.mapping.preset.cmdline(),
     sources = {
         { name = "buffer" },
     },
 })
 cmp.setup.cmdline(":", {
-    mapping = cmp_mapping,
+    mapping = cmp.mapping.preset.cmdline(),
     sources = {
         { name = "path" },
         { name = "cmdline" },

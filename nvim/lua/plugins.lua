@@ -38,22 +38,23 @@ install_plugin("ellisonleao/gruvbox.nvim")
 install_plugin("ibhagwan/fzf-lua")
 install_plugin("hrsh7th/nvim-cmp")
 install_plugin("hrsh7th/cmp-nvim-lsp")
-install_plugin("hrsh7th/cmp-nvim-lua")
 install_plugin("hrsh7th/cmp-buffer")
+install_plugin("hrsh7th/cmp-cmdline")
 install_plugin("hrsh7th/cmp-path")
 install_plugin("hrsh7th/cmp-nvim-lsp-signature-help")
 install_plugin("neovim/nvim-lspconfig")
 install_plugin("nvim-treesitter/nvim-treesitter")
 local cmp = require("cmp")
+local cmp_mapping = {
+    ["<C-d>"] = cmp.mapping.scroll_docs(-4),
+    ["<C-u>"] = cmp.mapping.scroll_docs(4),
+    ["<Down>"] = cmp.mapping.select_next_item(),
+    ["<Up>"] = cmp.mapping.select_prev_item(),
+    ["<CR>"] = cmp.config.disable,
+}
 cmp.setup {
     preselect = cmp.PreselectMode.None,
-    mapping = {
-        ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-        ["<C-u>"] = cmp.mapping.scroll_docs(4),
-        ["<Down>"] = cmp.mapping.select_next_item(),
-        ["<Up>"] = cmp.mapping.select_prev_item(),
-        ["<CR>"] = cmp.config.disable,
-    },
+    mapping = cmp_mapping,
     sources = {
         {
             name = "nvim_lsp",
@@ -61,12 +62,29 @@ cmp.setup {
                 return entry:get_kind() ~= cmp.lsp.CompletionItemKind.Snippet
             end,
         },
-        { name = "nvim_lua" },
         { name = "buffer" },
         { name = "path" },
         { name = "nvim_lsp_signature_help" },
     },
 }
+cmp.register_source("buffer", require("cmp_buffer"))
+cmp.register_source("nvim_lsp_signature_help", require("cmp_nvim_lsp_signature_help").new())
+cmp.register_source("path", require("cmp_path").new())
+cmp.register_source("cmdline", require("cmp_cmdline").new())
+require("cmp_nvim_lsp").setup()
+cmp.setup.cmdline({ "/", "?" }, {
+    mapping = cmp_mapping,
+    sources = {
+        { name = "buffer" },
+    },
+})
+cmp.setup.cmdline(":", {
+    mapping = cmp_mapping,
+    sources = {
+        { name = "path" },
+        { name = "cmdline" },
+    },
+})
 require("gruvbox").setup {
     bold = false,
     italic = {

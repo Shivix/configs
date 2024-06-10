@@ -1,13 +1,13 @@
 vim.g.mapleader = " "
 
 vim.opt.clipboard = "unnamed"
+vim.opt.completeopt = "menu,menuone,popup"
 vim.opt.cursorline = true
 vim.opt.expandtab = true
 vim.opt.grepformat = "%f:%l:%c:%m"
 vim.opt.grepprg = "rg --vimgrep"
 vim.opt.icm = "split"
 vim.opt.ignorecase = true
-vim.opt.iskeyword:remove("_")
 vim.opt.laststatus = 3
 vim.opt.list = true
 vim.opt.listchars = "tab:» ,trail:*"

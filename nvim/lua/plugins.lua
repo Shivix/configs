@@ -4,12 +4,6 @@ vim.opt.runtimepath:prepend(plugin_path)
 local plugins = {
     "ellisonleao/gruvbox.nvim",
     "ibhagwan/fzf-lua",
-    "hrsh7th/nvim-cmp",
-    "hrsh7th/cmp-nvim-lsp",
-    "hrsh7th/cmp-buffer",
-    "hrsh7th/cmp-cmdline",
-    "hrsh7th/cmp-path",
-    "hrsh7th/cmp-nvim-lsp-signature-help",
     "neovim/nvim-lspconfig",
     "nvim-treesitter/nvim-treesitter",
 }
@@ -61,47 +55,6 @@ vim.api.nvim_create_user_command("UpdatePlugins", function()
         )
     end
 end, { nargs = 0 })
-
-local cmp = require("cmp")
-cmp.setup {
-    preselect = cmp.PreselectMode.None,
-    mapping = {
-        ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-        ["<C-u>"] = cmp.mapping.scroll_docs(4),
-        ["<Down>"] = cmp.mapping.select_next_item(),
-        ["<Up>"] = cmp.mapping.select_prev_item(),
-        ["<CR>"] = cmp.config.disable,
-    },
-    sources = {
-        { name = "buffer" },
-        {
-            name = "nvim_lsp",
-            entry_filter = function(entry)
-                return entry:get_kind() ~= cmp.lsp.CompletionItemKind.Snippet
-            end,
-        },
-        { name = "nvim_lsp_signature_help" },
-        { name = "path" },
-    },
-}
-cmp.register_source("buffer", require("cmp_buffer").new())
-cmp.register_source("cmdline", require("cmp_cmdline").new())
-cmp.register_source("nvim_lsp_signature_help", require("cmp_nvim_lsp_signature_help").new())
-cmp.register_source("path", require("cmp_path").new())
-require("cmp_nvim_lsp").setup()
-cmp.setup.cmdline({ "/", "?" }, {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = {
-        { name = "buffer" },
-    },
-})
-cmp.setup.cmdline(":", {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = {
-        { name = "path" },
-        { name = "cmdline" },
-    },
-})
 
 require("gruvbox").setup {
     bold = false,

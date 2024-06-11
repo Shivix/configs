@@ -1,5 +1,6 @@
 -- Based on https://github.com/ellisonleao/gruvbox.nvim
 vim.g.colors_name = "gruvbox"
+vim.g.c_syntax_for_h = true
 
 local colours = {
     bg0 = "#282828",

@@ -2,7 +2,6 @@ local plugin_path = vim.fn.stdpath("data") .. "/local/plugins/"
 vim.opt.runtimepath:prepend(plugin_path)
 
 local plugins = {
-    "ellisonleao/gruvbox.nvim",
     "ibhagwan/fzf-lua",
     "neovim/nvim-lspconfig",
     "nvim-treesitter/nvim-treesitter",
@@ -55,26 +54,6 @@ vim.api.nvim_create_user_command("UpdatePlugins", function()
         )
     end
 end, { nargs = 0 })
-
-require("gruvbox").setup {
-    bold = false,
-    italic = {
-        strings = false,
-        operators = false,
-        comments = false,
-    },
-    overrides = {
-        Identifier = { fg = "#efe2c1" },
-        Typedef = { fg = "#fabd2f" },
-        StatusLine = { fg = "#fabd2f", bg = "#32302f", reverse = false },
-        Function = { fg = "#8ec07c" },
-        Include = { fg = "#d3869b" },
-        PreProc = { fg = "#d3869b" },
-        Delimiter = { fg = "#fe8019" },
-    },
-    transparent_mode = true,
-}
-vim.api.nvim_exec2("colorscheme gruvbox", { output = true })
 
 require("fzf-lua").setup {
     fzf_opts = {

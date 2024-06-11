@@ -11,7 +11,7 @@ vim.opt.ignorecase = true
 vim.opt.laststatus = 3
 vim.opt.list = true
 vim.opt.listchars = "tab:» ,trail:*"
-vim.opt.mouse = nil
+vim.opt.mouse = ""
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.shiftwidth = 4
@@ -24,6 +24,7 @@ vim.opt.splitright = true
 vim.opt.tabstop = 4
 vim.opt.undofile = true
 vim.g.c_syntax_for_h = true
+vim.loader.enable()
 
 -- nvim can auto detect this on startup, we do it manually to improve startup time
 vim.g.clipboard = {

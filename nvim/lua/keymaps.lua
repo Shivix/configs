@@ -55,13 +55,12 @@ vim.keymap.set("n", "<leader>s", ":set spell!<CR>")
 vim.keymap.set("i", "<Down>", "<C-n>")
 vim.keymap.set("i", "<Up>", "<C-p>")
 vim.keymap.set("i", "<C-f>", "<C-x><C-f>")
-vim.keymap.set("i", "<Tab>", "pumvisible() ? '<C-n>' : '<C-x><C-o>'", { expr = true })
 vim.keymap.set("i", "<Tab>", function()
     local col = vim.fn.col(".")
     local line = vim.fn.getline(".")
     if vim.fn.pumvisible() == 1 then
         return "<C-n>"
-    elseif line:sub(col - 1, col - 1):match("%a") then
+    elseif line:sub(col - 1, col - 1):match("[%a%p]") then
         return "<C-x><C-o>"
     else
         return "<Tab>"

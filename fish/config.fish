@@ -91,9 +91,26 @@ alias findrej "awk '\
     printf(\"%s | %s | %s\n\", stream[1], instr[1], reason[1]);\
 }'"
 
+function fzf-complete
+    set -l cmd (commandline -co) (commandline -ct)
+    if test $cmd[1] = "sudo" -o $cmd[1] = "env"
+        return
+    end
+
+    if test (commandline -t) = "**"
+        set -f complist (fd .)
+    else
+        set -f complist (complete -C (string join -- ' ' $cmd))
+    end
+
+    set -l result (string join -- \n $complist | fzf -m --select-1 | cut -f1)
+    commandline -tr -- (string join -- " " $result)
+end
+bind \ci -M insert fzf-complete
+
 function fish_mode_prompt; end
 function fish_prompt
-    set branch (git branch 2>/dev/null | awk -F '[ ()]'\
+    set -l branch (git branch 2>/dev/null | awk -F '[ ()]'\
         '/*/ { if ($3) print "| "$3" "$6; if (!$3) print "| "$2 }')
     printf '%s | %s %s\n%s%s$ ' (set_color yellow)(whoami)@(hostname) \
     (set_color bryellow)(prompt_pwd -d 3 -D 2) \
@@ -122,7 +139,7 @@ function find_func
 end
 
 function rund
-    set file (fd -1 --type x --full-path $argv[1] cmake-build-debug)
+    set -l file (fd -1 --type x --full-path $argv[1] cmake-build-debug)
     $file $argv[2..]
 end
 
@@ -142,9 +159,9 @@ function config_diff
 end
 
 function config_repo_diff
-    set files (fd --type file)
+    set -l files (fd --type file)
     for file in $files
-        set diff (diff $file ~/.config/$file 2>/dev/null)
+        set -l diff (diff $file ~/.config/$file 2>/dev/null)
         if test -n "$diff"
             echo $file
         end
@@ -156,27 +173,13 @@ function fzk8slogs --wraps "kubectl logs" --description "Fuzzy search kubectl lo
 end
 alias fzl "fzk8slogs"
 
-function nvimfzf --description "fzf files and open in new nvim instance"
-    if test -z "$argv"
-        set file (fzf \
-        --preview "bat --color=always {1}" \
-        --preview-window "up,50%,border-bottom")
-    else
-        set file (fzf --query $argv)
-    end
-    if test -z "$file"
-        return
-    end
-    nvim $file
-end
-alias nvf "nvimfzf"
-
+alias nvf "nvim -c \"lua require('fzf-lua').files()\""
 alias nvrg "nvim -c \"lua require('fzf-lua').live_grep()\""
 
 function update_copyright --description "Increment the copyright year on any modified files"
-    set files (git diff --name-only --ignore-submodules)
+    set -l files (git diff --name-only --ignore-submodules)
     if test -z "$files"
-        set files (git show $argv --pretty="" --name-only --ignore-submodules)
+        set -l files (git show $argv --pretty="" --name-only --ignore-submodules)
     end
     for file in $files
         sed -i "0,/2020\|2021\|2022/ s//2023/g" $file
@@ -184,9 +187,9 @@ function update_copyright --description "Increment the copyright year on any mod
 end
 
 function wt_status
-    set worktrees (git worktree list | awk '{print $1}')
-    set num_wt (count $worktrees)
-    set prev_dir (pwd)
+    set -l worktrees (git worktree list | awk '{print $1}')
+    set -l num_wt (count $worktrees)
+    set -l prev_dir (pwd)
     if test $num_wt -le 1
         return
     end
@@ -206,11 +209,11 @@ function wt_status
 end
 
 function grebase
-    set should_stash (git status --short --ignore-submodules --untracked=no)
+    set -l should_stash (git status --short --ignore-submodules --untracked=no)
     if test -n "$should_stash"
         git stash
     end
-    set master (git branch -l master main | cut -c 3-)
+    set -l master (git branch -l master main | cut -c 3-)
     git rebase -i upstream/$master
     if test -n "$should_stash"
         git stash pop
@@ -242,7 +245,7 @@ function condense_logs
 end
 
 function docker-gdb
-    set container_id (docker container ps -a | rg $argv | awk '{print $1; exit}')
+    set -l container_id (docker container ps -a | rg $argv | awk '{print $1; exit}')
     docker exec -i -t $container_id gdb -p 1
 end
 
@@ -251,7 +254,7 @@ function step
     src
 end
 function src
-    set source (cargo run --bin moxi_source) 
-    set source (string split ":" $source)
+    set -l source (cargo run --bin moxi_source)
+    set -l source (string split ":" $source)
     bat $source[1] --highlight-line $source[2]
 end

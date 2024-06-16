@@ -60,27 +60,21 @@ require("fzf-lua").setup {
         ["--layout"] = "default",
     },
     winopts = {
-        border = { "", "", "", "", "", "", "", "" },
+        border = { "", "", "", "│", "", "", "", "" },
         fullscreen = true,
         preview = {
-            default = "bat",
-            vertical = "up:60%",
+            horizontal = "right:50%",
             scrollbar = false,
         },
     },
-    files = {
+    defaults = {
         git_icons = false,
         file_icons = false,
     },
-    grep = {
-        git_icons = false,
-        file_icons = false,
-    },
-    keymap = {
-        fzf = {
-            ["ctrl-d"] = "preview-half-page-down",
-            ["ctrl-u"] = "preview-half-page-up",
-        },
+    lsp = {
+        symbols = {
+            symbol_style = 3,
+        }
     },
 }
 
@@ -106,5 +100,8 @@ require("nvim-treesitter.configs").setup {
         "vimdoc",
         "yaml",
     },
+    ignore_install = {},
     highlight = { enable = true },
+    modules = {},
+    sync_install = false,
 }

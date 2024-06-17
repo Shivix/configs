@@ -17,7 +17,6 @@ if status --is-interactive
     bind _ -M default "beginning-of-line"
     for mode in insert replace
         bind jk -M $mode -m default ""
-        bind kj -M $mode -m default ""
     end
     zua.lua --init | source
 end

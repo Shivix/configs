@@ -20,15 +20,16 @@ vim.lsp.handlers["$/progress"] = function(_, progress, _)
 end
 
 function StatusLine()
-    local warnings = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
-    local errors = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
-    local lsp_info = " | W:" .. #warnings .. " E:" .. #errors
+    local diagnostics = vim.diagnostic.count(0)
+    local warnings = diagnostics[vim.diagnostic.severity.WARN] or 0
+    local errors = diagnostics[vim.diagnostic.severity.ERROR] or 0
+    local lsp_info = "W:" .. warnings .. " E:" .. errors
     if lsp_status and lsp_status.value.message and lsp_status.value.kind ~= "end" then
-        lsp_info = " | progress: " .. lsp_status.value.message
+        lsp_info = "progress: " .. lsp_status.value.message
     end
     local current_mode = vim.api.nvim_get_mode().mode
     local pretty_mode = modes[current_mode] or current_mode
-    return " " .. pretty_mode .. lsp_info .. " |%m %<%.40F %= %Y | %l:%c "
+    return " " .. pretty_mode .. " | " .. lsp_info .. " |%m %<%.40F %= %Y | %l:%c "
 end
 
 vim.opt.statusline = "%!luaeval('StatusLine()')"

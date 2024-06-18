@@ -80,7 +80,6 @@ local groups = {
     { "MatchParen", { bg = colours.bg3 } },
     { "ModeMsg", { fg = colours.yellow } },
     { "MoreMsg", { fg = colours.yellow } },
-    { "MsgArea", { fg = colours.yellow } },
     { "netrwDir", { fg = colours.yellow } },
     { "netrwExe", { fg = colours.orange } },
     { "netrwSymLink", { fg = colours.purple } },

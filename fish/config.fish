@@ -11,6 +11,7 @@ if status --is-interactive
     for mode in insert default
         bind \cl -M $mode ""
         bind \cd -M $mode ""
+        bind \es -M $mode ""
     end
     bind \cr -M default "redo"
     bind U -M visual "togglecase-selection"
@@ -38,6 +39,7 @@ alias wt "git worktree"
 alias tree "tree --gitignore"
 alias rg "rg --smart-case"
 alias ssh "env TERM=xterm-256color ssh"
+alias tma "tmux attach"
 
 alias godebug "go build -gcflags=all='-N -l'"
 

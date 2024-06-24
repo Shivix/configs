@@ -259,3 +259,10 @@ function src
     set -l source (string split ":" $source)
     bat $source[1] --highlight-line $source[2]
 end
+
+function cat_tmp
+    set -l tmpfile (mktemp)
+    nvim $tmpfile
+    cat $tmpfile
+    rm -f $tmpfile
+end

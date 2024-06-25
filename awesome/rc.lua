@@ -77,6 +77,20 @@ local mymem = lain.widget.mem {
 mymem.timeout = 5
 local cpu_widget = require("awesome-wm-widgets.cpu-widget.cpu-widget")
 
+gears.timer {
+    timeout = 300,
+    call_now = true,
+    autostart = true,
+    callback = function()
+        awful.spawn.easy_async_with_shell("date +%H", function(out)
+            local hour = tonumber(out)
+            if hour > 18 and hour < 4 then
+                -- change wallpaper
+            end
+        end)
+    end
+}
+
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
     awful.button({}, 1, function(t)
@@ -131,6 +145,8 @@ awful.screen.connect_for_each_screen(function(s)
     -- Create the wibox
     s.mywibox = awful.wibar { position = "top", screen = s }
 
+    local battery_widget = require("battery-widget")
+    local battery = battery_widget { battery_prefix = " " }
     -- Add widgets to the wibox
     if s == screen.primary then
         s.mywibox:setup {
@@ -158,6 +174,7 @@ awful.screen.connect_for_each_screen(function(s)
                 wibox.widget.systray(),
                 delimeter,
                 mytextclock,
+                battery,
             },
         }
     else

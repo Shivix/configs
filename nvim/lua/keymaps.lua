@@ -40,14 +40,12 @@ end, { expr = true })
 vim.keymap.set("n", "<C-b>", "<C-^>")
 
 vim.keymap.set("i", "jk", "<Esc>")
+vim.keymap.set("t", "jk", "<C-\\><C-n>")
 
 vim.keymap.set("n", "<C-h>", "<C-w>h")
 vim.keymap.set("n", "<C-j>", "<C-w>j")
 vim.keymap.set("n", "<C-k>", "<C-w>k")
 vim.keymap.set("n", "<C-l>", "<C-w>l")
-
--- make terminal mode mappings close to insert
-vim.keymap.set("t", "jk", "<C-\\><C-n>")
 
 vim.keymap.set("n", "<leader>s", ":set spell!<CR>")
 
@@ -56,15 +54,17 @@ vim.keymap.set("i", "<Up>", "<C-p>")
 vim.keymap.set("i", "<C-f>", "<C-x><C-f>")
 vim.keymap.set("i", "<Tab>", function()
     local col = vim.fn.col(".")
-    local line = vim.fn.getline(".")
+    local char = vim.fn.getline("."):sub(col -1, col -1)
     if vim.fn.pumvisible() == 1 then
         return "<C-n>"
-    elseif line:sub(col - 1, col - 1):match("[%a%p]") then
+    elseif char and char == "/" then
+        return "<C-x><C-f>"
+    elseif char:match("[%a%p]") then
         return "<C-x><C-o>"
     else
         return "<Tab>"
     end
-    -- Maybe do <C-x><C-f> if a slash?
+    -- Fall back to buffer completion if no results
 end, { expr = true })
 
 vim.keymap.set("n", "gd", vim.lsp.buf.definition)

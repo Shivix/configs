@@ -47,7 +47,7 @@ end
 
 beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
 
-local terminal = "st"
+local terminal = "st -e sh -c '[ -z \"$TMUX\" ] && (tmux attach-session || tmux) || $SHELL'"
 local editor = os.getenv("EDITOR")
 local filemanager = "thunar"
 

@@ -29,7 +29,7 @@ function StatusLine()
     end
     local current_mode = vim.api.nvim_get_mode().mode
     local pretty_mode = modes[current_mode] or current_mode
-    return " " .. pretty_mode .. " | " .. lsp_info .. " |%m %<%.40F %= %Y | %l:%c "
+    return " " .. pretty_mode .. " | " .. lsp_info .. " |%m %<%.50f %= %Y | %l:%c "
 end
 
 vim.opt.statusline = "%!luaeval('StatusLine()')"

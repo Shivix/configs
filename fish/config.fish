@@ -111,7 +111,7 @@ bind \ci -M insert fzf-complete
 
 function fish_mode_prompt; end
 function fish_prompt
-    printf '%s$ ' (set_color yellow) (jobs | awk 'NR==1{ print $1 }')
+    printf '%s%s$ ' (set_color bryellow) (jobs | awk 'NR==1{ print $1 }' || echo " ")
 end
 
 function fix_vwap

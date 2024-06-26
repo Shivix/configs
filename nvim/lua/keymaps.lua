@@ -54,7 +54,7 @@ vim.keymap.set("i", "<Up>", "<C-p>")
 vim.keymap.set("i", "<C-f>", "<C-x><C-f>")
 vim.keymap.set("i", "<Tab>", function()
     local col = vim.fn.col(".")
-    local char = vim.fn.getline("."):sub(col -1, col -1)
+    local char = vim.fn.getline("."):sub(col - 1, col - 1)
     if vim.fn.pumvisible() == 1 then
         return "<C-n>"
     elseif char and char == "/" then

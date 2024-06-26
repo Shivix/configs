@@ -74,7 +74,7 @@ require("fzf-lua").setup {
     lsp = {
         symbols = {
             symbol_style = 3,
-        }
+        },
     },
 }
 

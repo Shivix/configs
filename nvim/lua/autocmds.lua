@@ -1,6 +1,6 @@
 local main_group = "main_group"
 local function create_autocmd(event, pattern, callback)
-    vim.api.nvim_create_autocmd("BufEnter", {
+    vim.api.nvim_create_autocmd(event, {
         pattern = pattern,
         callback = callback,
         group = main_group,
@@ -34,6 +34,7 @@ create_autocmd("BufEnter", "*.rs", function()
 end)
 create_autocmd("BufEnter", "*.cpp,*.hpp,*.c,*.h,*.cxx,*.hxx", function()
     vim.cmd("packadd termdebug")
+    Linter = "clang-tidy"
     Formatter = "clang-format -i"
 end)
 create_autocmd("BufEnter", "*.go", function()
@@ -41,6 +42,7 @@ create_autocmd("BufEnter", "*.go", function()
     Formatter = "go fmt"
 end)
 create_autocmd("BufEnter", "*.lua", function()
+    Linter = "selene"
     Formatter = "stylua"
 end)
 create_autocmd("BufEnter", "*.py", function()
@@ -53,4 +55,10 @@ end)
 create_autocmd("BufLeave", "scratch.md", function()
     vim.opt.foldmethod = "manual"
     vim.wo.foldexpr = ""
+end)
+create_autocmd("TermClose", "", function()
+    local bufs = vim.fn.getbufinfo { buflisted = 1 }
+    if #bufs == 1 and bufs[1].name == "" then
+        vim.cmd("qa!")
+    end
 end)

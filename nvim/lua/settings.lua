@@ -1,4 +1,6 @@
 vim.g.mapleader = " "
+vim.g.netrw_banner = 0
+vim.g.netrw_winsize = -35
 
 vim.opt.clipboard = "unnamed"
 vim.opt.completeopt = "menu,menuone,popup"
@@ -26,7 +28,6 @@ vim.opt.termguicolors = true
 vim.opt.undofile = true
 vim.loader.enable()
 
--- nvim can auto detect this on startup, we do it manually to improve startup time
 vim.g.clipboard = {
     name = "xsel",
     copy = {

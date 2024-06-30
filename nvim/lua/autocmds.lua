@@ -56,9 +56,17 @@ create_autocmd("BufLeave", "scratch.md", function()
     vim.opt.foldmethod = "manual"
     vim.wo.foldexpr = ""
 end)
-create_autocmd("TermClose", "", function()
-    local bufs = vim.fn.getbufinfo { buflisted = 1 }
-    if #bufs == 1 and bufs[1].name == "" then
-        vim.cmd("qa!")
-    end
-end)
+
+local function remove_quickfix_item()
+    local list = vim.fn.getqflist()
+    local item_pos = vim.fn.line(".")
+    table.remove(list, item_pos)
+    vim.fn.setqflist(list, "r")
+    vim.fn.cursor(item_pos, 1)
+end
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "qf",
+    callback = function()
+        vim.keymap.set("n", "d", remove_quickfix_item, { buffer = 0 })
+    end,
+})

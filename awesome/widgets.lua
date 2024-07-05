@@ -33,7 +33,7 @@ local function update_ram_widget()
 end
 
 gears.timer {
-    timeout = 5,
+    timeout = 10,
     autostart = true,
     call_now = true,
     callback = update_ram_widget
@@ -48,17 +48,21 @@ local function update_battery_widget()
     local battery_path = "/sys/class/power_supply/BAT0/"
     local status_file = battery_path .. "status"
     local capacity_file = battery_path .. "capacity"
+    local power_file = battery_path .. "power_now"
 
     local file = assert(io.open(status_file, "r"))
-    local status = file:read("*all") ~= "discharging" and "" or " AC"
+    local status = file:read("*all") == "Discharging\n" and "" or " AC"
     file:close()
     file = assert(io.open(capacity_file, "r"))
     local capacity = tonumber(file:read("*all"))
     file:close()
+    file = assert(io.open(power_file, "r"))
+    local power_now = file:read("*all")
+    file:close()
+    local wattage = string.format(" %.2fW", power_now / 1000000)
+    battery_widget:set_text(capacity .. "%" .. status .. wattage)
 
-    battery_widget:set_text(capacity .. "%" .. status)
-
-    if capacity < 20 and status == "discharging" and (battery_alert == false or capacity < 10) then
+    if capacity < 20 and status == "" and (battery_alert == false or capacity < 10) then
         naughty.notify {
             preset = naughty.config.presets.critical,
             title = "Low Battery",
@@ -74,7 +78,7 @@ end
 local file = io.open("/sys/class/power_supply/BAT0/", "r")
 if file ~= nil then
     gears.timer {
-        timeout = 60,
+        timeout = 10,
         autostart = true,
         call_now = true,
         callback = update_battery_widget

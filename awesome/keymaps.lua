@@ -9,7 +9,7 @@ local is_gromit_active = false
 -- Super key
 local modkey = "Mod4"
 
-local terminal = "st -e sh -c 'tmux attach-session || tmux || $SHELL'"
+local terminal = "alacritty -e sh -c 'tmux attach-session || tmux || $SHELL'"
 
 M.taglist_buttons = gears.table.join(
     awful.button({}, 1, function(t)

@@ -1,6 +1,5 @@
 [env]
 TERM = "xterm-256color"
-#WINIT_X11_SCALE_FACTOR="1" (size 18)
 
 [window]
 decorations = "None"
@@ -12,6 +11,9 @@ history = 0
 [font]
 normal = { family = "JetBrains Mono" }
 size = 9
+
+[colors]
+cursor = { cursor = "#efe2c1" }
 
 [colors.primary]
 foreground = "#efe2c1"
@@ -39,6 +41,3 @@ white = "#efe2c1"
 
 [selection]
 save_to_clipboard = true
-
-[cursor]
-style = { shape = "Beam" }

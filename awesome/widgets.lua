@@ -56,10 +56,13 @@ local function update_battery_widget()
     file = assert(io.open(capacity_file, "r"))
     local capacity = tonumber(file:read("*all"))
     file:close()
-    file = assert(io.open(power_file, "r"))
-    local power_now = file:read("*all")
-    file:close()
-    local wattage = string.format(" %.2fW", power_now / 1000000)
+    local wattage = ""
+    if status == "" then
+        file = assert(io.open(power_file, "r"))
+        local power_now = file:read("*all")
+        file:close()
+        wattage = string.format(" %.2fW", power_now / 1000000)
+    end
     battery_widget:set_text(capacity .. "%" .. status .. wattage)
 
     if capacity < 20 and status == "" and (battery_alert == false or capacity < 10) then

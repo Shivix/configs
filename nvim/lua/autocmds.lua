@@ -25,6 +25,9 @@ end)
 create_autocmd("BufEnter", "configmap.yaml", function()
     vim.bo.filetype = "helm"
 end)
+create_autocmd("BufEnter", "*.zsh", function()
+    vim.bo.filetype = "sh"
+end)
 create_autocmd("BufEnter", "*.rs", function()
     vim.opt.makeprg = "cargo build"
     vim.opt.errorformat = "%Eerror: %m," .. "%Wwarning: %m," .. "%Inote: %m," .. "%C %#--> %f:%l:%c"

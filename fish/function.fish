@@ -10,7 +10,7 @@ function fzf-complete
         set -f complist (complete -C (string join -- ' ' $cmd))
     end
 
-    set -l result (string join -- \n $complist | fzf -m --select-1 | cut -f1)
+    set -l result (string join -- \n $complist | fzf -m --select-1 --exit-0 | cut -f1)
     commandline -tr -- (string join -- " " $result)
 end
 bind \ci -M insert fzf-complete

@@ -11,6 +11,41 @@ local delimeter = wibox.widget {
 }
 
 local mytextclock = wibox.widget.textclock()
+local cpu_widget = wibox.widget {
+    widget = wibox.widget.textbox,
+}
+
+local idle_prev
+local total_prev
+local function update_cpu_widget()
+    local handle = assert(io.popen("grep --max-count=1 ^cpu. /proc/stat"))
+    local result = handle:read("*all")
+    handle:close()
+    local cpu_stats = {}
+    for word in result:gmatch("(%d+)") do
+        table.insert(cpu_stats, tonumber(word))
+    end
+    local idle = cpu_stats[4]
+    local total = 0
+    for i = 1, #cpu_stats - 2 do
+        total = total + cpu_stats[i]
+    end
+
+    local diff_idle = idle - tonumber(idle_prev or 0)
+    local diff_total = total - tonumber(total_prev or 0)
+    local usage = (1 - diff_idle / diff_total) * 100
+    cpu_widget:set_text("CPU: " .. math.floor(usage) .. "%")
+    idle_prev = idle
+    total_prev = total
+end
+
+gears.timer {
+    timeout = 5,
+    autostart = true,
+    call_now = true,
+    callback = update_cpu_widget
+}
+
 local ram_widget = wibox.widget {
     widget = wibox.widget.textbox,
 }
@@ -91,8 +126,6 @@ else
     battery_widget = nil
 end
 
-local cpu_widget = require("awesome-wm-widgets.cpu-widget.cpu-widget")
-
 function M.primary(s)
     return {
         layout = wibox.layout.align.horizontal,
@@ -107,12 +140,7 @@ function M.primary(s)
         },
             { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
-            cpu_widget {
-                width = 70,
-                step_width = 2,
-                step_spacing = 0,
-                color = "#D3BC8D",
-            },
+            cpu_widget,
             delimeter,
             ram_widget,
             delimeter,

@@ -31,17 +31,14 @@ end)
 create_autocmd("BufEnter", "*.rs", function()
     vim.opt.makeprg = "cargo build"
     vim.opt.errorformat = "%Eerror: %m," .. "%Wwarning: %m," .. "%Inote: %m," .. "%C %#--> %f:%l:%c"
-    vim.cmd("packadd termdebug")
     vim.g.termdebugger = "rust-gdb"
     Formatter = "rustfmt"
 end)
 create_autocmd("BufEnter", "*.cpp,*.hpp,*.c,*.h,*.cxx,*.hxx", function()
-    vim.cmd("packadd termdebug")
     Linter = "clang-tidy"
     Formatter = "clang-format -i"
 end)
 create_autocmd("BufEnter", "*.go", function()
-    vim.cmd("packadd termdebug")
     Formatter = "go fmt"
 end)
 create_autocmd("BufEnter", "*.lua", function()

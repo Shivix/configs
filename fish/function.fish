@@ -70,11 +70,6 @@ function config_repo_diff
     end
 end
 
-function fzk8slogs --wraps "kubectl logs" --description "Fuzzy search kubectl logs"
-    kubectl logs $argv | sed 's/\x01/|/g' | fzf --delimiter : --preview 'echo {} | cut -f2- -d":" | prefix -v' --preview-window up:50%:wrap --multi
-end
-abbr fzl "fzk8slogs"
-
 function update_copyright --description "Increment the copyright year on any modified files"
     set -l files (git diff --name-only --ignore-submodules)
     if test -z "$files"
@@ -143,9 +138,12 @@ function condense_logs
     }'
 end
 
-function docker-gdb
-    set -l container_id (docker container ps -a | rg $argv | awk '{print $1; exit}')
-    docker exec -i -t $container_id gdb -p 1
+function docker-gdb --wraps "docker exec"
+    docker exec -it $argv gdb -p 1
+end
+
+function docker-gdbserver --wraps "docker exec"
+    echo docker exec -it $argv[1] gdbserver --attach localhost:$argv[2] 1
 end
 
 function step
@@ -190,7 +188,6 @@ function init_fish
     fish_vi_key_bindings
 
     set -Ux VISUAL nvim
-    set -Ux GPG_TTY (tty)
     set -Ux FZF_DEFAULT_OPTS "--tiebreak=index --bind=ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up"
     set -Ux FZF_DEFAULT_COMMAND "fd --type f --full-path --strip-cwd-prefix"
     set -Ux RG_PREFIX "rg --column --no-heading --color=always"

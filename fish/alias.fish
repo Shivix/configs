@@ -16,6 +16,7 @@ abbr tree "tree --gitignore"
 abbr rg "rg --smart-case"
 abbr ssh "env TERM=xterm-256color ssh"
 abbr tma "tmux attach"
+abbr dc "docker-compose"
 
 abbr godebug "go build -gcflags=all='-N -l'"
 
@@ -34,6 +35,8 @@ abbr scratch "nvim $HOME/Documents/Notes/scratch.md"
 abbr nvf "nvim -c \"lua require('fzf-lua').files()\""
 abbr nvrg "nvim -c \"lua require('fzf-lua').live_grep()\""
 
+abbr --position=anywhere fzffix "fzf --delimiter : --preview 'prefix -v \'{}\'' --preview-window up:50%:wrap --multi"
+
 abbr trim_whitespace "git ls-files | xargs sed -i 's/[[:space:]]*\$//'"
 
-abbr fix2pipe "sed 's/\x01/|/g'"
+abbr --position=anywhere fix2pipe "sed 's/\x01/|/g'"

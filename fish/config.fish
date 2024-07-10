@@ -25,4 +25,5 @@ if status --is-interactive
     source ~/.config/fish/function.fish
     # Override /etc/environment
     set -gx EDITOR nvim
+    set -gx GPG_TTY (tty)
 end

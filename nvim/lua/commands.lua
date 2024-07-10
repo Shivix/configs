@@ -15,19 +15,19 @@ end, { nargs = 0 })
 vim.api.nvim_create_user_command("Lint", function()
     vim.cmd("!" .. Linter .. " %")
 end, { nargs = 0 })
-vim.api.nvim_create_user_command("Break", function()
-    vim.cmd("!lua break.lua % line('.')")
-end, { nargs = 0 })
-vim.api.nvim_create_user_command("Source", function()
-    local source = vim.fn.system("lua source.lua --line")
-    local file, line = source:match("(.*):([0-9]*)")
-    vim.cmd("edit +" .. line .. " " .. file)
-end, { nargs = 0 })
 vim.api.nvim_create_user_command("GdbB", function()
-    -- Assumes you're calling from project root, this way it works better with containers.
     local gdb_cmd = "b " .. vim.fn.expand("%") .. ":" .. vim.fn.line(".")
     vim.fn.system("echo " .. gdb_cmd .. " | " .. vim.g.clipboard.copy["+"] .. " --trim")
 end, { nargs = 0 })
+vim.api.nvim_create_user_command("Debug", function(opts)
+    if vim.fn.exists(":Termdebug") == 0 then
+        vim.cmd("packadd termdebug")
+    end
+    vim.cmd("Termdebug")
+    if opts.args ~= "" then
+        vim.cmd("call TermDebugSendCommand('target remote :" .. opts.args .. "')")
+    end
+end, { nargs = "?" })
 
 function GetLine(offset)
     local cur_line = vim.fn.line(".")

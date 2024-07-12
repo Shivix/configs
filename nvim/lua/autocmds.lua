@@ -37,6 +37,11 @@ end)
 create_autocmd("BufEnter", "*.cpp,*.hpp,*.c,*.h,*.cxx,*.hxx", function()
     Linter = "clang-tidy"
     Formatter = "clang-format -i"
+    if vim.fn.isdirectory("cmake-build-debug") then
+        vim.opt.makeprg = "make --no-print-directory -j -C cmake-build-debug"
+    else
+        vim.opt.makeprg = "make -j"
+    end
 end)
 create_autocmd("BufEnter", "*.go", function()
     Formatter = "go fmt"

@@ -141,9 +141,8 @@ end
 function docker-gdb --wraps "docker exec"
     docker exec -it $argv gdb -p 1
 end
-
 function docker-gdbserver --wraps "docker exec"
-    echo docker exec -it $argv[1] gdbserver --attach localhost:$argv[2] 1
+    docker exec -it $argv[1] gdbserver --attach localhost:$argv[2] 1
 end
 
 function step

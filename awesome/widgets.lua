@@ -40,7 +40,7 @@ local function update_cpu_widget()
 end
 
 gears.timer {
-    timeout = 5,
+    timeout = 10,
     autostart = true,
     call_now = true,
     callback = update_cpu_widget

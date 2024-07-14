@@ -1,9 +1,10 @@
 function fzf-complete
-    set -l cmd (commandline -co) (commandline -ct)
+    set -l cmd (commandline -ctj)
     if test $cmd[1] = "sudo" -o $cmd[1] = "env"
         return
     end
 
+    set -f preview --tmux
     if test "$cmd" = "nvim "
         set -f complist (fd . --type f)
         set -f preview --preview 'test -f {} && bat --color=always {}'

@@ -16,9 +16,6 @@ if status --is-interactive
         bind \cr -M default "redo"
         bind U -M visual "togglecase-selection"
         bind _ -M default "beginning-of-line"
-        bind b -M default backward-bigword
-        bind w -M default forward-bigword forward-single-char
-        bind e -M default forward-single-char forward-bigword backward-char
         for mode in insert replace
             bind jk -M $mode -m default ""
         end

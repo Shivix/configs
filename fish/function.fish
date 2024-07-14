@@ -4,13 +4,18 @@ function fzf-complete
         return
     end
 
-    if test (commandline -t) = "**"
+    if test "$cmd" = "nvim "
+        set -f complist (fd . --type f)
+        set -f preview --preview 'test -f {} && bat --color=always {}'
+    else if test "$cmd" = "cd "
+        set -f complist (cat ~/.local/state/zua/data)
+    else if test (commandline -t) = "**"
         set -f complist (fd .)
     else
         set -f complist (complete -C (string join -- ' ' $cmd))
     end
 
-    set -l result (string join -- \n $complist | fzf -m --select-1 --exit-0 | cut -f1)
+    set -l result (string join -- \n $complist | fzf --multi --select-1 --exit-0 $preview | cut -f1)
     commandline -tr -- (string join -- " " $result)
 end
 bind \ci -M insert fzf-complete
@@ -18,6 +23,17 @@ bind \ci -M insert fzf-complete
 function fish_mode_prompt; end
 function fish_prompt
     printf '%s%s$ ' (set_color bryellow) (jobs | awk 'NR==1{ print $1 }' || echo " ")
+end
+
+function exit
+    read -l -P 'Are you sure you want to exit fish? (y/n) ' confirmation
+    if test "$confirmation" = "y"
+        builtin exit
+    end
+end
+
+function fzffix
+    fzf --multi --delimiter : --preview "prefix -v '{}'" --preview-window 25%:wrap
 end
 
 function fix_vwap
@@ -186,11 +202,12 @@ end
 function init_fish
     fish_vi_key_bindings
 
+    fish_add_path ~/.cargo/bin
+
     set -Ux VISUAL nvim
-    set -Ux FZF_DEFAULT_OPTS "--tiebreak=index --bind=ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up"
+    set -Ux FZF_DEFAULT_OPTS "--bind=ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up"
     set -Ux FZF_DEFAULT_COMMAND "fd --type f --full-path --strip-cwd-prefix"
     set -Ux RG_PREFIX "rg --column --no-heading --color=always"
-    set -Ux BAT_THEME "gruvbox-dark"
     set -Ux MANPAGER "nvim -c Man!"
 
     set -Ux fish_greeting

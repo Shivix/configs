@@ -60,11 +60,13 @@ vim.keymap.set("i", "<Tab>", function()
     elseif char and char == "/" then
         return "<C-x><C-f>"
     elseif char:match("[%a%p]") then
+        if vim.bo.omnifunc == "" then
+            return "<C-n>"
+        end
         return "<C-x><C-o>"
     else
         return "<Tab>"
     end
-    -- Fall back to buffer completion if no results
 end, { expr = true })
 
 vim.keymap.set("n", "gd", vim.lsp.buf.definition)

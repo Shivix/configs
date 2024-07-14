@@ -62,6 +62,25 @@ create_autocmd("BufLeave", "scratch.md", function()
     vim.wo.foldexpr = ""
 end)
 
+vim.api.nvim_create_autocmd("VimEnter", {
+    pattern = "*",
+    callback = function()
+        -- Do not use if we're diffing files
+        if vim.opt.diff:get() then
+            return
+        end
+        local files = vim.fn.argv()
+        if type(files) == "table" and #files > 1 then
+            local qflist = {}
+            for _, file in ipairs(files) do
+                table.insert(qflist, { filename = file })
+            end
+            vim.fn.setqflist(qflist, "r")
+            vim.cmd("copen")
+        end
+    end,
+})
+
 local function remove_quickfix_item()
     local list = vim.fn.getqflist()
     local item_pos = vim.fn.line(".")
@@ -72,6 +91,6 @@ end
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "qf",
     callback = function()
-        vim.keymap.set("n", "d", remove_quickfix_item, { buffer = 0 })
+        vim.keymap.set("n", "dd", remove_quickfix_item, { buffer = 0 })
     end,
 })

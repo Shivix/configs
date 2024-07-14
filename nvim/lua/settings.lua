@@ -4,10 +4,7 @@ vim.g.netrw_winsize = -35
 
 vim.opt.clipboard = "unnamed"
 vim.opt.completeopt = "menu,menuone,popup"
-vim.opt.cursorline = true
 vim.opt.expandtab = true
-vim.opt.grepformat = "%f:%l:%c:%m"
-vim.opt.grepprg = "rg --vimgrep"
 vim.opt.icm = "split"
 vim.opt.ignorecase = true
 vim.opt.laststatus = 3

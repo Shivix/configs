@@ -1,5 +1,5 @@
-set -l num_cpus(math (grep -c processor /proc/cpuinfo) - 1)
-abbr make "make -j"
+set -l num_cpus (math (grep -c processor /proc/cpuinfo) - 1)
+abbr make "make -j$num_cpus"
 abbr md "make --no-print-directory -j$num_cpus -C cmake-build-debug"
 abbr mr "make --no-print-directory -j$num_cpus -C cmake-build-release"
 

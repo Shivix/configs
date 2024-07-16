@@ -40,6 +40,7 @@ end, { expr = true })
 vim.keymap.set("n", "<C-b>", "<C-^>")
 
 vim.keymap.set("i", "jk", "<Esc>")
+vim.keymap.set("i", "Jk", "<Esc>")
 vim.keymap.set("t", "jk", "<C-\\><C-n>")
 
 vim.keymap.set("n", "<C-h>", "<C-w>h")

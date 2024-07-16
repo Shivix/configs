@@ -16,8 +16,14 @@ function fzf-complete
         set -f complist (complete -C (string join -- ' ' $cmd))
     end
 
-    set -l result (string join -- \n $complist | fzf --multi --select-1 --exit-0 $preview | cut -f1)
-    commandline -tr -- (string join -- " " $result)
+    # Handle 0/ 1 case here instead of --exit-0 --select-1 to avoid --tmux window opening
+    if test (count $complist) -lt 2
+        commandline -tr $complist
+        return
+    end
+
+    set -l result (string join \n $complist | fzf --multi $preview | cut -f1)
+    commandline -tr (string join " " $result)
 end
 bind \ci -M insert fzf-complete
 

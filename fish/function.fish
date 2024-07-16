@@ -1,29 +1,33 @@
 function fzf-complete
-    set -l cmd (commandline -ctj)
+    set -l cmd (commandline -c)
+
     if test $cmd[1] = "sudo" -o $cmd[1] = "env"
         return
     end
 
-    set -f preview --tmux
+    set -l preview --tmux
     if test "$cmd" = "nvim "
         set -f complist (fd . --type f)
-        set -f preview --preview 'test -f {} && bat --color=always {}'
+        set preview --preview 'test -f {} && bat --color=always {}'
     else if test "$cmd" = "cd "
-        set -f complist (cat ~/.local/state/zua/data)
+        set -f complist (cat $ZUA_DATA_FILE)
     else if test (commandline -t) = "**"
         set -f complist (fd .)
     else
-        set -f complist (complete -C (string join -- ' ' $cmd))
+        set -f complist (complete -C $cmd)
     end
 
     # Handle 0/ 1 case here instead of --exit-0 --select-1 to avoid --tmux window opening
-    if test (count $complist) -lt 2
-        commandline -tr $complist
-        return
+    switch (count $complist)
+        case 0
+            return
+        case 1
+            commandline -tr -- (echo $complist | cut -f1)
+            return
     end
 
-    set -l result (string join \n $complist | fzf --multi $preview | cut -f1)
-    commandline -tr (string join " " $result)
+    set -l result (string join -- \n $complist | fzf --multi $preview | cut -f1)
+    commandline -tr -- (string join -- " " $result)
 end
 bind \ci -M insert fzf-complete
 

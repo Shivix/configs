@@ -1,4 +1,4 @@
-function fzf-complete
+function fzf-complete --description "Provides fuzzy commandline completion"
     set -l cmd (commandline -c)
 
     if test $cmd[1] = "sudo" -o $cmd[1] = "env"
@@ -43,7 +43,7 @@ function exit
     end
 end
 
-function fzffix
+function fzffix --description "Put the input into fzf and preview with prefix"
     fzf --multi --delimiter : --preview "prefix -v '{}'" --preview-window 25%:wrap
 end
 
@@ -54,7 +54,7 @@ function fix_vwap
     if (i == args) print vwap / total }'
 end
 
-function quickdiff
+function quickdiff --description "Allows easy diffing between two stdout sources"
     if test $argv[1] = "store"
         echo $argv[2..] >"$HOME/.cache/quickdiff_store.txt"
     else
@@ -72,22 +72,15 @@ function rund
     $file $argv[2..]
 end
 
-function cat_between
-    awk -v start=$argv[1] -v end=$argv[2] '
-    $0 ~ start { x = 1 }
-    $0 ~ end { x = 0 }
-    { if (x == 1) print $0 }'
-end
-
-function mkcd --wraps mkdir --description "creates directory and cds into it"
+function mkcd --wraps mkdir --description "Creates directory and cds into it"
     mkdir $argv && cd $argv
 end
 
-function config_diff
+function config_diff --description "Opens a vimdiff between the version controlled and system used config files"
     nvim -d ~/GitHub/configs/$argv ~/.config/$argv
 end
 
-function config_repo_diff
+function config_repo_diff --description "Prints the config files that do not match their system used counterparts"
     set -l files (fd --type file)
     for file in $files
         set -l diff (diff $file ~/.config/$file 2>/dev/null)
@@ -103,33 +96,25 @@ function update_copyright --description "Increment the copyright year on any mod
         set -l files (git show $argv --pretty="" --name-only --ignore-submodules)
     end
     for file in $files
-        sed -i "0,/2020\|2021\|2022/ s//2023/g" $file
+        sed -i '0,/2020|2021|2022|2023/ s//2024/g' $file
     end
 end
 
-function wt_status
-    set -l worktrees (git worktree list | awk '{print $1}')
+function wt_status --description "Prints the status of each worktree in a repo"
+    if not git rev-parse --is-inside-work-tree >/dev/null
+        return 1
+    end
+    set -l worktrees (git worktree list | awk 'NR > 1 {print $1}')
     set -l num_wt (count $worktrees)
-    set -l prev_dir (pwd)
-    if test $num_wt -le 1
-        return
-    end
     for worktree in $worktrees
-        if test "$worktree" = "$worktrees[1]"
-            continue
-        end
-        set_color green
-        echo $worktree
-        set_color normal
-        builtin cd $worktree
-        git status -s --show-stash
-        git submodule foreach git branch --show-current | rg -v Entering
-        git log | awk 'NR == 5'
+        set_color bryellow; echo $worktree; set_color normal
+        git -C $worktree status -s --show-stash
+        git -C $worktree submodule foreach git branch --show-current | rg -v Entering
+        git -C $worktree log --not --remotes=upstream | awk 'NR == 5'
     end
-    cd $prev_dir
 end
 
-function grebase
+function grebase --description "Rebase branch keeping changes intact"
     set -l should_stash (git status --short --ignore-submodules --untracked=no)
     if test -n "$should_stash"
         git stash
@@ -141,7 +126,7 @@ function grebase
     end
 end
 
-function condense_logs
+function condense_logs --description "Condenses FIX logs down to a summary"
     awk 'match($0, /[\||](35=[^|]+)[\||]/, capture) {
         if (!(capture[1] in fix_messages)) {
             fix_messages[capture[1]] = 1
@@ -210,7 +195,7 @@ function findrej
     }'
 end
 
-function init_fish
+function init_fish --description "Sets universal variables for fish shell"
     fish_vi_key_bindings
 
     fish_add_path ~/.cargo/bin

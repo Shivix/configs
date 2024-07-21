@@ -27,7 +27,6 @@ abbr gs "git status"
 
 abbr scratch "nvim $HOME/Documents/Notes/scratch.md"
 
-abbr nvf "nvim -c \"lua require('fzf-lua').files()\""
 abbr nvrg "nvim -c \"lua require('fzf-lua').live_grep()\""
 
 abbr trim_whitespace "git ls-files | xargs sed -i 's/[[:space:]]*\$//'"

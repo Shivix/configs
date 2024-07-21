@@ -7,12 +7,10 @@ local function create_autocmd(event, pattern, callback)
     })
 end
 vim.api.nvim_create_augroup(main_group, {})
-vim.api.nvim_create_autocmd("TextYankPost", {
-    callback = function()
-        vim.highlight.on_yank { higroup = "IncSearch", timeout = 150, on_visual = true }
-    end,
-    group = main_group,
-})
+
+create_autocmd("TextYankPost", nil, function()
+    vim.highlight.on_yank { higroup = "IncSearch", timeout = 150, on_visual = true }
+end)
 -- If there is no / in the pattern, vim will only check against the filename
 create_autocmd("BufEnter", "*.*.j2", function()
     local buf_name = vim.api.nvim_buf_get_name(0)
@@ -62,24 +60,21 @@ create_autocmd("BufLeave", "scratch.md", function()
     vim.wo.foldexpr = ""
 end)
 
-vim.api.nvim_create_autocmd("VimEnter", {
-    pattern = "*",
-    callback = function()
-        -- Do not use if we're diffing files
-        if vim.opt.diff:get() then
-            return
+create_autocmd("VimEnter", "*", function()
+    -- Do not use if we're diffing files
+    if vim.opt.diff:get() then
+        return
+    end
+    local files = vim.fn.argv()
+    if type(files) == "table" and #files > 1 then
+        local qflist = {}
+        for _, file in ipairs(files) do
+            table.insert(qflist, { filename = file })
         end
-        local files = vim.fn.argv()
-        if type(files) == "table" and #files > 1 then
-            local qflist = {}
-            for _, file in ipairs(files) do
-                table.insert(qflist, { filename = file })
-            end
-            vim.fn.setqflist(qflist, "r")
-            vim.cmd("copen")
-        end
-    end,
-})
+        vim.fn.setqflist(qflist, "r")
+        vim.cmd("copen")
+    end
+end)
 
 local function remove_quickfix_item()
     local list = vim.fn.getqflist()
@@ -88,9 +83,6 @@ local function remove_quickfix_item()
     vim.fn.setqflist(list, "r")
     vim.fn.cursor(item_pos, 1)
 end
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "qf",
-    callback = function()
-        vim.keymap.set("n", "dd", remove_quickfix_item, { buffer = 0 })
-    end,
-})
+create_autocmd("FileType", "qf", function()
+    vim.keymap.set("n", "dd", remove_quickfix_item, { buffer = 0 })
+end)

@@ -18,7 +18,7 @@ end, { nargs = 0 })
 
 vim.api.nvim_create_user_command("GdbB", function()
     local gdb_cmd = "b " .. vim.fn.expand("%") .. ":" .. vim.fn.line(".")
-    vim.fn.setreg('+', gdb_cmd)
+    vim.fn.setreg("+", gdb_cmd)
 end, { nargs = 0 })
 vim.api.nvim_create_user_command("Debug", function(opts)
     if vim.fn.exists(":Termdebug") == 0 then
@@ -31,12 +31,13 @@ vim.api.nvim_create_user_command("Debug", function(opts)
 end, { nargs = "?" })
 
 vim.api.nvim_create_user_command("GHLink", function()
-    local remote = vim.fn.system("git remote get-url upstream 2>/dev/null || git remote get-url origin")
+    local remote =
+        vim.fn.system("git remote get-url upstream 2>/dev/null || git remote get-url origin")
     local repo = remote:match("github.com[:/](.+).git")
     assert(repo, "repo not found")
     local file = vim.fn.expand("%")
     local line = vim.fn.line(".")
-    vim.fn.setreg('+', "github.com/" .. repo .. "/blob/master/" .. file .. "#L"..line)
+    vim.fn.setreg("+", "github.com/" .. repo .. "/blob/master/" .. file .. "#L" .. line)
 end, { nargs = 0 })
 
 function GetLine(offset)

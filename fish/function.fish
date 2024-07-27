@@ -47,6 +47,10 @@ function fzffix --description "Put the input into fzf and preview with prefix"
     fzf --multi --delimiter : --preview "prefix -v '{}'" --preview-window 25%:wrap
 end
 
+function fzfpac --description "Fuzzy find pacman packages"
+    pacman -Slq | fzf --multi --preview 'pacman -Si {1}'
+end
+
 function fix_vwap
     sed "s/\\\u0001/|/g" | prefix | awk -v args=$argv '\
     /MDEntryPx/ { price = $3 }\

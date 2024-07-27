@@ -8,14 +8,6 @@ require("lspconfig").clangd.setup {
     capabilities = capabilities,
     on_init = on_init,
 }
-require("lspconfig").pyright.setup {
-    capabilities = capabilities,
-    on_init = on_init,
-}
-require("lspconfig").rust_analyzer.setup {
-    capabilities = capabilities,
-    on_init = on_init,
-}
 require("lspconfig").gopls.setup {
     capabilities = capabilities,
     on_init = on_init,
@@ -39,4 +31,16 @@ require("lspconfig").lua_ls.setup {
             telemetry = { enable = false },
         },
     },
+}
+require("lspconfig").pyright.setup {
+    capabilities = capabilities,
+    on_init = on_init,
+}
+require("lspconfig").rust_analyzer.setup {
+    capabilities = capabilities,
+    on_init = on_init,
+}
+require("lspconfig").zls.setup {
+    capabilities = capabilities,
+    on_init = on_init,
 }

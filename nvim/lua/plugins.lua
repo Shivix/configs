@@ -99,6 +99,7 @@ require("nvim-treesitter.configs").setup {
         "vim",
         "vimdoc",
         "yaml",
+        "zig",
     },
     ignore_install = {},
     highlight = { enable = true },

@@ -1,20 +1,22 @@
 function fzf-complete --description "Provides fuzzy commandline completion"
-    set -l cmd (commandline -c)
+    set -l cmdline (commandline -c)
+    set -l cmd (string split ' ' $cmdline)
 
     if test $cmd[1] = "sudo" -o $cmd[1] = "env"
         return
     end
 
-    set -l preview --tmux
+    set -l fzf_args --tmux
+    # Use standard completion if a file/directory name has started to be typed.
     if test "$cmd" = "nvim "
         set -f complist (fd . --type f)
-        set preview --preview 'test -f {} && bat --color=always {}'
+        set fzf_args --preview "test -f {} && bat --color=always {}" --preview-window "border-left"
     else if test "$cmd" = "cd "
         set -f complist (cat $ZUA_DATA_FILE)
     else if test (commandline -t) = "**"
         set -f complist (fd .)
     else
-        set -f complist (complete -C $cmd)
+        set -f complist (complete -C $cmdline)
     end
 
     # Handle 0/ 1 case here instead of --exit-0 --select-1 to avoid --tmux window opening
@@ -22,11 +24,12 @@ function fzf-complete --description "Provides fuzzy commandline completion"
         case 0
             return
         case 1
+            # Cut the completion description
             commandline -tr -- (echo $complist | cut -f1)
             return
     end
 
-    set -l result (string join -- \n $complist | fzf --multi $preview | cut -f1)
+    set -l result (string join -- \n $complist | fzf --multi $fzf_args | cut -f1)
     commandline -tr -- (string join -- " " $result)
 end
 bind \ci -M insert fzf-complete
@@ -44,11 +47,20 @@ function exit
 end
 
 function fzffix --description "Put the input into fzf and preview with prefix"
-    fzf --multi --delimiter : --preview "prefix -v '{}'" --preview-window 25%:wrap
+    fzf --multi --delimiter : --preview "prefix -v {}" --preview-window 25%:wrap
 end
 
 function fzfpac --description "Fuzzy find pacman packages"
     pacman -Slq | fzf --multi --preview 'pacman -Si {1}'
+end
+
+function fzfrg --description "Combination of fzf and ripgrep"
+    env FZF_DEFAULT_COMMAND="$RG_PREFIX" \
+    fzf --disabled --ansi --delimiter : \
+        --bind "change:reload:$RG_PREFIX {q} $argv || true" \
+        --preview "bat --color=always {1} --highlight-line {2} --line-range (math max {2}-20,0):+50" \
+        --preview-window "border-left" \
+        --multi
 end
 
 function fix_vwap
@@ -114,7 +126,7 @@ function wt_status --description "Prints the status of each worktree in a repo"
         set_color bryellow; echo $worktree; set_color normal
         git -C $worktree status -s --show-stash
         git -C $worktree submodule foreach git branch --show-current | rg -v Entering
-        git -C $worktree log --not --remotes=upstream | awk 'NR == 5'
+        git -C $worktree log upstream/master..HEAD | awk 'NR == 5'
     end
 end
 

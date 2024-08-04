@@ -51,6 +51,10 @@ end)
 create_autocmd("BufEnter", "*.py", function()
     Formatter = "yapf -i"
 end)
+create_autocmd("BufEnter", "*.zig", function()
+    vim.opt.makeprg = "zig build"
+    Formatter = "zig fmt"
+end)
 create_autocmd("BufEnter", "scratch.md", function()
     vim.opt.foldmethod = "expr"
     vim.wo.foldexpr = "nvim_treesitter#foldexpr()"

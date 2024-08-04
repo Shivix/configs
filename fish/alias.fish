@@ -14,16 +14,17 @@ abbr rg "rg --smart-case"
 abbr tma "tmux attach"
 abbr dc "docker-compose"
 abbr cat "bat"
-
-abbr godebug "go build -gcflags=all='-N -l'"
-
-abbr gitlscpp "git ls-files '*.cpp' '*.hpp' '*.cxx' '*.hxx'"
+abbr kc "kubectl"
 
 abbr gamend "git commit --amend"
 abbr gfetch "git fetch upstream"
 abbr gfetchall "git fetch --all --prune -j$num_cpus"
 abbr gpush "git push origin"
 abbr gs "git status"
+
+abbr gitlscpp "git ls-files '*.cpp' '*.hpp' '*.cxx' '*.hxx'"
+
+abbr godebug "go build -gcflags=all='-N -l'"
 
 abbr scratch "nvim $HOME/Documents/Notes/scratch.md"
 
@@ -32,3 +33,4 @@ abbr nvrg "nvim -c \"lua require('fzf-lua').live_grep()\""
 abbr trim_whitespace "git ls-files | xargs sed -i 's/[[:space:]]*\$//'"
 
 abbr --position=anywhere fix2pipe "sed 's/\x01/|/g'"
+abbr --position=anywhere delnewline ':a;N;$!ba;'

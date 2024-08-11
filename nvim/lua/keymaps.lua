@@ -58,8 +58,6 @@ vim.keymap.set("i", "<Tab>", function()
     local char = vim.fn.getline("."):sub(col - 1, col - 1)
     if vim.fn.pumvisible() == 1 then
         return "<C-n>"
-    elseif char and char == "/" then
-        return "<C-x><C-f>"
     elseif char:match("[%a%p]") then
         if vim.bo.omnifunc == "" then
             return "<C-n>"

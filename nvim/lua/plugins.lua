@@ -3,7 +3,6 @@ vim.opt.runtimepath:prepend(plugin_path)
 
 local plugins = {
     "ibhagwan/fzf-lua",
-    "neovim/nvim-lspconfig",
     "nvim-treesitter/nvim-treesitter",
 }
 

@@ -47,7 +47,7 @@ function exit
 end
 
 function fzffix --description "Put the input into fzf and preview with prefix"
-    fzf --multi --delimiter : --preview "prefix -v {}" --preview-window 25%:wrap
+    fzf --multi --preview "prefix -v {}" --preview-window 25%:wrap
 end
 
 function fzfpac --description "Fuzzy find pacman packages"

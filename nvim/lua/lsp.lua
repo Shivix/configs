@@ -1,15 +1,18 @@
 local language_servers = {
     {
         name = "clangd",
-        cmd = { "clangd" },
         filetype = { "cpp", "c" },
-        root_dir = { "Makefile", "CMakeLists.txt", ".clang-format", ".clang-tidy", ".git" },
+        root_dir = { ".clangd", ".clang-format", ".clang-tidy", ".git", "compile_commands.json" },
     },
     {
-        name = "lua_ls",
-        cmd = { "lua-language-server" },
+        name = "gopls",
+        filetype = { "go", "gomod", "gowork", "gotmpl" },
+        root_dir = { ".git", "go.mod", "go.sum" },
+    },
+    {
+        name = "lua-language-server",
         filetype = { "lua" },
-        root_dir = { "Makefile", "stylua.toml", ".git" },
+        root_dir = { ".git", "Makefile", "stylua.toml" },
         settings = {
             Lua = {
                 runtime = {
@@ -28,28 +31,19 @@ local language_servers = {
         },
     },
     {
-        name = "gopls",
-        cmd = { "gopls" },
-        filetype = { "go" },
-        root_dir = { "go.mod", "go.sum", ".git" },
-    },
-    {
         name = "pyright",
-        cmd = { "pyright" },
         filetype = { "python" },
-        root_dir = { "setup.py", "pyproject.toml", ".git" },
+        root_dir = { ".git", "pyproject.toml", "requirements.txt", "setup.py" },
     },
     {
         name = "rust-analyzer",
-        cmd = { "rust-analyzer" },
         filetype = { "rust" },
-        root_dir = { "cargo.toml", "cargo.lock", ".git" },
+        root_dir = { ".git", "Cargo.lock", "Cargo.toml" },
     },
     {
         name = "zls",
-        cmd = { "zls" },
         filetype = { "zig" },
-        root_dir = { "build.zig", "build.zig.zon", ".git" },
+        root_dir = { ".git", "build.zig", "build.zig.zon" },
     },
 }
 
@@ -61,7 +55,7 @@ for _, ls in pairs(language_servers) do
         callback = function(ev)
             vim.lsp.start({
                 name = ls.name,
-                cmd = ls.cmd,
+                cmd = { ls.name },
                 root_dir = vim.fs.root(ev.buf, ls.root_dir),
                 capabilities = ls.capabilities,
                 settings = ls.settings,
@@ -72,7 +66,7 @@ end
 
 function ClangSwitchHeader()
     local bufnr = vim.api.nvim_get_current_buf()
-    -- using { method = testDocument/switchSourceHeader } seems to return all clients.
+    -- using { method = textDocument/switchSourceHeader } seems to return all clients.
     local client = vim.lsp.get_clients({ name = "clangd" })[1]
     if client == nil then
         print("Clangd not attached")
@@ -83,7 +77,7 @@ function ClangSwitchHeader()
         { uri = vim.uri_from_bufnr(bufnr) },
         function(err, result)
             if err then
-                error(err.message)
+                error(tostring(err))
             end
             if not result then
                 print("Corresponding file cannot be determined")

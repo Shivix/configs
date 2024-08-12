@@ -1,9 +1,8 @@
 require("settings")
 require("plugins")
-
-require("autocmds")
+require("lsp")
 require("colourscheme")
+require("autocmds")
 require("commands")
 require("keymaps")
-require("lsp")
 require("statusline")

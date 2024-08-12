@@ -21,6 +21,9 @@ abbr gfetch "git fetch upstream"
 abbr gfetchall "git fetch --all --prune -j$num_cpus"
 abbr gpush "git push origin"
 abbr gs "git status"
+abbr gblame "git blame -wCCC"
+
+abbr --position=anywhere -- --fwl "--force-with-lease"
 
 abbr gitlscpp "git ls-files '*.cpp' '*.hpp' '*.cxx' '*.hxx'"
 

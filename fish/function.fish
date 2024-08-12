@@ -142,6 +142,11 @@ function grebase --description "Rebase branch keeping changes intact"
     end
 end
 
+function checkout_pr
+    git fetch upstream pull/$argv/head
+    git checkout FETCH_HEAD
+end
+
 function condense_logs --description "Condenses FIX logs down to a summary"
     awk 'match($0, /[\||](35=[^|]+)[\||]/, capture) {
         if (!(capture[1] in fix_messages)) {

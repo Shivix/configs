@@ -69,7 +69,7 @@ vim.keymap.set("i", "<Tab>", function()
 end, { expr = true })
 
 vim.keymap.set("n", "gd", vim.lsp.buf.definition)
-vim.keymap.set("n", "gh", ":ClangdSwitchSourceHeader<CR>")
+vim.keymap.set("n", "gh", ClangSwitchHeader)
 vim.keymap.set("n", "<C-s>", vim.lsp.buf.signature_help)
 vim.keymap.set("n", "<C-n>", function()
     vim.diagnostic.jump { count = 1 }

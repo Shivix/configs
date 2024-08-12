@@ -21,7 +21,7 @@ local language_servers = {
                     library = {
                         vim.env.VIMRUNTIME,
                         "${3rd}/luv/library",
-                    }
+                    },
                 },
                 telemetry = { enable = false },
             },
@@ -70,11 +70,36 @@ for _, ls in pairs(language_servers) do
     })
 end
 
---vim.api.nvim_create_autocmd('LspAttach', {
---  callback = function(args)
---    local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
---    if client.supports_method('textDocument/semanticTokens') then
---        client.server_capabilities.semanticTokensProvider = nil
---    end
---  end,
---})
+function ClangSwitchHeader()
+    local bufnr = vim.api.nvim_get_current_buf()
+    -- using { method = testDocument/switchSourceHeader } seems to return all clients.
+    local client = vim.lsp.get_clients({ name = "clangd" })[1]
+    if client == nil then
+        print("Clangd not attached")
+        return
+    end
+    client.request(
+        "textDocument/switchSourceHeader",
+        { uri = vim.uri_from_bufnr(bufnr) },
+        function(err, result)
+            if err then
+                error(err.message)
+            end
+            if not result then
+                print("Corresponding file cannot be determined")
+                return
+            end
+            vim.api.nvim_command("edit " .. vim.uri_to_fname(result))
+        end,
+        bufnr
+    )
+end
+
+vim.api.nvim_create_autocmd("LspAttach", {
+    callback = function(args)
+        local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+        if client.supports_method("textDocument/semanticTokensProvider") then
+            --client.server_capabilities.semanticTokensProvider = nil
+        end
+    end,
+})

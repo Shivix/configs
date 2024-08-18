@@ -64,6 +64,13 @@ for _, ls in pairs(language_servers) do
     })
 end
 
+vim.api.nvim_create_user_command("ActiveLS", function()
+    local bufnr = vim.api.nvim_get_current_buf()
+    -- using { method = textDocument/switchSourceHeader } seems to return all clients.
+    local clients = vim.lsp.get_clients({ bufnr = bufnr })
+    print(vim.inspect(clients))
+end, { nargs = 0 })
+
 function ClangSwitchHeader()
     local bufnr = vim.api.nvim_get_current_buf()
     -- using { method = textDocument/switchSourceHeader } seems to return all clients.

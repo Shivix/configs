@@ -55,9 +55,19 @@ function fzfpac --description "Fuzzy find pacman packages"
 end
 
 function fzfrg --description "Combination of fzf and ripgrep"
-    env FZF_DEFAULT_COMMAND="$RG_PREFIX" \
-    fzf --disabled --ansi --delimiter : \
-        --bind "change:reload:$RG_PREFIX {q} $argv || true" \
+    # || true hides the error message if no query is given.
+    env FZF_DEFAULT_COMMAND="$RG_PREFIX $argv || true" \
+    fzf --ansi --disabled --delimiter : \
+        --bind "change:reload:sleep 0.1; $RG_PREFIX {q} || true" \
+        --query "$argv" \
+        --prompt 'rg> ' \
+        --bind 'ctrl-f:transform:
+            if test "$FZF_PROMPT" = "rg> "
+                echo "unbind(change)+change-prompt(fzf> )+enable-search+transform-query:echo \{q} > /tmp/rg-fzf-r; cat /tmp/rg-fzf-f"
+            else
+                echo "rebind(change)+change-prompt(rg> )+disable-search+transform-query:echo \{q} > /tmp/rg-fzf-f; cat /tmp/rg-fzf-r"
+            end
+        ' \
         --preview "bat --color=always {1} --highlight-line {2} --line-range (math max {2}-20,0):+50" \
         --preview-window "border-left" \
         --multi

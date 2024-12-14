@@ -37,3 +37,4 @@ abbr trim_whitespace "git ls-files | xargs sed -i 's/[[:space:]]*\$//'"
 
 abbr --position=anywhere fix2pipe "sed 's/\x01/|/g'"
 abbr --position=anywhere delnewline ':a;N;$!ba;'
+abbr --position=anywhere orderlogs "sort -k3,3 -k4,4"

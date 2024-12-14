@@ -1,18 +1,15 @@
 local language_servers = {
-    {
-        name = "clangd",
+    clangd = {
         filetype = { "cpp", "c" },
-        root_dir = { ".clangd", ".clang-format", ".clang-tidy", ".git", "compile_commands.json" },
+        root_markers = { ".clangd", ".clang-format", ".clang-tidy", "compile_commands.json" },
     },
-    {
-        name = "gopls",
+    gopls = {
         filetype = { "go", "gomod", "gowork", "gotmpl" },
-        root_dir = { ".git", "go.mod", "go.sum" },
+        root_markers = { "go.mod", "go.sum" },
     },
-    {
-        name = "lua-language-server",
+    ["lua-language-server"] = {
         filetype = { "lua" },
-        root_dir = { ".git", "Makefile", "stylua.toml" },
+        root_markers = { "Makefile", "stylua.toml" },
         settings = {
             Lua = {
                 runtime = {
@@ -30,44 +27,39 @@ local language_servers = {
             },
         },
     },
-    {
-        name = "pyright",
+    pyright = {
         filetype = { "python" },
-        root_dir = { ".git", "pyproject.toml", "requirements.txt", "setup.py" },
+        root_markers = { "pyproject.toml", "requirements.txt", "setup.py" },
     },
-    {
-        name = "rust-analyzer",
+    ["rust-analyzer"] = {
         filetype = { "rust" },
-        root_dir = { ".git", "Cargo.lock", "Cargo.toml" },
+        root_markers = { "Cargo.lock", "Cargo.toml" },
     },
-    {
-        name = "zls",
+    zls = {
         filetype = { "zig" },
-        root_dir = { ".git", "build.zig", "build.zig.zon" },
+        root_markers = { "build.zig", "build.zig.zon" },
     },
 }
 
-local augroup = vim.api.nvim_create_augroup("LspStart", { clear = true })
-for _, ls in pairs(language_servers) do
-    vim.api.nvim_create_autocmd("FileType", {
-        group = augroup,
-        pattern = ls.filetype,
-        callback = function(ev)
-            vim.lsp.start({
-                name = ls.name,
-                cmd = { ls.name },
-                root_dir = vim.fs.root(ev.buf, ls.root_dir),
-                capabilities = ls.capabilities,
-                settings = ls.settings,
-            }, { bufnr = ev.buf })
-        end,
-    })
+vim.lsp.config("*", {
+    root_markers = { ".git" },
+})
+
+for name, ls in pairs(language_servers) do
+    vim.lsp.config[name] = {
+        cmd = ls.cmd or { name },
+        root_markers = ls.root_markers,
+        capabilities = ls.capabilities,
+        settings = ls.settings,
+        filetypes = ls.filetype,
+    }
+    vim.lsp.enable(name)
 end
 
 vim.api.nvim_create_user_command("ActiveLS", function()
     local bufnr = vim.api.nvim_get_current_buf()
     -- using { method = textDocument/switchSourceHeader } seems to return all clients.
-    local clients = vim.lsp.get_clients({ bufnr = bufnr })
+    local clients = vim.lsp.get_clients { bufnr = bufnr }
     print(vim.inspect(clients))
 end, { nargs = 0 })
 

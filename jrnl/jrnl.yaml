@@ -1,0 +1,19 @@
+colors:
+  body: none
+  date: blue
+  tags: magenta
+  title: none
+default_hour: 9
+default_minute: 0
+editor: nvim -c 'set ft=markdown'
+encrypt: false
+highlight: true
+indent_character: ''
+journals:
+  default:
+    journal: /home/shivix/.local/share/jrnl/journal.txt
+linewrap: false
+tagsymbols: '@'
+template: false
+timeformat: '%F %r'
+version: v4.2

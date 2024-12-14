@@ -93,7 +93,7 @@ local groups = {
     { "Operator", { fg = colours.orange, italic = false } },
     { "Pmenu", { fg = colours.fg1, bg = colours.bg1 } },
     { "PmenuSbar", { bg = colours.bg1 } },
-    { "PmenuSel", { fg = colours.bg1, bg = colours.yellow } },
+    { "PmenuSel", { fg = colours.yellow, bg = colours.bg1, reverse = true } },
     { "PreCondit", { fg = colours.purple } },
     { "PreProc", { fg = colours.purple } },
     { "Question", { fg = colours.orange } },

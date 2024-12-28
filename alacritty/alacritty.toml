@@ -6,14 +6,18 @@ decorations = "None"
 dynamic_padding = true
 
 [scrolling]
-history = 0
+history = 10000
 
 [font]
 normal = { family = "JetBrains Mono" }
 size = 9
 
+[cursor]
+vi_mode_style = { shape = "Block" }
+
 [colors]
 cursor = { cursor = "#efe2c1" }
+footer_bar = { foreground = "#fabd2f", background = "#2e2e2e"}
 
 [colors.primary]
 foreground = "#efe2c1"
@@ -39,5 +43,15 @@ magenta = "#d3869b"
 cyan = "#8ec07c"
 white = "#efe2c1"
 
+[colors.search]
+matches = { background = "#fabd2f" }
+focused_match = { background = "#d79921" }
+
 [selection]
 save_to_clipboard = true
+
+[keyboard]
+bindings = [
+    { key = "Y", mods = "Control|Shift", action = "ToggleViMode" },
+    { key = "Y", mods = "Control|Shift", mode = "Vi", action = "ScrollToBottom" },
+]

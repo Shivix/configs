@@ -9,7 +9,8 @@ local is_gromit_active = false
 -- Super key
 local modkey = "Mod4"
 
-local terminal = "alacritty -e sh -c 'tmux attach-session || tmux || $SHELL'"
+local terminal = "tabbed -c alacritty --embed"
+local backup_terminal = "alacritty"
 
 M.taglist_buttons = gears.table.join(
     awful.button({}, 1, function(t)
@@ -74,7 +75,9 @@ M.globalkeys = gears.table.join(
     end, { description = "go back", group = "client" }),
 
     awful.key({ modkey }, "Return", function()
-        awful.spawn(terminal)
+        if type(awful.spawn(terminal)) ~= "number" then
+            awful.spawn(backup_terminal)
+        end
     end, { description = "open a terminal", group = "launcher" }),
     awful.key(
         { modkey, "Control" },

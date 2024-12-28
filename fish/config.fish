@@ -7,6 +7,7 @@ end
 if status --is-interactive
     fzf_key_bindings
     if test "$fish_key_bindings" = "fish_vi_key_bindings"
+        set -g fish_vi_force_cursor 1
         set fish_cursor_insert line
         for mode in insert default
             bind \cl -M $mode ""

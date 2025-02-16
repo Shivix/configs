@@ -68,7 +68,17 @@ vim.keymap.set("i", "<Tab>", function()
     end
 end, { expr = true })
 
-vim.keymap.set("n", "gd", vim.lsp.buf.definition)
+vim.keymap.set("n", "gd", function()
+    if vim.bo.filetype ~= "man" then
+        return vim.lsp.buf.definition()
+    end
+    local word = vim.fn.expand("<cword>")
+    local match = word:match("([%w_-]+)%(%w+%)")
+
+    if match then
+        vim.cmd("Man " .. match)
+    end
+end)
 vim.keymap.set("n", "gh", ClangSwitchHeader)
 vim.keymap.set("n", "<C-s>", vim.lsp.buf.signature_help)
 vim.keymap.set("n", "<C-n>", function()

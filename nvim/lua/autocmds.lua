@@ -55,14 +55,6 @@ create_autocmd("BufEnter", "*.zig", function()
     vim.opt.makeprg = "zig build"
     Formatter = "zig fmt"
 end)
-create_autocmd("BufEnter", "scratch.md", function()
-    vim.opt.foldmethod = "expr"
-    vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
-end)
-create_autocmd("BufLeave", "scratch.md", function()
-    vim.opt.foldmethod = "manual"
-    vim.wo.foldexpr = ""
-end)
 
 create_autocmd("VimEnter", "*", function()
     -- Do not use if we're diffing files

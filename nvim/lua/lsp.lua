@@ -1,4 +1,28 @@
 local language_servers = {
+    -- TODO: WIP
+    ansiblels = {
+        cmd = { "ansible-language-server", "--stdio" },
+        -- Don't want this always running on every yaml, how do we know? Manually trigger? Always run but only on work laptop?
+        filetype = { "yaml.ansible" },
+        --root_markers = {},
+        settings = {
+            ansible = {
+                ansible = {
+                    path = "ansible",
+                },
+                executionEnvironment = {
+                    enabled = false,
+                },
+                validation = {
+                    enabled = true,
+                    lint = {
+                        enabled = true,
+                        path = "ansible-lint",
+                    },
+                },
+            },
+        },
+    },
     clangd = {
         filetype = { "cpp", "c" },
         root_markers = { ".clangd", ".clang-format", ".clang-tidy", "compile_commands.json" },
@@ -28,6 +52,7 @@ local language_servers = {
         },
     },
     pyright = {
+        cmd = { "pyright-langserver", "--stdio" },
         filetype = { "python" },
         root_markers = { "pyproject.toml", "requirements.txt", "setup.py" },
     },
@@ -36,7 +61,7 @@ local language_servers = {
         root_markers = { "Cargo.lock", "Cargo.toml" },
     },
     zls = {
-        filetype = { "zig" },
+        filetype = { "zig", "zir" },
         root_markers = { "build.zig", "build.zig.zon" },
     },
 }
@@ -44,6 +69,10 @@ local language_servers = {
 vim.lsp.config("*", {
     root_markers = { ".git" },
 })
+
+vim.diagnostic.config {
+    virtual_text = true,
+}
 
 for name, ls in pairs(language_servers) do
     vim.lsp.config[name] = {

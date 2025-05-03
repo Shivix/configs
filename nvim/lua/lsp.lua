@@ -1,28 +1,4 @@
 local language_servers = {
-    -- TODO: WIP
-    ansiblels = {
-        cmd = { "ansible-language-server", "--stdio" },
-        -- Don't want this always running on every yaml, how do we know? Manually trigger? Always run but only on work laptop?
-        filetype = { "yaml.ansible" },
-        --root_markers = {},
-        settings = {
-            ansible = {
-                ansible = {
-                    path = "ansible",
-                },
-                executionEnvironment = {
-                    enabled = false,
-                },
-                validation = {
-                    enabled = true,
-                    lint = {
-                        enabled = true,
-                        path = "ansible-lint",
-                    },
-                },
-            },
-        },
-    },
     clangd = {
         filetype = { "cpp", "c" },
         root_markers = { ".clangd", ".clang-format", ".clang-tidy", "compile_commands.json" },
@@ -87,41 +63,28 @@ end
 
 vim.api.nvim_create_user_command("ActiveLS", function()
     local bufnr = vim.api.nvim_get_current_buf()
-    -- using { method = textDocument/switchSourceHeader } seems to return all clients.
     local clients = vim.lsp.get_clients { bufnr = bufnr }
     print(vim.inspect(clients))
 end, { nargs = 0 })
 
 function ClangSwitchHeader()
-    local bufnr = vim.api.nvim_get_current_buf()
-    -- using { method = textDocument/switchSourceHeader } seems to return all clients.
     local client = vim.lsp.get_clients({ name = "clangd" })[1]
     if client == nil then
         print("Clangd not attached")
         return
     end
-    client.request(
+    client:request(
         "textDocument/switchSourceHeader",
-        { uri = vim.uri_from_bufnr(bufnr) },
+        vim.lsp.util.make_text_document_params(),
         function(err, result)
             if err then
                 error(tostring(err))
             end
             if not result then
-                print("Corresponding file cannot be determined")
+                print("Cannot find corresponding file")
                 return
             end
             vim.api.nvim_command("edit " .. vim.uri_to_fname(result))
-        end,
-        bufnr
+        end
     )
 end
-
-vim.api.nvim_create_autocmd("LspAttach", {
-    callback = function(args)
-        local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
-        if client.supports_method("textDocument/semanticTokensProvider") then
-            --client.server_capabilities.semanticTokensProvider = nil
-        end
-    end,
-})

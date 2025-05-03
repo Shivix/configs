@@ -9,8 +9,7 @@ local is_gromit_active = false
 -- Super key
 local modkey = "Mod4"
 
-local terminal = "tabbed -c alacritty --embed"
-local backup_terminal = "alacritty"
+local terminal = "alacritty"
 
 M.taglist_buttons = gears.table.join(
     awful.button({}, 1, function(t)
@@ -75,9 +74,7 @@ M.globalkeys = gears.table.join(
     end, { description = "go back", group = "client" }),
 
     awful.key({ modkey }, "Return", function()
-        if type(awful.spawn(terminal)) ~= "number" then
-            awful.spawn(backup_terminal)
-        end
+        awful.spawn(terminal)
     end, { description = "open a terminal", group = "launcher" }),
     awful.key(
         { modkey, "Control" },

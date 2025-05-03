@@ -9,10 +9,10 @@ end
 vim.api.nvim_create_augroup(main_group, {})
 
 create_autocmd("TextYankPost", nil, function()
-    vim.highlight.on_yank { higroup = "IncSearch", timeout = 150, on_visual = true }
+    vim.hl.on_yank()
 end)
 -- If there is no / in the pattern, vim will only check against the filename
-create_autocmd("BufEnter", "*.*.j2", function()
+create_autocmd({ "BufRead", "BufNewFile" }, "*.*.j2", function()
     local buf_name = vim.api.nvim_buf_get_name(0)
     local filetype = buf_name:match("([^.]+).j2$")
     if filetype == "yml" then
@@ -20,10 +20,10 @@ create_autocmd("BufEnter", "*.*.j2", function()
     end
     vim.bo.filetype = filetype
 end)
-create_autocmd("BufEnter", "configmap.yaml", function()
+create_autocmd({ "BufRead", "BufNewFile" }, "configmap.yaml", function()
     vim.bo.filetype = "helm"
 end)
-create_autocmd("BufEnter", "*.zsh", function()
+create_autocmd({ "BufRead", "BufNewFile" }, "*.zsh", function()
     vim.bo.filetype = "sh"
 end)
 create_autocmd("BufEnter", "*.rs", function()

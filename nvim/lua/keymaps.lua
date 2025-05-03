@@ -52,7 +52,6 @@ vim.keymap.set("n", "<leader>s", ":set spell!<CR>")
 
 vim.keymap.set("i", "<Down>", "<C-n>")
 vim.keymap.set("i", "<Up>", "<C-p>")
-vim.keymap.set("i", "<C-f>", "<C-x><C-f>")
 vim.keymap.set("i", "<Tab>", function()
     local col = vim.fn.col(".")
     local char = vim.fn.getline("."):sub(col - 1, col - 1)
@@ -72,8 +71,8 @@ vim.keymap.set("n", "gd", function()
     if vim.bo.filetype ~= "man" then
         return vim.lsp.buf.definition()
     end
-    local word = vim.fn.expand("<cword>")
-    local match = word:match("([%w_-]+)%(%w+%)")
+    local word = vim.fn.expand("<cWORD>")
+    local match = word:match("[%w.@_-]+%(%w+%)")
 
     if match then
         vim.cmd("Man " .. match)

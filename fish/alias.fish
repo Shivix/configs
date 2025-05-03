@@ -23,13 +23,11 @@ abbr gpush "git push origin"
 abbr gs "git status"
 abbr gblame "git blame -wCCC"
 
-abbr --position=anywhere -- --fwl "--force-with-lease"
+abbr --command=git --position=anywhere -- --fwl "--force-with-lease"
 
 abbr gitlscpp "git ls-files '*.cpp' '*.hpp' '*.cxx' '*.hxx'"
 
 abbr godebug "go build -gcflags=all='-N -l'"
-
-abbr scratch "nvim $HOME/Documents/Notes/scratch.md"
 
 abbr nvrg "nvim -c \"lua require('fzf-lua').live_grep()\""
 

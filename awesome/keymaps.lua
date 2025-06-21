@@ -111,7 +111,7 @@ M.globalkeys = gears.table.join(
 
     -- Prompt
     awful.key({ modkey }, "r", function()
-        awful.spawn("dmenu_run -sf '#161616' -sb '#efe2c1'")
+        awful.spawn("dmenu_run -sf '#161616' -sb '#efe2c1' -fn 'Jetbrains Mono-15'")
     end, { description = "run dmenu", group = "launcher" }),
 
     awful.key({ modkey }, "x", function()
@@ -126,9 +126,6 @@ M.globalkeys = gears.table.join(
     awful.key({ modkey }, "b", function()
         awful.spawn("/usr/bin/firefox-developer-edition")
     end, { description = "Firefox Developer Edition", group = "launcher" }),
-    awful.key({ modkey }, "g", function()
-        awful.spawn("gyazo")
-    end, { description = "Gyazo", group = "launcher" }),
     awful.key({ modkey }, "d", function()
         if not is_gromit_active then
             awful.spawn("gromit-mpx -a")

@@ -132,6 +132,9 @@ end)
 -- Backup jrnl
 local jrnl_location = os.getenv("HOME") .. "/.local/share/jrnl/journal.txt"
 local backup_location = os.getenv("HOME") .. "/.local/share/backup/journal.txt.backup"
+local secondary_location = os.getenv("HOME") .. "/.local/share/backup/journal.txt.backup2"
+
+os.execute("cp " .. jrnl_location .. " " .. secondary_location)
 
 local file = io.open(backup_location, "r")
 if file == nil then

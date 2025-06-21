@@ -6,12 +6,13 @@ function fzf-complete --description "Provides fuzzy commandline completion"
         return
     end
 
-    set -l fzf_args --tmux
+    set -l fzf_args
     # Use standard completion if a file/directory name has started to be typed.
     if test "$cmd" = "nvim "
         set -f complist (fd . --type f)
-        set fzf_args --preview "test -f {} && bat --color=always {}" --preview-window "border-left"
+        set fzf_args --preview "test -f {} && bat --color=always {}"
     else if test "$cmd" = "cd "
+        set fzf_args --preview "ls --color=always {}"
         set -f complist (cat $ZUA_DATA_FILE)
     else if test (commandline -t) = "**"
         set -f complist (fd .)
@@ -19,17 +20,14 @@ function fzf-complete --description "Provides fuzzy commandline completion"
         set -f complist (complete -C $cmdline)
     end
 
-    # Handle 0/ 1 case here instead of --exit-0 --select-1 to avoid --tmux window opening
-    switch (count $complist)
-        case 0
-            return
-        case 1
-            # Cut the completion description
-            commandline -tr -- (echo $complist | cut -f1)
-            return
+    set width (tput cols)
+    if test $width -gt 120
+        set preview_layout "right:50%:border-left"
+    else
+        set preview_layout "up:50%:border-down"
     end
 
-    set -l result (string join -- \n $complist | fzf --multi $fzf_args | cut -f1)
+    set -l result (string join -- \n $complist | fzf --multi --exit-0 --select-1 $fzf_args --preview-window $preview_layout | cut -f1)
     commandline -tr -- (string join -- " " $result)
 end
 bind \ci -M insert fzf-complete
@@ -242,6 +240,15 @@ function findrej
         match(\$0, /58=([^\x01|]*)/, reason);
         printf(\"%s | %s | %s\n\", stream[1], instr[1], reason[1]);
     }'
+end
+
+function darken
+    echo "3000" | sudo tee /sys/class/backlight/intel_backlight/brightness >/dev/null
+    redshift -P -O 4000
+end
+function brighten
+    echo "13000" | sudo tee /sys/class/backlight/intel_backlight/brightness >/dev/null
+    redshift -x
 end
 
 function init_fish --description "Sets universal variables for fish shell"

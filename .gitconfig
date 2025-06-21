@@ -1,19 +1,19 @@
 [credential]
-	helper = store
+    helper = store
 [core]
-	autocrlf = input
-	editor = nvim
+    autocrlf = input
+    editor = nvim
     pager = delta
 [alias]
-	grep = grep -i
+    grep = grep -i
 [commit]
-	gpgsign = true
+    gpgsign = true
 [grep]
-	linenumber = true
+    linenumber = true
 [merge]
     conflictstyle = diff3
 [rebase]
-	autosquash = true
+    autosquash = true
 [interactive]
     diffFilter = delta --color-only
 [delta]

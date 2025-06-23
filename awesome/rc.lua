@@ -149,7 +149,7 @@ end
 local jrnl_size = file:seek("end")
 file:close()
 
-if jrnl_size < 500 or jrnl_size < backup_size or jrnl_size > backup_size + 1000 then
+if jrnl_size < 500 or jrnl_size < backup_size or jrnl_size > backup_size + 2000 then
     naughty.notify {
         preset = naughty.config.presets.critical,
         title = "The jrnl size is smaller or massively larger than the backup, please check contents and manually backup",

@@ -4,13 +4,22 @@ local key_sets = {
     ["{"] = "}",
 }
 
-for open, close in pairs(key_sets) do
-    -- Ctrl-G U will prevent <Left> from breaking with . repeat
-    vim.keymap.set("i", open, open .. close .. "<C-g>U<Left>")
-    vim.keymap.set("i", close, function()
-        local pos = vim.api.nvim_win_get_cursor(0)[2] + 1
-        local next_char = vim.api.nvim_get_current_line():sub(pos, pos)
+local function get_next_char()
+    local pos = vim.api.nvim_win_get_cursor(0)[2] + 1
+    return vim.api.nvim_get_current_line():sub(pos, pos)
+end
 
+for open, close in pairs(key_sets) do
+    vim.keymap.set("i", open, function()
+        local next_char = get_next_char()
+        if next_char == "" or next_char == close then
+            -- Ctrl-G U will prevent <Left> from breaking with . repeat
+            return open .. close .. "<C-g>U<Left>"
+        end
+        return open
+    end, { expr = true })
+    vim.keymap.set("i", close, function()
+        local next_char = get_next_char()
         if next_char == close then
             return "<C-g>U<Right>"
         end
@@ -100,3 +109,22 @@ vim.keymap.set("n", "<leader>fq", fzf.quickfix)
 vim.keymap.set("n", "<leader>fr", fzf.live_grep_resume)
 vim.keymap.set("n", "<leader>fe", fzf.lsp_workspace_diagnostics)
 vim.keymap.set("n", "<leader>fs", fzf.lsp_live_workspace_symbols)
+
+-- RTS style keybinds for using marks
+for i = 1, 9 do
+    vim.keymap.set("n", "<C-" .. i .. ">", function()
+        vim.cmd("norm!m" .. string.char(64 + i))
+    end)
+    vim.keymap.set("n", "g" .. i, function()
+        local _, _, bufnr, filename = unpack(vim.api.nvim_get_mark(string.char(64 + i), {}))
+        if filename == "" then
+            print("Mark for " .. i .. " not set")
+            return
+        end
+        if bufnr ~= 0 then
+            vim.api.nvim_set_current_buf(bufnr)
+        else
+            vim.cmd("edit " .. filename)
+        end
+    end)
+end

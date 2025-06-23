@@ -19,7 +19,7 @@ if status --is-interactive
             bind jk -M $mode -m default ""
         end
     end
-    zua.lua init fish | source
+    zua init | source
     source ~/.config/fish/alias.fish
     source ~/.config/fish/function.fish
     # Override /etc/environment

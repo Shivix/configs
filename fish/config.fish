@@ -1,7 +1,5 @@
 if status is-login
-    if test -z "$DISPLAY" -a "$XDG_VTNR" = 1
-        #exec startx
-    end
+    set -Ue MOTD_WAS_SHOWN
 end
 
 if status --is-interactive
@@ -25,4 +23,13 @@ if status --is-interactive
     # Override /etc/environment
     set -gx EDITOR nvim
     set -gx GPG_TTY (tty)
+
+    if status is-login
+        return
+    end
+    # Only show if it hasn't already been shown this session
+    if not set -q MOTD_WAS_SHOWN
+        fastfetch
+        set -U MOTD_WAS_SHOWN yes
+    end
 end

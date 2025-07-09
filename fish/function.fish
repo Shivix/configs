@@ -40,7 +40,6 @@ function fish_prompt
         (set_color bryellow)(prompt_pwd -d 3 -D 2) \
         (set_color yellow)$branch \
         (jobs | awk 'NR==1{ print "\n"$1 }')(set_color bryellow)
-
 end
 
 function exit
@@ -56,6 +55,10 @@ end
 
 function fzfpac --description "Fuzzy find pacman packages"
     pacman -Slq | fzf --multi --preview 'pacman -Si {1}'
+end
+
+function fzflus --description "Fuzzy find lus journals"
+    lus "" --short | fzf --multi --preview "lus {} --file | xargs bat -H 1 --language markdown --color=always"
 end
 
 function fzfrg --description "Combination of fzf and ripgrep"
@@ -158,7 +161,7 @@ end
 
 function checkout_pr
     git fetch upstream pull/$argv/head
-    git checkout FETCH_HEAD
+    git switch FETCH_HEAD --detach
 end
 
 function condense_logs --description "Condenses FIX logs down to a summary"

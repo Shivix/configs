@@ -128,32 +128,3 @@ end)
 client.connect_signal("unfocus", function(c)
     c.border_color = beautiful.border_normal
 end)
-
--- Backup jrnl
-local jrnl_location = os.getenv("HOME") .. "/.local/share/jrnl/journal.txt"
-local backup_location = os.getenv("HOME") .. "/.local/share/backup/journal.txt.backup"
-local secondary_location = os.getenv("HOME") .. "/.local/share/backup/journal.txt.backup2"
-
-os.execute("cp " .. jrnl_location .. " " .. secondary_location)
-
-local file = io.open(backup_location, "r")
-if file == nil then
-    return
-end
-local backup_size = file:seek("end")
-file:close()
-file = io.open(jrnl_location, "r")
-if file == nil then
-    return
-end
-local jrnl_size = file:seek("end")
-file:close()
-
-if jrnl_size < 500 or jrnl_size < backup_size or jrnl_size > backup_size + 2000 then
-    naughty.notify {
-        preset = naughty.config.presets.critical,
-        title = "The jrnl size is smaller or massively larger than the backup, please check contents and manually backup",
-    }
-else
-    os.execute("cp " .. jrnl_location .. " " .. backup_location)
-end

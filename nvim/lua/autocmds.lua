@@ -35,7 +35,7 @@ end)
 create_autocmd("BufEnter", "*.cpp,*.hpp,*.c,*.h,*.cxx,*.hxx", function()
     Linter = "clang-tidy"
     Formatter = "clang-format -i"
-    if vim.fn.isdirectory("cmake-build-debug") then
+    if vim.fn.isdirectory("cmake-build-debug") == 1 then
         vim.opt.makeprg = "make --no-print-directory -j -C cmake-build-debug"
     else
         vim.opt.makeprg = "make -j"
@@ -47,13 +47,23 @@ end)
 create_autocmd("BufEnter", "*.lua", function()
     Linter = "selene"
     Formatter = "stylua"
+    vim.opt.makeprg = "luac -p %"
+    vim.opt.errorformat = "luac: %f:%l: %m"
 end)
 create_autocmd("BufEnter", "*.py", function()
-    Formatter = "yapf -i"
+    Formatter = "ruff format"
 end)
 create_autocmd("BufEnter", "*.zig", function()
     vim.opt.makeprg = "zig build"
     Formatter = "zig fmt"
+end)
+
+create_autocmd("BufEnter", "*.sent", function()
+    vim.cmd([[
+        syntax match Macro "^@.*$"
+        syntax match Comment "^#.*$"
+        syntax match Operator "\\"
+    ]])
 end)
 
 create_autocmd("VimEnter", "*", function()

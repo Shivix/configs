@@ -14,7 +14,7 @@ abbr rg "rg --smart-case"
 abbr tma "tmux attach"
 abbr dc "docker-compose"
 abbr cat "bat"
-abbr kc "kubectl"
+abbr ap "ansible-playbook"
 
 abbr gamend "git commit --amend"
 abbr gfetch "git fetch upstream"
@@ -26,6 +26,10 @@ abbr gblame "git blame -wCCC"
 abbr --command=git --position=anywhere -- --fwl "--force-with-lease"
 
 abbr gitlscpp "git ls-files '*.cpp' '*.hpp' '*.cxx' '*.hxx'"
+
+abbr kc "kubectl"
+abbr --command=kubectl --position=anywhere restart "rollout restart"
+#abbr -a L --position anywhere --set-cursor "% | less"
 
 abbr godebug "go build -gcflags=all='-N -l'"
 

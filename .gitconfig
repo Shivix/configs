@@ -1,5 +1,3 @@
-[credential]
-    helper = store
 [core]
     autocrlf = input
     editor = nvim
@@ -8,17 +6,20 @@
     grep = grep -i
 [commit]
     gpgsign = true
-[grep]
-    linenumber = true
-[merge]
-    conflictstyle = diff3
-[rebase]
-    autosquash = true
-[interactive]
-    diffFilter = delta --color-only
 [delta]
     navigate = true
     side-by-side = true
     syntax-theme = gruvbox-dark
 [diff]
     submodule = log
+[grep]
+    linenumber = true
+[interactive]
+    diffFilter = delta --color-only
+[merge]
+    conflictstyle = zdiff3
+    tool = nvimdiff
+[pull]
+    rebase = true
+[rebase]
+    autosquash = true

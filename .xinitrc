@@ -3,8 +3,7 @@
 xmodmap "$HOME/.Xmodmap"
 xrdb "$HOME/.Xresources"
 
-session=${1:-awesome}
-case $session in
-    xfce|xfce4) exec startxfce4;;
-    *)          exec awesome;;
-esac
+feh --no-fehbg --bg-scale "$HOME/Pictures/Wallpapers/sidcyberpunk.png" &
+status_bar &
+dunst &
+exec dwm

@@ -110,13 +110,22 @@ function mkcd --wraps mkdir --description "Creates directory and cds into it"
 end
 
 function config_diff --description "Opens a vimdiff between the version controlled and system used config files"
-    nvim -d ~/GitHub/configs/$argv ~/.config/$argv
+    if test -f ~/.config/$argv
+        nvim -d ~/System/configs/$argv ~/.config/$argv
+    end
+    if test -f ~/$argv
+        nvim -d ~/System/configs/$argv ~/$argv
+    end
 end
 
 function config_repo_diff --description "Prints the config files that do not match their system used counterparts"
-    set -l files (fd --type file)
+    set -l files (fd --hidden --type file)
     for file in $files
         set -l diff (diff $file ~/.config/$file 2>/dev/null)
+        if test -n "$diff"
+            echo $file
+        end
+        set -l diff (diff $file ~/$file 2>/dev/null)
         if test -n "$diff"
             echo $file
         end
@@ -258,12 +267,14 @@ function init_fish --description "Sets universal variables for fish shell"
     fish_vi_key_bindings
 
     fish_add_path ~/.cargo/bin
+    fish_add_path ~/.go/bin
 
-    set -Ux VISUAL nvim
-    set -Ux FZF_DEFAULT_OPTS "--bind=ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up"
     set -Ux FZF_DEFAULT_COMMAND "fd --type f --full-path --strip-cwd-prefix"
-    set -Ux RG_PREFIX "rg --column --no-heading --color=always"
+    set -Ux FZF_DEFAULT_OPTS "--bind=ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up"
+    set -Ux GOPATH ~/.go
     set -Ux MANPAGER "nvim -c Man!"
+    set -Ux RG_PREFIX "rg --column --no-heading --color=always"
+    set -Ux VISUAL nvim
 
     set -Ux fish_greeting
     set -Ux fish_browser "firefox-developer-edition"

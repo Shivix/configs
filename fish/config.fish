@@ -20,8 +20,7 @@ if status --is-interactive
     zua init | source
     source ~/.config/fish/alias.fish
     source ~/.config/fish/function.fish
-    # Override /etc/environment
-    set -gx EDITOR nvim
+
     set -gx GPG_TTY (tty)
 
     if status is-login

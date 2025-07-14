@@ -58,7 +58,7 @@ function fzfpac --description "Fuzzy find pacman packages"
 end
 
 function fzflus --description "Fuzzy find lus journals"
-    lus "" --short | fzf --multi --preview "lus {} --file | xargs bat -H 1 --language markdown --color=always"
+    lus "" --short | fzf --multi --preview "lus {} --fixed-strings --file | xargs bat -H 1 --language markdown --color=always"
 end
 
 function fzfrg --description "Combination of fzf and ripgrep"
@@ -269,6 +269,7 @@ function init_fish --description "Sets universal variables for fish shell"
     fish_add_path ~/.cargo/bin
     fish_add_path ~/.go/bin
 
+    set -Ux EDITOR nvim
     set -Ux FZF_DEFAULT_COMMAND "fd --type f --full-path --strip-cwd-prefix"
     set -Ux FZF_DEFAULT_OPTS "--bind=ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up"
     set -Ux GOPATH ~/.go

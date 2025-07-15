@@ -1,0 +1,9 @@
+cache-file ~/.local/state/newsboat/cache.db
+
+color listnormal        color224 black
+color listnormal_unread color224 black
+color listfocus         black yellow
+color listfocus_unread  black yellow bold
+color info              yellow black
+color background        color224 black
+color article           color224 black

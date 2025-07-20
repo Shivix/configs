@@ -59,8 +59,20 @@ vim.keymap.set("n", "<C-l>", "<C-w>l")
 
 vim.keymap.set("n", "<leader>s", ":set spell!<CR>")
 
-vim.keymap.set("i", "<Down>", "<C-n>")
-vim.keymap.set("i", "<Up>", "<C-p>")
+vim.keymap.set("i", "<Down>", function()
+    if vim.fn.pumvisible() == 1 then
+        return "<C-n>"
+    else
+        return "<Down>"
+    end
+end, { expr = true })
+vim.keymap.set("i", "<Up>", function()
+    if vim.fn.pumvisible() == 1 then
+        return "<C-n>"
+    else
+        return "<Up>"
+    end
+end, { expr = true })
 vim.keymap.set("i", "<Tab>", function()
     local col = vim.fn.col(".")
     local char = vim.fn.getline("."):sub(col - 1, col - 1)

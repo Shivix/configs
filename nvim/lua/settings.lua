@@ -11,7 +11,6 @@ vim.opt.laststatus = 3
 vim.opt.list = true
 vim.opt.listchars = "tab:» ,trail:*"
 vim.opt.mouse = ""
-vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.shiftwidth = 4
 vim.opt.showmode = false

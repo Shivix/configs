@@ -10,6 +10,7 @@ abbr ctd "ctest --test-dir cmake-build-debug"
 abbr ctr "ctest --test-dir cmake-build-release"
 
 abbr rm "rm -i"
+abbr cp "cp -i"
 abbr mv "mv -i"
 abbr wt "git worktree"
 abbr tree "tree --gitignore"
@@ -32,6 +33,7 @@ abbr gitlscpp "git ls-files '*.cpp' '*.hpp' '*.cxx' '*.hxx'"
 
 abbr kc "kubectl"
 abbr --command=kubectl --position=anywhere rr "rollout restart"
+abbr --command=kubectl --position=anywhere ec "config use-context"
 
 abbr dexec --set-cursor "docker exec -it % bash"
 abbr dbuild --set-cursor "docker build -t % ."

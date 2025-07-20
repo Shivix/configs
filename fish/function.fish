@@ -280,6 +280,7 @@ function init_fish --description "Sets universal variables for fish shell"
     set -Ux fish_greeting
     set -Ux fish_browser "firefox-developer-edition"
     set -U fish_autosuggestion_enabled 0
+    set -U fish_handle_reflow 0
 
     set -U fish_color_autosuggestion grey
     set -U fish_color_cancel brwhite

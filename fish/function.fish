@@ -61,11 +61,11 @@ function fzflus --description "Fuzzy find lus journals"
     lus "" --short | fzf --multi --preview "lus {} --fixed-strings --file | xargs bat -H 1 --language markdown --color=always"
 end
 
-function nvrg
+function fzfrg
     if test "$argv" = "resume" -o "$argv" = "r"
         set -f query (cat /tmp/rg_fzf_resume_query)
     end
-    set -l result (env FZF_DEFAULT_COMMAND="$RG_PREFIX \"$query\" || true" \
+    env FZF_DEFAULT_COMMAND="$RG_PREFIX $query || true" \
     fzf --ansi --disabled --delimiter : \
         --bind "change:reload:sleep 0.1; $RG_PREFIX {q} || true" \
         --query "$query" \
@@ -80,10 +80,19 @@ function nvrg
         --bind 'enter:execute-silent(echo {q} > /tmp/rg_fzf_resume_query)+accept' \
         --preview "bat --color=always {1} --highlight-line {2} --line-range (math max {2}-20,0):+50" \
         --preview-window "border-left" \
-        --multi)
+        --multi
+end
+
+function nvrg
+    set -l result (fzfrg $argv)
     if test -n "$result"
-        set parts (string split ':' -- $result)
-        commandline -r "nvim +$parts[2] $parts[1]"
+        if test (count $result) -eq 1
+            set parts (string split ':' -- $result)
+            nvim +$parts[2] $parts[1]
+        else
+            string split \n -- $result > /tmp/nvrg_quickfixlist
+            nvim -q /tmp/nvrg_quickfixlist --cmd copen
+        end
     end
 end
 

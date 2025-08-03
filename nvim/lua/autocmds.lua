@@ -75,7 +75,7 @@ create_autocmd("VimEnter", "*", function()
     if type(files) == "table" and #files > 1 then
         local qflist = {}
         for _, file in ipairs(files) do
-            table.insert(qflist, { filename = file })
+            table.insert(qflist, { filename = file, lnum = 1 })
         end
         vim.fn.setqflist(qflist, "r")
         vim.cmd("copen")

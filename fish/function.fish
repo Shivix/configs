@@ -61,23 +61,30 @@ function fzflus --description "Fuzzy find lus journals"
     lus "" --short | fzf --multi --preview "lus {} --fixed-strings --file | xargs bat -H 1 --language markdown --color=always"
 end
 
-function fzfrg --description "Combination of fzf and ripgrep"
-    # || true hides the error message if no query is given.
-    env FZF_DEFAULT_COMMAND="$RG_PREFIX $argv || true" \
+function nvrg
+    if test "$argv" = "resume" -o "$argv" = "r"
+        set -f query (cat /tmp/rg_fzf_resume_query)
+    end
+    set -l result (env FZF_DEFAULT_COMMAND="$RG_PREFIX \"$query\" || true" \
     fzf --ansi --disabled --delimiter : \
         --bind "change:reload:sleep 0.1; $RG_PREFIX {q} || true" \
-        --query "$argv" \
+        --query "$query" \
         --prompt 'rg> ' \
-        --bind 'ctrl-f:transform:
+        --bind 'ctrl-g:transform:
             if test "$FZF_PROMPT" = "rg> "
-                echo "unbind(change)+change-prompt(fzf> )+enable-search+transform-query:echo \{q} > /tmp/rg-fzf-r; cat /tmp/rg-fzf-f"
+                echo "unbind(change)+change-prompt(fzf> )+enable-search+transform-query:echo {q} > /tmp/rg_fzf_r; cat /tmp/rg_fzf_f"
             else
-                echo "rebind(change)+change-prompt(rg> )+disable-search+transform-query:echo \{q} > /tmp/rg-fzf-f; cat /tmp/rg-fzf-r"
+                echo "rebind(change)+change-prompt(rg> )+disable-search+transform-query:echo {q} > /tmp/rg_fzf_f; cat /tmp/rg_fzf_r"
             end
         ' \
+        --bind 'enter:execute-silent(echo {q} > /tmp/rg_fzf_resume_query)+accept' \
         --preview "bat --color=always {1} --highlight-line {2} --line-range (math max {2}-20,0):+50" \
         --preview-window "border-left" \
-        --multi
+        --multi)
+    if test -n "$result"
+        set parts (string split ':' -- $result)
+        commandline -r "nvim +$parts[2] $parts[1]"
+    end
 end
 
 function fix_vwap
@@ -274,7 +281,7 @@ function init_fish --description "Sets universal variables for fish shell"
     set -Ux FZF_DEFAULT_OPTS "--bind=ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up"
     set -Ux GOPATH ~/.go
     set -Ux MANPAGER "nvim -c Man!"
-    set -Ux RG_PREFIX "rg --column --no-heading --color=always"
+    set -Ux RG_PREFIX "rg --column --no-heading --color=always --smart-case"
     set -Ux VISUAL nvim
 
     set -Ux fish_greeting

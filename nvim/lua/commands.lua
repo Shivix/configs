@@ -40,6 +40,26 @@ vim.api.nvim_create_user_command("GHLink", function()
     vim.fn.setreg("+", "github.com/" .. repo .. "/blob/master/" .. file .. "#L" .. line)
 end, { nargs = 0 })
 
+vim.api.nvim_create_user_command("GitHunks", function()
+    local output = vim.fn.systemlist("git diff --unified=0 --no-prefix")
+    local qflist = {}
+    local current_file
+    for _, line in ipairs(output) do
+        local file = line:match("^%+%+%+ (.*)")
+        if file then
+            current_file = file
+        end
+        local lnum = line:match("+(%d+) @@")
+        if lnum then
+            if lnum then
+                table.insert(qflist, { filename = current_file, lnum = tonumber(lnum) })
+            end
+        end
+    end
+    vim.fn.setqflist(qflist, "r")
+    vim.cmd("copen")
+end, { nargs = 0 })
+
 function GetLine(offset)
     local cur_line = vim.fn.line(".")
     return vim.fn.getline(cur_line + offset)

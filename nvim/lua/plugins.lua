@@ -82,26 +82,22 @@ require("nvim-treesitter.configs").setup {
     ensure_installed = {
         "bash",
         "cmake",
+        --"c", Included by default.
         "cpp",
         "dockerfile",
         "fish",
         "go",
-        "gomod",
-        -- "latex", requires treesitter-cli and Node
-        "lua",
+        --"lua", Included by default.
         "make",
-        "markdown",
+        --"markdown", Included by default.
+        "perl",
         "python",
-        "regex",
         "rust",
         "toml",
-        "vim",
-        "vimdoc",
+        --"vim", Included by default.
+        --"vimdoc", Included by default.
         "yaml",
         "zig",
     },
-    ignore_install = {},
     highlight = { enable = true },
-    modules = {},
-    sync_install = false,
 }

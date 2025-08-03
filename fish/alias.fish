@@ -24,7 +24,7 @@ abbr gamend "git commit --amend"
 abbr gfetch "git fetch upstream"
 abbr gfetchall "git fetch --all --prune -j$num_cpus"
 abbr gpush "git push origin"
-abbr gs "git status"
+abbr gs "git status --short"
 abbr gblame "git blame -wCCC"
 
 abbr --command=git --position=anywhere -- --fwl "--force-with-lease"
@@ -41,12 +41,12 @@ abbr drun "docker run -it"
 
 abbr godebug "go build -gcflags=all='-N -l'"
 
-abbr nvrg "nvim -c \"lua require('fzf-lua').live_grep()\""
-
 abbr cr "cargo run"
 abbr crr "cargo run --release"
 abbr cb "cargo run"
 abbr cbr "cargo run --release"
+
+abbr refresh "source ~/.config/fish/config.fish"
 
 abbr trim_whitespace "git ls-files | xargs sed -i 's/[[:space:]]*\$//'"
 

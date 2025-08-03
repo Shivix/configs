@@ -1,1 +1,5 @@
 set recolor true
+
+map <C-=> zoom in
+map <C--> zoom out
+map <C-0> zoom reset

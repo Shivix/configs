@@ -23,3 +23,7 @@
     rebase = true
 [rebase]
     autosquash = true
+[status]
+    branch = true
+[tag]
+    sort = version:refname

@@ -64,30 +64,40 @@ end
 function fzfrg
     if test "$argv" = "resume" -o "$argv" = "r"
         set -f query (cat /tmp/rg_fzf_resume_query)
-        cat /tmp/rg_fzf_resume_fzf_query >/tmp/rg_fzf_f 2>/dev/null
+        cat /tmp/rg_fzf_resume_fzf_query >/tmp/rg_fzf_f
     else
         echo "" >/tmp/rg_fzf_f
     end
-    env FZF_DEFAULT_COMMAND="$RG_PREFIX $query || true" \
+    if test -n "$query"
+        set escaped (string replace -a "'" "\\'" $query)
+        set rg_command "$RG_PREFIX '$escaped'"
+    else
+        # Avoid searching for rg '' on start.
+        set rg_command "true"
+    end
+    env FZF_DEFAULT_COMMAND="$rg_command" \
     fzf --ansi --disabled --delimiter : \
         --bind "change:reload:sleep 0.1; $RG_PREFIX {q} || true" \
         --query "$query" \
         --prompt "rg> " \
         --bind 'ctrl-g:transform:
             if test "$FZF_PROMPT" = "rg> "
-                echo "unbind(change)+change-prompt(fzf> )+enable-search+transform-query:echo {q} >/tmp/rg_fzf_r; cat /tmp/rg_fzf_f"
+                echo "unbind(change)+change-prompt(fzf> )+enable-search+transform-query:echo \{q} > /tmp/rg_fzf_r; cat /tmp/rg_fzf_f"
             else
-                echo "rebind(change)+change-prompt(rg> )+disable-search+transform-query:echo {q} >/tmp/rg_fzf_f; cat /tmp/rg_fzf_r"
+                echo "rebind(change)+change-prompt(rg> )+disable-search+transform-query:echo \{q} > /tmp/rg_fzf_f; cat /tmp/rg_fzf_r"
             end
         ' \
         --header "Press ctrl-g to switch between rg and fzf mode" \
-        --bind 'enter:transform:
+        --bind 'enter:execute(
             if test "$FZF_PROMPT" = "rg> "
-                echo "execute-silent(echo {q} >/tmp/rg_fzf_resume_query)+execute-silent(echo "" >/tmp/rg_fzf_resume_fzf_query && echo "" >/tmp/rg_fzf_f)+accept"
+                echo {q} >/tmp/rg_fzf_resume_query
+                echo "" >/tmp/rg_fzf_resume_fzf_query
+                echo "" >/tmp/rg_fzf_f
             else
-                echo "execute-silent(cat /tmp/rg_fzf_r >/tmp/rg_fzf_resume_query)+execute-silent(echo {q} >/tmp/rg_fzf_resume_fzf_query)+accept"
+                cat /tmp/rg_fzf_r >/tmp/rg_fzf_resume_query
+                echo {q} >/tmp/rg_fzf_resume_fzf_query
             end
-        ' \
+        )+accept' \
         --preview "bat --color=always {1} --highlight-line {2} --line-range (math max {2}-20,0):+50" \
         --preview-window "border-left" \
         --multi

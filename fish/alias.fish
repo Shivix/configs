@@ -33,7 +33,7 @@ abbr gitlscpp "git ls-files '*.cpp' '*.hpp' '*.cxx' '*.hxx'"
 
 abbr kc "kubectl"
 abbr --command=kubectl --position=anywhere rr "rollout restart"
-abbr --command=kubectl --position=anywhere ec "config use-context"
+abbr --command=kubectl --position=anywhere uc "config use-context"
 
 abbr dexec --set-cursor "docker exec -it % bash"
 abbr dbuild --set-cursor "docker build -t % ."

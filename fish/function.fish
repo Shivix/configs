@@ -193,7 +193,7 @@ function wt_status --description "Prints the status of each worktree in a repo"
 end
 
 function grebase --description "Rebase branch keeping changes intact"
-    set -l should_stash (git status --short --ignore-submodules --untracked=no)
+    set -l should_stash (git status --short --ignore-submodules --untracked=no --porcelain)
     if test -n "$should_stash"
         git stash
     end

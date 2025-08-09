@@ -12,13 +12,18 @@ end
 for open, close in pairs(key_sets) do
     vim.keymap.set("i", open, function()
         local next_char = get_next_char()
-        if next_char == "" or next_char == close then
+        if next_char == "" then
             -- Ctrl-G U will prevent <Left> from breaking with . repeat
             return open .. close .. "<C-g>U<Left>"
         end
         return open
     end, { expr = true })
     vim.keymap.set("i", close, function()
+        local pos = vim.api.nvim_win_get_cursor(0)[2] + 1
+        local line = vim.api.nvim_get_current_line():sub(pos)
+        if line:match("[^"..close.."]") then
+            return close
+        end
         local next_char = get_next_char()
         if next_char == close then
             return "<C-g>U<Right>"
@@ -43,6 +48,13 @@ vim.keymap.set("i", "<BS>", function()
     return if_pair_else("<BS><Del>", "<BS>")
 end, { expr = true })
 vim.keymap.set("i", "<CR>", function()
+    if vim.bo.filetype == "lua" then
+        local line = vim.api.nvim_get_current_line()
+        print(line)
+        if line:match("^%s*if.+then$") or line:match("^%s*for.+do$") then
+            return "end<Left><Left><Left><CR><ESC>O"
+        end
+    end
     return if_pair_else("<CR><ESC>==O", "<CR>")
 end, { expr = true })
 

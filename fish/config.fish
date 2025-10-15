@@ -17,7 +17,6 @@ if status --is-interactive
             bind jk -M $mode -m default ""
         end
     end
-    bind xp -M default "commandline -f forward-char transpose-chars backward-char"
 
     zua init | source
     source ~/.config/fish/alias.fish

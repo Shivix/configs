@@ -50,7 +50,6 @@ end, { expr = true })
 vim.keymap.set("i", "<CR>", function()
     if vim.bo.filetype == "lua" then
         local line = vim.api.nvim_get_current_line()
-        print(line)
         if line:match("^%s*if.+then$") or line:match("^%s*for.+do$") then
             return "end<Left><Left><Left><CR><ESC>O"
         end
@@ -101,6 +100,13 @@ vim.keymap.set("i", "<Tab>", function()
 end, { expr = true })
 
 vim.keymap.set("n", "gd", function()
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        -- Close lsp hover window if open
+        local config = vim.api.nvim_win_get_config(win)
+        if config.relative ~= "" then
+            vim.api.nvim_win_close(win, true)
+        end
+    end
     if vim.bo.filetype ~= "man" then
         return vim.lsp.buf.definition()
     end
@@ -130,9 +136,10 @@ vim.keymap.set("n", "<leader>fg", fzf.live_grep)
 vim.keymap.set("n", "<leader>fh", fzf.help_tags)
 vim.keymap.set("n", "<leader>fj", fzf.jumps)
 vim.keymap.set("n", "<leader>fq", fzf.quickfix)
-vim.keymap.set("n", "<leader>fr", fzf.live_grep_resume)
+vim.keymap.set("n", "<leader>fr", fzf.resume)
+vim.keymap.set("n", "<leader>ft", fzf.builtin)
 vim.keymap.set("n", "<leader>fe", fzf.lsp_workspace_diagnostics)
-vim.keymap.set("n", "<leader>fs", fzf.lsp_live_workspace_symbols)
+vim.keymap.set("n", "<leader>fs", fzf.spell_suggest)
 
 -- RTS style keybinds for using marks
 for i = 1, 9 do

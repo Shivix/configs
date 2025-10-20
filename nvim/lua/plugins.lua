@@ -58,20 +58,30 @@ require("fzf-lua").setup {
     fzf_opts = {
         ["--layout"] = "default",
     },
+    manpages = {
+        previewer = "man_native",
+    },
     winopts = {
-        border = { "", "", "", "│", "", "", "", "" },
+        border = "none",
         fullscreen = true,
+        treesitter = false,
         preview = {
-            horizontal = "right:50%",
-            scrollbar = false,
+            default = "bat",
+            border = "border-left",
         },
     },
     defaults = {
         git_icons = false,
         file_icons = false,
     },
+    previewers = {
+        bat = {
+            args = "plain",
+        },
+    },
     lsp = {
         symbols = {
+            -- Hide icons in lsp symbol pickers
             symbol_style = 3,
         },
     },

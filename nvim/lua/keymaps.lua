@@ -21,7 +21,7 @@ for open, close in pairs(key_sets) do
     vim.keymap.set("i", close, function()
         local pos = vim.api.nvim_win_get_cursor(0)[2] + 1
         local line = vim.api.nvim_get_current_line():sub(pos)
-        if line:match("[^"..close.."]") then
+        if line:match("[^" .. close .. "]") then
             return close
         end
         local next_char = get_next_char()
@@ -100,13 +100,6 @@ vim.keymap.set("i", "<Tab>", function()
 end, { expr = true })
 
 vim.keymap.set("n", "gd", function()
-    for _, win in ipairs(vim.api.nvim_list_wins()) do
-        -- Close lsp hover window if open
-        local config = vim.api.nvim_win_get_config(win)
-        if config.relative ~= "" then
-            vim.api.nvim_win_close(win, true)
-        end
-    end
     if vim.bo.filetype ~= "man" then
         return vim.lsp.buf.definition()
     end
@@ -131,15 +124,16 @@ vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename)
 
 local fzf = require("fzf-lua")
 vim.keymap.set("n", "gr", fzf.lsp_references)
+vim.keymap.set("n", "<leader>fe", fzf.lsp_workspace_diagnostics)
 vim.keymap.set("n", "<leader>ff", fzf.files)
 vim.keymap.set("n", "<leader>fg", fzf.live_grep)
 vim.keymap.set("n", "<leader>fh", fzf.help_tags)
 vim.keymap.set("n", "<leader>fj", fzf.jumps)
+vim.keymap.set("n", "<leader>fo", fzf.oldfiles)
 vim.keymap.set("n", "<leader>fq", fzf.quickfix)
 vim.keymap.set("n", "<leader>fr", fzf.resume)
-vim.keymap.set("n", "<leader>ft", fzf.builtin)
-vim.keymap.set("n", "<leader>fe", fzf.lsp_workspace_diagnostics)
 vim.keymap.set("n", "<leader>fs", fzf.spell_suggest)
+vim.keymap.set("n", "<leader>ft", fzf.builtin)
 
 -- RTS style keybinds for using marks
 for i = 1, 9 do

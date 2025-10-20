@@ -6,13 +6,9 @@ function fzf-complete --description "Provides fuzzy commandline completion"
         return
     end
 
-    set -l fzf_args
-    # Use standard completion if a file/directory name has started to be typed.
-    if test "$cmd" = "nvim "
-        set -f complist (fd . --type f)
-        set fzf_args --preview "test -f {} && bat --color=always {}"
-    else if test "$cmd" = "cd "
-        set fzf_args --preview "ls --color=always {}"
+    # Trigger cd completion if commandline is empty
+    if test "$cmd" = "cd " -o "$cmd" = ""
+        set -f fzf_args --preview "ls --color=always {}"
         set -f complist (cat $ZUA_DATA_FILE)
     else if test (commandline -t) = "**"
         set -f complist (fd .)
@@ -27,10 +23,13 @@ function fzf-complete --description "Provides fuzzy commandline completion"
         set preview_layout "up:50%:border-down"
     end
 
-    set -l result (string join -- \n $complist | fzf --multi --exit-0 --select-1 $fzf_args --preview-window $preview_layout | cut -f1)
+    set -l result (string join -- \n $complist | fzf --multi --exit-0 --select-1 --height 50% $fzf_args --preview-window $preview_layout | cut -f1)
     commandline -tr -- (string join -- " " $result)
+    # Need to repaint after if using --height
+    commandline -f repaint
 end
-bind \ci -M insert fzf-complete
+# Use builtin completion by default, but add bind to trigger fzf/dmenu based completion
+bind \cf -M insert fzf-complete
 
 function fish_mode_prompt; end
 function fish_prompt
@@ -40,13 +39,6 @@ function fish_prompt
         (set_color bryellow)(prompt_pwd -d 3 -D 2) \
         (set_color yellow)$branch \
         (jobs | awk 'NR==1{ print "\n"$1 }')(set_color bryellow)
-end
-
-function exit
-    read -l -P 'Are you sure you want to exit fish? (y/n) ' confirmation
-    if test "$confirmation" = "y"
-        builtin exit
-    end
 end
 
 function fzffix --description "Put the input into fzf and preview with prefix"
@@ -99,21 +91,21 @@ function fzfrg
             end
         )+accept' \
         --preview "bat --color=always {1} --highlight-line {2} --line-range (math max {2}-20,0):+50" \
-        --preview-window "border-left" \
+        --preview-window "right:35%:border-left" \
         --multi
 end
 
+function nvf
+    nvim -c "lua require('fzf-lua').files()"
+end
+function nvo
+    nvim -c "lua require('fzf-lua').oldfiles()"
+end
 function nvrg
-    set -l result (fzfrg $argv)
-    if test -n "$result"
-        if test (count $result) -eq 1
-            set parts (string split ':' -- $result)
-            nvim +$parts[2] $parts[1]
-        else
-            string split \n -- $result > /tmp/nvrg_quickfixlist
-            nvim -q /tmp/nvrg_quickfixlist --cmd copen
-        end
-    end
+    nvim -c "lua require('fzf-lua').live_grep()"
+end
+function nvr
+    nvim -c "lua require('fzf-lua').resume()"
 end
 
 function fix_vwap

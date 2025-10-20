@@ -76,7 +76,8 @@ require("fzf-lua").setup {
     },
     previewers = {
         bat = {
-            args = "plain",
+            -- Avoid default --style=number arg being added
+            args = "--color=always",
         },
     },
     lsp = {

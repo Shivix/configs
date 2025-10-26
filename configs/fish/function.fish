@@ -137,29 +137,6 @@ function mkcd --wraps mkdir --description "Creates directory and cds into it"
     mkdir $argv && cd $argv
 end
 
-function config_diff --description "Opens a vimdiff between the version controlled and system used config files"
-    if test -f ~/.config/$argv
-        nvim -d ~/System/configs/$argv ~/.config/$argv
-    end
-    if test -f ~/$argv
-        nvim -d ~/System/configs/$argv ~/$argv
-    end
-end
-
-function config_repo_diff --description "Prints the config files that do not match their system used counterparts"
-    set -l files (fd --hidden --type file)
-    for file in $files
-        set -l diff (diff $file ~/.config/$file 2>/dev/null)
-        if test -n "$diff"
-            echo $file
-        end
-        set -l diff (diff $file ~/$file 2>/dev/null)
-        if test -n "$diff"
-            echo $file
-        end
-    end
-end
-
 function update_copyright --description "Increment the copyright year on any modified files"
     set -l files (git diff --name-only --ignore-submodules)
     if test -z "$files"

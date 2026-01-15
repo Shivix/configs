@@ -23,13 +23,17 @@ for _, plugin in ipairs(plugins) do
 end
 
 vim.api.nvim_create_user_command("UpdatePlugins", function()
-    local new_commits = {}
+    local update_log = {}
     for _, plugin in ipairs(plugins) do
         print("Updating plugin: " .. plugin)
         local install_path = plugin_path .. plugin
         local pull = vim.fn.system("git -C " .. install_path .. " pull")
+        if vim.v.shell_error ~= 0 then
+            print("Could not git pull plugin, please manually fix: ", install_path)
+            table.insert(update_log, plugin .. "\n" .. pull)
+        end
         if not pull:find("up to date") then
-            table.insert(new_commits, plugin .. "\n" .. vim.fn.system {
+            table.insert(update_log, plugin .. "\n" .. vim.fn.system {
                 "git",
                 "-C",
                 install_path,
@@ -37,9 +41,11 @@ vim.api.nvim_create_user_command("UpdatePlugins", function()
                 "HEAD@{1}..HEAD",
                 "--pretty=reference",
             })
+        else
+            table.insert(update_log, plugin .. "\nUp to date")
         end
     end
-    if #new_commits > 0 then
+    if #update_log > 0 then
         if vim.fn.bufname("%") ~= "" then
             vim.cmd("new")
         end
@@ -49,7 +55,7 @@ vim.api.nvim_create_user_command("UpdatePlugins", function()
             0,
             -1,
             false,
-            vim.split(table.concat(new_commits, "\n"), "\n")
+            vim.split(table.concat(update_log, "\n"), "\n")
         )
     end
 end, { nargs = 0 })

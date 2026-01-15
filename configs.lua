@@ -32,12 +32,6 @@ return {
     gromit = {
         path = "~/",
     },
-    --jrnl = {
-    --    path = "~/.config/jrnl",
-    --},
-    lus = {
-        path = "~/.config/lus",
-    },
     newsboat = {
         path = "~/.config/newsboat",
     },

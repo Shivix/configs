@@ -65,6 +65,9 @@ create_autocmd("BufEnter", "*.sent", function()
         syntax match Operator "\\"
     ]])
 end)
+create_autocmd("BufEnter", "*.lus", function()
+    vim.cmd("set ft=markdown")
+end)
 
 create_autocmd("VimEnter", "*", function()
     -- Do not use if we're diffing files

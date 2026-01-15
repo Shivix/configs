@@ -133,7 +133,7 @@ function rund
     $file $argv[2..]
 end
 
-function mkcd --wraps mkdir --description "Creates directory and cds into it"
+function mkcd --description "Creates directory and cds into it"
     mkdir $argv && cd $argv
 end
 
@@ -143,7 +143,7 @@ function update_copyright --description "Increment the copyright year on any mod
         set -l files (git show $argv --pretty="" --name-only --ignore-submodules)
     end
     for file in $files
-        sed -i '0,/2020|2021|2022|2023/ s//2024/g' $file
+        sed -i '0,/202[0-9]/ s//2026/g' $file
     end
 end
 
@@ -152,8 +152,10 @@ function wt_status --description "Prints the status of each worktree in a repo"
         return 1
     end
     set -l worktrees (git worktree list | awk 'NR > 1 {print $1}')
-    set -l num_wt (count $worktrees)
     for worktree in $worktrees
+        if test (basename "$worktree") = "pull_request"
+            continue
+        end
         set_color bryellow; echo $worktree; set_color normal
         git -C $worktree status -s --show-stash
         git -C $worktree submodule foreach git branch --show-current | rg -v Entering

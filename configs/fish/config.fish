@@ -16,6 +16,8 @@ if status --is-interactive
         for mode in insert replace
             bind jk -M $mode -m default ""
         end
+        # Switch back to line style cursor after
+        bind -M insert \ce "edit_command_buffer; printf '\e[6 q'"
     end
 
     zua init | source

@@ -271,8 +271,6 @@ function brighten
 end
 
 function init_fish --description "Sets universal variables for fish shell"
-    fish_vi_key_bindings
-
     fish_add_path ~/.cargo/bin
     fish_add_path ~/.go/bin
 

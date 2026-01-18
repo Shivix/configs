@@ -4,57 +4,29 @@ local key_sets = {
     ["{"] = "}",
 }
 
-local function get_next_char()
-    local pos = vim.api.nvim_win_get_cursor(0)[2] + 1
-    return vim.api.nvim_get_current_line():sub(pos, pos)
+local function count_opens(line, col, open)
+    local prefix = line:sub(1, col)
+    local match = prefix:match("[" .. open .. "]+$")
+    return #match or 0
 end
 
-for open, close in pairs(key_sets) do
-    vim.keymap.set("i", open, function()
-        local next_char = get_next_char()
-        if next_char == "" then
-            -- Ctrl-G U will prevent <Left> from breaking with . repeat
-            return open .. close .. "<C-g>U<Left>"
-        end
-        return open
-    end, { expr = true })
-    vim.keymap.set("i", close, function()
-        local pos = vim.api.nvim_win_get_cursor(0)[2] + 1
-        local line = vim.api.nvim_get_current_line():sub(pos)
-        if line:match("[^" .. close .. "]") then
-            return close
-        end
-        local next_char = get_next_char()
-        if next_char == close then
-            return "<C-g>U<Right>"
-        end
-        return close
-    end, { expr = true })
-end
-
-local function if_pair_else(lhs, rhs)
-    local pos = vim.api.nvim_win_get_cursor(0)[2]
-    local pair = vim.api.nvim_get_current_line():sub(pos, pos + 1)
-
-    for open, close in pairs(key_sets) do
-        if pair == open .. close then
-            return lhs
-        end
-    end
-    return rhs
-end
-
-vim.keymap.set("i", "<BS>", function()
-    return if_pair_else("<BS><Del>", "<BS>")
-end, { expr = true })
 vim.keymap.set("i", "<CR>", function()
+    local line = vim.api.nvim_get_current_line()
+    local pos = vim.api.nvim_win_get_cursor(0)[2]
+    local open = line:sub(pos)
+
     if vim.bo.filetype == "lua" then
-        local line = vim.api.nvim_get_current_line()
         if line:match("^%s*if.+then$") or line:match("^%s*for.+do$") then
             return "end<Left><Left><Left><CR><ESC>O"
         end
     end
-    return if_pair_else("<CR><ESC>==O", "<CR>")
+
+    local close = key_sets[open]
+    if close ~= nil then
+        local n = count_opens(line, pos, open)
+        return string.rep(close.."<Left>", n).."<CR><ESC>==O"
+    end
+    return "<CR>"
 end, { expr = true })
 
 vim.keymap.set("n", "<C-b>", "<C-^>")
@@ -139,6 +111,7 @@ vim.keymap.set("n", "<leader>ft", fzf.builtin)
 for i = 1, 9 do
     vim.keymap.set("n", "<C-" .. i .. ">", function()
         vim.cmd("norm!m" .. string.char(64 + i))
+        print("Control group " .. i .. " set")
     end)
     vim.keymap.set("n", "g" .. i, function()
         local _, _, bufnr, filename = unpack(vim.api.nvim_get_mark(string.char(64 + i), {}))

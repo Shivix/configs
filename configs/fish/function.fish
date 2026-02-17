@@ -33,12 +33,26 @@ bind \cf -M insert fzf-complete
 
 function fish_mode_prompt; end
 function fish_prompt
-    set -l branch (git branch 2>/dev/null | awk -F '[ ()]'\
-        '/*/ { if ($3) print "| "$3" "$6; if (!$3) print "| "$2 }')
-    printf '%s | %s %s\n%s%s$ ' (set_color yellow)(whoami)@(hostname) \
-        (set_color bryellow)(prompt_pwd -d 3 -D 2) \
-        (set_color yellow)$branch \
-        (jobs | awk 'NR==1{ print "\n"$1 }')(set_color bryellow)
+    set -l last_status $status
+    set -l job (jobs | cut -c1)
+    if test (count $job) -gt 0
+        printf (set_color blue)"["$job"] "
+    end
+    if test $last_status -ne 0
+        printf (set_color red)"["$last_status"] "
+    end
+
+    # $3 will exist when HEAD is detached
+    set -f branch (git branch 2>/dev/null | awk -F '[ ()]' '/*/ { if ($3) print "| "$3" "$6; if (!$3) print "| "$2 }')
+    printf '%s | %s %s' (set_color yellow)$USER@$hostname (set_color bryellow)(prompt_pwd -d 3 -D 2) (set_color yellow)$branch
+    if contains -- --final-rendering $argv
+        set -l date_str (set_color bryellow)(date "+%H:%M:%S")
+        printf "\r\033[%sC%s" (math (tput cols) - 8) $date_str
+    end
+
+    printf \n
+    printf (set_color bryellow)'$ '
+    set_color normal
 end
 
 function fzffix --description "Put the input into fzf and preview with prefix"
@@ -164,6 +178,10 @@ function wt_status --description "Prints the status of each worktree in a repo"
 end
 
 function grebase --description "Rebase branch keeping changes intact"
+   if not git rev-parse --is-inside-work-tree >/dev/null
+       return 1
+   end
+
     set -l should_stash (git status --short --ignore-submodules --untracked=no --porcelain)
     if test -n "$should_stash"
         git stash
@@ -270,6 +288,22 @@ function brighten
     redshift -x
 end
 
+function githubpr --description "Generate a GitHub pull request URL"
+   if not git rev-parse --is-inside-work-tree >/dev/null
+       return 1
+   end
+
+   set -l target_branch (git branch -l master main | cut -c 3-)
+   if test (count $argv) -gt 0
+       set target_branch $argv[1]
+   end
+   set -l target_repo (git remote get-url upstream | sed -E 's/(git@|https:\/\/)github.com[:\/](.*)\.git/\2/')
+   set -l origin (git remote get-url origin | sed -E 's/(git@|https:\/\/)github.com[:\/]([^\/]+)\/.*/\2/')
+   set -l current_branch (git branch --show-current)
+
+   echo "https://github.com/$target_repo/compare/$target_branch...$origin:$current_branch"
+end
+
 function init_fish --description "Sets universal variables for fish shell"
     fish_add_path ~/.cargo/bin
     fish_add_path ~/.go/bin
@@ -286,6 +320,7 @@ function init_fish --description "Sets universal variables for fish shell"
     set -Ux fish_browser "firefox-developer-edition"
     set -U fish_autosuggestion_enabled 0
     set -U fish_handle_reflow 0
+    set -U fish_transient_prompt 1
 
     set -U fish_color_autosuggestion grey
     set -U fish_color_cancel brwhite

@@ -1,7 +1,4 @@
 return {
-    gemini = {
-        path = "~/.gemini",
-    },
     alacritty = {
         path = "~/.config/alacritty",
     },

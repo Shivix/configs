@@ -1,5 +1,7 @@
 cache-file ~/.local/state/newsboat/cache.db
 
+browser "xdg-open %u"
+
 color listnormal        color224 black
 color listnormal_unread color224 black
 color listfocus         black yellow

@@ -21,9 +21,10 @@ if status --is-interactive
         bind -M insert \ce "edit_command_buffer; printf '\e[6 q'"
     end
 
-    zua init | source
     source ~/.config/fish/alias.fish
     source ~/.config/fish/function.fish
+
+    zua init | source
 
     set -gx GPG_TTY (tty)
 

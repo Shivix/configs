@@ -1,19 +1,17 @@
-local key_sets = {
+local close_by_open = {
     ["("] = ")",
     ["["] = "]",
     ["{"] = "}",
 }
 
-local function count_opens(line, col, open)
-    local prefix = line:sub(1, col)
+local function count_opens(line, cursor_pos, open)
+    local prefix = line:sub(1, cursor_pos)
     local match = prefix:match("[" .. open .. "]+$")
     return #match or 0
 end
 
 vim.keymap.set("i", "<CR>", function()
     local line = vim.api.nvim_get_current_line()
-    local pos = vim.api.nvim_win_get_cursor(0)[2]
-    local open = line:sub(pos)
 
     if vim.bo.filetype == "lua" then
         if line:match("^%s*if.+then$") or line:match("^%s*for.+do$") then
@@ -21,9 +19,12 @@ vim.keymap.set("i", "<CR>", function()
         end
     end
 
-    local close = key_sets[open]
+    local cursor_pos = vim.api.nvim_win_get_cursor(0)[2]
+    -- If there are characters after open or cursor is not at end of line, won't match any opens.
+    local open = line:sub(cursor_pos)
+    local close = close_by_open[open]
     if close ~= nil then
-        local n = count_opens(line, pos, open)
+        local n = count_opens(line, cursor_pos, open)
         return string.rep(close.."<Left>", n).."<CR><ESC>==O"
     end
     return "<CR>"

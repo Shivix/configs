@@ -94,27 +94,47 @@ require("fzf-lua").setup {
     },
 }
 
-require("nvim-treesitter.configs").setup {
-    auto_install = false,
-    ensure_installed = {
-        "bash",
-        "cmake",
-        --"c", Included by default.
-        "cpp",
-        "dockerfile",
-        "fish",
-        "go",
-        --"lua", Included by default.
-        "make",
-        --"markdown", Included by default.
-        "perl",
-        "python",
-        "rust",
-        "toml",
-        --"vim", Included by default.
-        --"vimdoc", Included by default.
-        "yaml",
-        "zig",
-    },
-    highlight = { enable = true },
+local ensure_installed = {
+    "bash",
+    "cmake",
+    "c",
+    "cpp",
+    "dockerfile",
+    "fish",
+    "go",
+    "json",
+    "xml",
+    "lua",
+    "make",
+    "markdown",
+    "markdown_inline",
+    "perl",
+    "python",
+    "rust",
+    "toml",
+    "vim",
+    "vimdoc",
+    "yaml",
+    "zig",
 }
+if vim.fn.executable("tree-sitter") == 0 then
+    vim.notify("tree-sitter CLI is required to install parsers", vim.log.levels.ERROR)
+    return
+end
+local treesitter = require("nvim-treesitter")
+treesitter.install(ensure_installed)
+
+vim.api.nvim_create_autocmd("FileType", {
+    callback = function(args)
+        if
+            vim.list_contains(
+                treesitter.get_installed(),
+                vim.treesitter.language.get_lang(args.match)
+            )
+        then
+            vim.schedule(function()
+                vim.treesitter.start(args.buf)
+            end)
+        end
+    end,
+})

@@ -24,7 +24,9 @@ if status --is-interactive
     source ~/.config/fish/alias.fish
     source ~/.config/fish/function.fish
 
-    zua init | source
+    if type -q zua
+        zua init | source
+    end
 
     set -gx GPG_TTY (tty)
 

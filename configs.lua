@@ -2,14 +2,14 @@ return {
     alacritty = {
         path = "~/.config/alacritty",
     },
-    --awesome = {
-    --    path = "~/.config/awesome",
-    --},
     bat = {
         path = "~/.config/bat",
     },
     clangd = {
         path = "~/.config/clangd",
+    },
+    codex = {
+        path = "~/.codex",
     },
     dunst = {
         path = "~/.config/dunst",
@@ -35,9 +35,6 @@ return {
     nvim = {
         path = "~/.config/nvim",
     },
-    --tmux = {
-    --    path = "~/.config/tmux",
-    --},
     vim = {
         path = "~/.config/vim",
     },
@@ -48,7 +45,4 @@ return {
     zathura = {
         path = "~/.config/zathura",
     },
-    --zsh = {
-    --    path = "~/.config/zsh",
-    --},
 }

@@ -1,0 +1,20 @@
+model = "gpt-5.3-codex"
+model_reasoning_effort = "medium"
+
+[tui]
+status_line = ["model-with-reasoning", "current-dir", "context-used", "context-window-size", "five-hour-limit", "weekly-limit", "git-branch"]
+
+# Profiles
+[profiles.safeinteractive]
+approval_policy = "on-request"
+sandbox_mode = "read-only"
+
+[profiles.safenoninteractive]
+approval_policy = "never"
+sandbox_mode = "read-only"
+
+[profiles.lowreasoning]
+model_reasoning_effort = "minimal"
+
+[profiles.highreasoning]
+model_reasoning_effort = "xhigh"

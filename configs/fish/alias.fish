@@ -9,16 +9,17 @@ abbr cmr "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_CO
 abbr ctd "ctest --test-dir cmake-build-debug"
 abbr ctr "ctest --test-dir cmake-build-release"
 
+abbr godebug "go build -gcflags=all='-N -l'"
+
+abbr cr "cargo run"
+abbr crr "cargo run --release"
+
 abbr rm "rm -i"
 abbr cp "cp -i"
 abbr mv "mv -i"
-abbr wt "git worktree"
+
 abbr tree "tree --gitignore"
 abbr rg "rg -S"
-abbr tma "tmux attach"
-abbr dc "docker-compose"
-abbr cat "bat"
-abbr ap "ansible-playbook"
 
 abbr gamend "git commit --amend"
 abbr gfetch "git fetch upstream"
@@ -26,9 +27,8 @@ abbr gfetchall "git fetch --all --prune -j$num_cpus"
 abbr gpush "git push origin"
 abbr gs "git status --short"
 abbr gblame "git blame -wCCC"
-
+abbr wt "git worktree"
 abbr --command=git --position=anywhere -- --fwl "--force-with-lease"
-
 abbr gitlscpp "git ls-files '*.cpp' '*.hpp' '*.cxx' '*.hxx'"
 
 abbr kc "kubectl"
@@ -38,13 +38,9 @@ abbr --command=kubectl --position=anywhere uc "config use-context"
 abbr dexec --set-cursor "docker exec -it % bash"
 abbr dbuild --set-cursor "docker build -t % ."
 abbr drun "docker run -it"
+abbr dc "docker-compose"
 
-abbr godebug "go build -gcflags=all='-N -l'"
-
-abbr cr "cargo run"
-abbr crr "cargo run --release"
-abbr cb "cargo run"
-abbr cbr "cargo run --release"
+abbr ap "ansible-playbook"
 
 abbr refresh "source ~/.config/fish/config.fish"
 
@@ -53,5 +49,3 @@ abbr trim_whitespace "git ls-files | xargs sed -i 's/[[:space:]]*\$//'"
 abbr --position=anywhere fix2pipe "sed 's/\x01/|/g'"
 abbr --position=anywhere delnewline ':a;N;$!ba;'
 abbr --position=anywhere orderlogs "sort -k3,3 -k4,4"
-
-abbr help --regex='--help$' --position=anywhere -- "--help | bat --language help"

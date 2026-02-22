@@ -304,6 +304,14 @@ function githubpr --description "Generate a GitHub pull request URL"
    echo "https://github.com/$target_repo/compare/$target_branch...$origin:$current_branch"
 end
 
+function clipboard
+    if isatty stdin
+        xsel -ob
+    else
+        xsel -ib
+    end
+end
+
 function init_fish --description "Sets universal variables for fish shell"
     fish_add_path ~/.cargo/bin
     fish_add_path ~/.go/bin

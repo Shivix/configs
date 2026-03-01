@@ -19,7 +19,6 @@ abbr cp "cp -i"
 abbr mv "mv -i"
 
 abbr tree "tree --gitignore"
-abbr rg "rg -S"
 
 abbr gamend "git commit --amend"
 abbr gfetch "git fetch upstream"

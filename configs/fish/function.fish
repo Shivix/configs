@@ -8,9 +8,10 @@ function fzf-complete --description "Provides fuzzy commandline completion"
 
     # Trigger cd completion if commandline is empty
     if test "$cmd" = "cd " -o "$cmd" = ""
-        set -f fzf_args --preview "ls --color=always {}"
+        set -f preview --preview "ls --color=always {}"
         set -f complist (cat $ZUA_DATA_FILE)
-    else if test (commandline -t) = "**"
+    else if test (commandline -t) = ""
+        set -f preview --preview 'bat --color=always {} 2>/dev/null || ls --color=always {}'
         set -f complist (fd .)
     else
         set -f complist (complete -C $cmdline)
@@ -18,17 +19,17 @@ function fzf-complete --description "Provides fuzzy commandline completion"
 
     set width (tput cols)
     if test $width -gt 120
-        set preview_layout "right:50%:border-left"
+        set -f preview_layout --preview-window right:50%:border-left
     else
-        set preview_layout "up:50%:border-down"
+        set -e preview
     end
 
-    set -l result (string join -- \n $complist | fzf --multi --exit-0 --select-1 --height 50% $fzf_args --preview-window $preview_layout | cut -f1)
+    set -l result (string join -- \n $complist | fzf --multi --exit-0 --select-1 --height 30% $preview $preview_layout | cut -f1)
     commandline -tr -- (string join -- " " $result)
     # Need to repaint after if using --height
     commandline -f repaint
 end
-# Use builtin completion by default, but add bind to trigger fzf/dmenu based completion
+# Use builtin completion by default, but add bind to trigger fzf based completion
 bind \cf -M insert fzf-complete
 
 function fish_mode_prompt; end
@@ -43,7 +44,7 @@ function fish_prompt
     end
 
     # $3 will exist when HEAD is detached
-    set -f branch (git branch 2>/dev/null | awk -F '[ ()]' '/*/ { if ($3) print "| "$3" "$6; if (!$3) print "| "$2 }')
+    set -f branch (git branch 2>/dev/null | awk -F '[ ()]' '/\*/ { if ($3) print "| "$3" "$6; if (!$3) print "| "$2 }')
     printf '%s | %s %s' (set_color yellow)$USER@$hostname (set_color bryellow)(prompt_pwd -d 3 -D 2) (set_color yellow)$branch
     if contains -- --final-rendering $argv
         set -l date_str (set_color bryellow)(date "+%H:%M:%S")
@@ -67,59 +68,16 @@ function fzflus --description "Fuzzy find lus journals"
     lus "" --short | fzf --multi --preview "lus {} --fixed-strings --file | xargs bat -H 1 --language markdown --color=always"
 end
 
-function fzfrg
-    if test "$argv" = "resume" -o "$argv" = "r"
-        set -f query (cat /tmp/rg_fzf_resume_query)
-        cat /tmp/rg_fzf_resume_fzf_query >/tmp/rg_fzf_f
-    else
-        echo "" >/tmp/rg_fzf_f
-    end
-    if test -n "$query"
-        set escaped (string replace -a "'" "\\'" $query)
-        set rg_command "$RG_PREFIX '$escaped'"
-    else
-        # Avoid searching for rg '' on start.
-        set rg_command "true"
-    end
-    env FZF_DEFAULT_COMMAND="$rg_command" \
-    fzf --ansi --disabled --delimiter : \
-        --bind "change:reload:sleep 0.1; $RG_PREFIX {q} || true" \
-        --query "$query" \
-        --prompt "rg> " \
-        --bind 'ctrl-g:transform:
-            if test "$FZF_PROMPT" = "rg> "
-                echo "unbind(change)+change-prompt(fzf> )+enable-search+transform-query:echo \{q} > /tmp/rg_fzf_r; cat /tmp/rg_fzf_f"
-            else
-                echo "rebind(change)+change-prompt(rg> )+disable-search+transform-query:echo \{q} > /tmp/rg_fzf_f; cat /tmp/rg_fzf_r"
-            end
-        ' \
-        --header "Press ctrl-g to switch between rg and fzf mode" \
-        --bind 'enter:execute(
-            if test "$FZF_PROMPT" = "rg> "
-                echo {q} >/tmp/rg_fzf_resume_query
-                echo "" >/tmp/rg_fzf_resume_fzf_query
-                echo "" >/tmp/rg_fzf_f
-            else
-                cat /tmp/rg_fzf_r >/tmp/rg_fzf_resume_query
-                echo {q} >/tmp/rg_fzf_resume_fzf_query
-            end
-        )+accept' \
-        --preview "bat --color=always {1} --highlight-line {2} --line-range (math max {2}-20,0):+50" \
-        --preview-window "right:35%:border-left" \
-        --multi
-end
-
 function nvf
-    nvim -c "lua require('fzf-lua').files()"
+    set -g last_nvim_file (fzf --preview 'bat --color=always {}')
+    if test -n "$last_nvim_file"
+        nvim $last_nvim_file
+    else
+        return 130
+    end
 end
 function nvo
-    nvim -c "lua require('fzf-lua').oldfiles()"
-end
-function nvrg
-    nvim -c "lua require('fzf-lua').live_grep()"
-end
-function nvr
-    nvim -c "lua require('fzf-lua').resume()"
+    nvim $last_nvim_file
 end
 
 function fix_vwap
@@ -312,16 +270,23 @@ function clipboard
     end
 end
 
+function rg
+    command rg --smart-case --line-number --hidden $argv
+end
+
+function ug
+    command ug --smart-case --line-number --hidden --ignore-files $argv
+end
+
 function init_fish --description "Sets universal variables for fish shell"
     fish_add_path ~/.cargo/bin
     fish_add_path ~/.go/bin
 
     set -Ux EDITOR nvim
-    set -Ux FZF_DEFAULT_COMMAND "fd --type f --full-path --strip-cwd-prefix"
+    set -Ux FZF_DEFAULT_COMMAND "fd --hidden"
     set -Ux FZF_DEFAULT_OPTS "--bind=ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up"
     set -Ux GOPATH ~/.go
     set -Ux MANPAGER "nvim -c Man!"
-    set -Ux RG_PREFIX "rg --column --no-heading --color=always --smart-case"
     set -Ux VISUAL nvim
 
     set -Ux fish_greeting

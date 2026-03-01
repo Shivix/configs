@@ -65,3 +65,10 @@ function GetLine(offset)
     local cur_line = vim.fn.line(".")
     return vim.fn.getline(cur_line + offset)
 end
+
+vim.api.nvim_create_user_command("Prefix", function()
+    local line = vim.api.nvim_get_current_line()
+    local lines = vim.fn.systemlist("prefix -vor " .. vim.fn.shellescape(line))
+
+    vim.lsp.util.open_floating_preview(lines, "dosini")
+end, { nargs = 0 })

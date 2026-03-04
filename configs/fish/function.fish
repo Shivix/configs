@@ -270,12 +270,21 @@ function clipboard
     end
 end
 
-function rg
-    command rg --smart-case --line-number --hidden $argv
+function nvrg
+    set -l last_rg (history search --prefix rg --max 1)
+
+    if test -z "$last_rg"
+        echo "No 'rg' command found in history."
+        return 1
+    end
+
+    set -l args (string replace -r '^rg\s+' '' "$last_rg")
+
+    nvim -c "silent grep $args" -c "copen"
 end
 
-function ug
-    command ug --smart-case --line-number --hidden --ignore-files $argv
+function ripgrep --description "Run ripgrep in a way closer to standard default grep"
+    rg -uuu --no-config
 end
 
 function init_fish --description "Sets universal variables for fish shell"
@@ -287,6 +296,7 @@ function init_fish --description "Sets universal variables for fish shell"
     set -Ux FZF_DEFAULT_OPTS "--bind=ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up"
     set -Ux GOPATH ~/.go
     set -Ux MANPAGER "nvim -c Man!"
+    set -Ux RIPGREP_CONFIG_PATH "$HOME/.config/rg/config"
     set -Ux VISUAL nvim
 
     set -Ux fish_greeting

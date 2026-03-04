@@ -21,4 +21,10 @@ vim.opt.splitright = true
 vim.opt.tabstop = 4
 vim.opt.termguicolors = true
 vim.opt.undofile = true
+
+if vim.fn.executable('rg') == 1 then
+    vim.opt.grepprg = "rg --vimgrep"
+    vim.opt.grepformat = "%f:%l:%c:%m"
+end
+
 vim.loader.enable()

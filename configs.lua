@@ -35,6 +35,9 @@ return {
     nvim = {
         path = "~/.config/nvim",
     },
+    rg = {
+        path = "~/.config/rg",
+    },
     vim = {
         path = "~/.config/vim",
     },

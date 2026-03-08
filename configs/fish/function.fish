@@ -77,7 +77,7 @@ function nvf
     if test -z "$argv"
         return
     end
-    nvim -c "Fdp $argv"
+    nvim -c "Fp $argv"
 end
 
 function nvrg

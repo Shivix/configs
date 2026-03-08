@@ -4,7 +4,7 @@ local language_servers = {
         root_markers = { ".clangd", ".clang-format", ".clang-tidy", "compile_commands.json" },
     },
     gopls = {
-        filetype = { "go", "gomod", "gowork", "gotmpl" },
+        filetype = { "go", "gomod" },
         root_markers = { "go.mod", "go.sum" },
     },
     ["lua-language-server"] = {

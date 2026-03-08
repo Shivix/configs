@@ -25,7 +25,7 @@ vim.keymap.set("i", "<CR>", function()
     local close = close_by_open[open]
     if close ~= nil then
         local n = count_opens(line, cursor_pos, open)
-        return string.rep(close.."<Left>", n).."<CR><ESC>==O"
+        return string.rep(close .. "<Left>", n) .. "<CR><ESC>==O"
     end
     return "<CR>"
 end, { expr = true })
@@ -38,6 +38,16 @@ vim.keymap.set("t", "jk", "<C-\\><C-n>")
 
 vim.keymap.set("n", "<C-h>", "<C-w>h")
 vim.keymap.set("n", "<C-j>", "<C-w>j")
+vim.keymap.set("n", "<C-j>", function()
+    local win_below = vim.fn.win_getid(vim.fn.winnr("j"))
+    local current_win = vim.api.nvim_get_current_win()
+
+    if win_below == current_win or win_below == 0 then
+        vim.cmd("copen")
+    else
+        vim.cmd("wincmd j")
+    end
+end)
 vim.keymap.set("n", "<C-k>", "<C-w>k")
 vim.keymap.set("n", "<C-l>", "<C-w>l")
 
@@ -84,7 +94,6 @@ vim.keymap.set("n", "gd", function()
     end
 end)
 vim.keymap.set("n", "gh", ClangSwitchHeader)
-vim.keymap.set("n", "<C-s>", vim.lsp.buf.signature_help)
 vim.keymap.set("n", "<C-n>", function()
     vim.diagnostic.jump { count = 1 }
 end)
@@ -94,19 +103,15 @@ end)
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
 vim.keymap.set("n", "<leader>qf", vim.lsp.buf.code_action)
 vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename)
-
-local fzf = require("fzf-lua")
-vim.keymap.set("n", "gr", fzf.lsp_references)
-vim.keymap.set("n", "<leader>fe", fzf.lsp_workspace_diagnostics)
-vim.keymap.set("n", "<leader>ff", fzf.files)
-vim.keymap.set("n", "<leader>fg", fzf.live_grep)
-vim.keymap.set("n", "<leader>fh", fzf.help_tags)
-vim.keymap.set("n", "<leader>fj", fzf.jumps)
-vim.keymap.set("n", "<leader>fo", fzf.oldfiles)
-vim.keymap.set("n", "<leader>fq", fzf.quickfix)
-vim.keymap.set("n", "<leader>fr", fzf.resume)
-vim.keymap.set("n", "<leader>fs", fzf.spell_suggest)
-vim.keymap.set("n", "<leader>ft", fzf.builtin)
+vim.keymap.del("n", "gra")
+vim.keymap.del("n", "gri")
+vim.keymap.del("n", "grn")
+vim.keymap.del("n", "grr")
+vim.keymap.del("n", "grt")
+vim.keymap.set("n", "gr", vim.lsp.buf.references)
+vim.keymap.set("n", "gi", vim.lsp.buf.implementation)
+vim.keymap.set("n", "gt", vim.lsp.buf.type_definition)
+vim.keymap.set("n", "<leader>fs", "1z=")
 
 -- RTS style keybinds for using marks
 for i = 1, 9 do

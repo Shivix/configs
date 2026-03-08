@@ -1,5 +1,39 @@
-vim.api.nvim_create_user_command("Fd", "args `fd <args>`", { nargs = 1 })
-vim.api.nvim_create_user_command("QFRun", "cexpr execute('!<args>')", { nargs = 1 })
+local function quickfix_or_edit(shell_cmd, title)
+    local lines = vim.fn.systemlist(shell_cmd)
+    if #lines > 1 then
+        local old_efm = vim.bo.errorformat
+        vim.opt.errorformat = "%f"
+        vim.fn.setqflist({}, " ", { title = title, lines = lines })
+        vim.cmd("copen")
+        vim.opt.errorformat = old_efm
+    elseif #lines == 1 then
+        vim.cmd("edit " .. vim.fn.fnameescape(lines[1]))
+    end
+end
+
+vim.api.nvim_create_user_command("Fp", function(opts)
+    local cmd = "fd --hidden --exclude .git --type file | fp --filter-scores -e " .. opts.args
+    quickfix_or_edit(cmd, "Fp: " .. opts.args)
+end, { nargs = 1 })
+
+vim.api.nvim_create_user_command("Fd", function(opts)
+    local cmd = "fd --hidden --exclude .git --type file " .. opts.args
+    quickfix_or_edit(cmd, "Fd: " .. opts.args)
+end, { nargs = "*" })
+
+vim.api.nvim_create_user_command("Fdp", function(opts)
+    local cmd = "fd --hidden --exclude .git --type file " .. opts.args .. " | fp -e " .. opts.args
+    quickfix_or_edit(cmd, "Fd: " .. opts.args)
+end, { nargs = 1 })
+
+vim.api.nvim_create_user_command("Rg", function(opts)
+    -- Combines args into one string compared to :grep
+    vim.cmd("cexpr system('rg --vimgrep \"" .. opts.args .. "\"')")
+    local qf_list = vim.fn.getqflist()
+    if #qf_list > 1 then
+        vim.cmd("copen")
+    end
+end, { nargs = "*" })
 
 vim.api.nvim_create_user_command("Blame", function()
     local pos = vim.api.nvim_win_get_cursor(0)[1]
@@ -39,26 +73,6 @@ vim.api.nvim_create_user_command("GHLink", function()
     local file = vim.fn.fnamemodify(vim.fn.expand("%"), ":.")
     local line = vim.fn.line(".")
     vim.fn.setreg("+", "github.com/" .. repo .. "/blob/master/" .. file .. "#L" .. line)
-end, { nargs = 0 })
-
-vim.api.nvim_create_user_command("GitHunks", function()
-    local output = vim.fn.systemlist("git diff --unified=0 --no-prefix")
-    local qflist = {}
-    local current_file
-    for _, line in ipairs(output) do
-        local file = line:match("^%+%+%+ (.*)")
-        if file then
-            current_file = file
-        end
-        local lnum = line:match("+(%d+) @@")
-        if lnum then
-            if lnum then
-                table.insert(qflist, { filename = current_file, lnum = tonumber(lnum) })
-            end
-        end
-    end
-    vim.fn.setqflist(qflist, "r")
-    vim.cmd("copen")
 end, { nargs = 0 })
 
 function GetLine(offset)

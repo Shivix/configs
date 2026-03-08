@@ -68,6 +68,9 @@ end)
 create_autocmd("BufEnter", "*.lus", function()
     vim.cmd("set ft=markdown")
 end)
+create_autocmd("BufEnter", "go.sum", function()
+    vim.bo.syntax = "gomod"
+end)
 
 create_autocmd("VimEnter", "*", function()
     -- Do not use if we're diffing files
@@ -92,6 +95,36 @@ local function remove_quickfix_item()
     vim.fn.setqflist(list, "r")
     vim.fn.cursor(item_pos, 1)
 end
+local function remove_highlighted_quickfix_items()
+    local start_line = vim.fn.line("v")
+    local end_line = vim.fn.line(".")
+
+    -- Leave visual mode
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
+
+    local list = vim.fn.getqflist()
+    for i = end_line, start_line, -1 do
+        table.remove(list, i)
+    end
+
+    vim.fn.setqflist(list, "r")
+    vim.fn.cursor(start_line, 1)
+end
+
 create_autocmd("FileType", "qf", function()
     vim.keymap.set("n", "dd", remove_quickfix_item, { buffer = 0 })
+    vim.keymap.set("v", "d", remove_highlighted_quickfix_items, { buffer = 0 })
+end)
+
+create_autocmd("QuickFixCmdPost", "[^l]*", function()
+    local qf_list = vim.fn.getqflist()
+    if #qf_list > 1 then
+        vim.cmd("copen")
+    end
+end)
+
+create_autocmd("WinLeave", nil, function()
+    if vim.bo.buftype == "quickfix" then
+        vim.cmd("cclose")
+    end
 end)

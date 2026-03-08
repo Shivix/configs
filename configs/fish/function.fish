@@ -1,4 +1,4 @@
-function fzf-complete --description "Provides fuzzy commandline completion"
+function fp-complete --description "Provides fuzzy commandline completion"
     set -l cmdline (commandline -c)
     set -l cmd (string split ' ' $cmdline)
 
@@ -8,29 +8,41 @@ function fzf-complete --description "Provides fuzzy commandline completion"
 
     # Trigger cd completion if commandline is empty
     if test "$cmd" = "cd " -o "$cmd" = ""
-        set -f preview --preview "ls --color=always {}"
         set -f complist (cat $ZUA_DATA_FILE)
-    else if test (commandline -t) = ""
-        set -f preview --preview 'bat --color=always {} 2>/dev/null || ls --color=always {}'
-        set -f complist (fd .)
+    else if test (commandline -t) = "**"
+        set -f complist (fd --hidden --exclude .git)
     else
         set -f complist (complete -C $cmdline)
     end
 
-    set width (tput cols)
-    if test $width -gt 120
-        set -f preview_layout --preview-window right:50%:border-left
+    set -l len (count $complist)
+    if test $len -eq 0
+        return
+    else if test $len -eq 1
+        set -f result (echo $complist | cut -f1)
     else
-        set -e preview
+        # Cut out the description. Do it inline to avoid flattening result.
+        set -f result (string join -- \n $complist | fp | cut -f1)
     end
-
-    set -l result (string join -- \n $complist | fzf --multi --exit-0 --select-1 --height 30% $preview $preview_layout | cut -f1)
     commandline -tr -- (string join -- " " $result)
-    # Need to repaint after if using --height
     commandline -f repaint
 end
-# Use builtin completion by default, but add bind to trigger fzf based completion
-bind \cf -M insert fzf-complete
+# Use builtin completion by default, but add bind to trigger fp based completion
+bind \cf -M insert fp-complete
+
+function fp-history --description "Search shell history using fp"
+    set -l cmdline (commandline -c)
+
+    if test -z "$cmdline"
+        set -f result (history search | fp)
+    else
+        set -f result (history --prefix "$cmdline" | fp)
+    end
+
+    commandline -r -- (string join -- " " $result)
+    commandline -f repaint
+end
+bind \cr -M insert fp-history
 
 function fish_mode_prompt; end
 function fish_prompt
@@ -56,29 +68,38 @@ function fish_prompt
     set_color normal
 end
 
-function fzffix --description "Put the input into fzf and preview with prefix"
-    fzf --multi --preview "prefix -v {}" --preview-window 25%:wrap
-end
-
-function fzfpac --description "Fuzzy find pacman packages"
-    pacman -Slq | fzf --multi --preview 'pacman -Si {1}'
-end
-
-function fzflus --description "Fuzzy find lus journals"
-    lus "" --short | fzf --multi --preview "lus {} --fixed-strings --file | xargs bat -H 1 --language markdown --color=always"
+function jd --description "Jump to the closet matching path from zua"
+    set -l path (fp -e "$argv" <"$ZUA_DATA_FILE" | head -1)
+    cd "$path"
 end
 
 function nvf
-    set -g last_nvim_file (fzf --preview 'bat --color=always {}')
-    if test -n "$last_nvim_file"
-        nvim $last_nvim_file
-    else
-        return 130
+    if test -z "$argv"
+        return
     end
+    nvim -c "Fdp $argv"
 end
-function nvo
-    nvim $last_nvim_file
+
+function nvrg
+    if test -z "$argv"
+        return
+    end
+    nvim -c "Rg $argv"
 end
+
+function nvrg_last
+    set -l last_rg (history search --prefix rg --max 1)
+
+    if test -z "$last_rg"
+        echo "No 'rg' command found in history."
+        return 1
+    end
+
+    set -l args (string replace -r '^rg\s+' '' "$last_rg")
+
+    nvim -c "silent grep $args" -c "copen"
+end
+
 
 function fix_vwap
     sed "s/\\\u0001/|/g" | prefix | awk -v args=$argv '\
@@ -270,19 +291,6 @@ function clipboard
     end
 end
 
-function nvrg
-    set -l last_rg (history search --prefix rg --max 1)
-
-    if test -z "$last_rg"
-        echo "No 'rg' command found in history."
-        return 1
-    end
-
-    set -l args (string replace -r '^rg\s+' '' "$last_rg")
-
-    nvim -c "silent grep $args" -c "copen"
-end
-
 function ripgrep --description "Run ripgrep in a way closer to standard default grep"
     rg -uuu --no-config
 end
@@ -292,8 +300,6 @@ function init_fish --description "Sets universal variables for fish shell"
     fish_add_path ~/.go/bin
 
     set -Ux EDITOR nvim
-    set -Ux FZF_DEFAULT_COMMAND "fd --hidden"
-    set -Ux FZF_DEFAULT_OPTS "--bind=ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up"
     set -Ux GOPATH ~/.go
     set -Ux MANPAGER "nvim -c Man!"
     set -Ux RIPGREP_CONFIG_PATH "$HOME/.config/rg/config"
@@ -314,9 +320,10 @@ function init_fish --description "Sets universal variables for fish shell"
     set -U fish_color_escape brorange
     set -U fish_color_keyword brred
     set -U fish_color_normal brwhite
-    set -U fish_color_operator brorange
+    set -U fish_color_operator yellow
     set -U fish_color_param brwhite
     set -U fish_color_quote brgreen
     set -U fish_color_redirection brmagenta
     set -U fish_color_selection --background=grey black
+    return 0
 end

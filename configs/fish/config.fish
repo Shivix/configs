@@ -4,7 +4,6 @@ end
 
 if status --is-interactive
     fish_vi_key_bindings
-    fzf_key_bindings
     if test "$fish_key_bindings" = "fish_vi_key_bindings"
         for mode in insert default
             bind \cl -M $mode ""

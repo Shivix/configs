@@ -100,7 +100,6 @@ function nvrg_last
     nvim -c "silent grep $args" -c "copen"
 end
 
-
 function fix_vwap
     sed "s/\\\u0001/|/g" | prefix | awk -v args=$argv '\
     /MDEntryPx/ { price = $3 }\

@@ -37,7 +37,6 @@ vim.keymap.set("i", "Jk", "<Esc>")
 vim.keymap.set("t", "jk", "<C-\\><C-n>")
 
 vim.keymap.set("n", "<C-h>", "<C-w>h")
-vim.keymap.set("n", "<C-j>", "<C-w>j")
 vim.keymap.set("n", "<C-j>", function()
     local win_below = vim.fn.win_getid(vim.fn.winnr("j"))
     local current_win = vim.api.nvim_get_current_win()

@@ -68,11 +68,6 @@ function fish_prompt
     set_color normal
 end
 
-function jd --description "Jump to the closet matching path from zua"
-    set -l path (fp -e "$argv" <"$ZUA_DATA_FILE" | head -1)
-    cd "$path"
-end
-
 function nvf
     if test -z "$argv"
         return
@@ -105,15 +100,6 @@ function fix_vwap
     /MDEntryPx/ { price = $3 }\
     /MDEntrySize/ { size = $3; vwap += price * size; total += size; i++;\
     if (i == args) print vwap / total }'
-end
-
-function quickdiff --description "Allows easy diffing between two stdout sources"
-    if test $argv[1] = "store"
-        echo $argv[2..] >"$HOME/.cache/quickdiff_store.txt"
-    else
-        echo $argv[1..] >"$HOME/.cache/quickdiff_compare.txt"
-        delta "$HOME/.cache/quickdiff_store.txt" "$HOME/.cache/quickdiff_compare.txt"
-    end
 end
 
 function find_func
@@ -279,7 +265,7 @@ function githubpr --description "Generate a GitHub pull request URL"
    set -l origin (git remote get-url origin | sed -E 's/(git@|https:\/\/)github.com[:\/]([^\/]+)\/.*/\2/')
    set -l current_branch (git branch --show-current)
 
-   echo "https://github.com/$target_repo/compare/$target_branch...$origin:$current_branch"
+   xdg-open "https://github.com/$target_repo/compare/$target_branch...$origin:$current_branch"
 end
 
 function clipboard

@@ -17,27 +17,33 @@ vim.api.nvim_create_user_command("Fp", function(opts)
 end, { nargs = 1 })
 
 vim.api.nvim_create_user_command("Fd", function(opts)
-    local cmd = "fd --hidden --exclude .git --type file " .. opts.args
+    local cmd = "fd --hidden --exclude .git --type file --full-path " .. opts.args
     quickfix_or_edit(cmd, "Fd: " .. opts.args)
 end, { nargs = "*" })
 
 vim.api.nvim_create_user_command("Fdp", function(opts)
-    local cmd = "fd --hidden --exclude .git --type file " .. opts.args .. " | fp -e " .. opts.args
+    local cmd = "fd --hidden --exclude .git --type file --full-path " .. opts.args .. " | fp -e " .. opts.args
     quickfix_or_edit(cmd, "Fd: " .. opts.args)
 end, { nargs = 1 })
 
 vim.api.nvim_create_user_command("Rg", function(opts)
     -- Combines args into one string compared to :grep
-    vim.cmd("cexpr system('rg --vimgrep \"" .. opts.args .. "\"')")
-    local qf_list = vim.fn.getqflist()
-    if #qf_list > 1 then
+    local lines = vim.fn.systemlist("rg --vimgrep '" .. opts.args .. "'")
+    if #lines > 1 then
+        vim.fn.setqflist({}, " ", { title = "Rg: " .. opts.args, lines = lines })
         vim.cmd("copen")
+    elseif #lines == 1 then
+        local parts = vim.split(lines[1], ":")
+        local row = tonumber(parts[2])
+        local col = tonumber(parts[3])
+        vim.cmd("edit " .. vim.fn.fnameescape(parts[1]))
+        vim.api.nvim_win_set_cursor(0, {row, col - 1})
     end
 end, { nargs = "*" })
 
 vim.api.nvim_create_user_command("Blame", function()
     local pos = vim.api.nvim_win_get_cursor(0)[1]
-    vim.cmd("!git blame -wCCC % -L" .. pos .. "," .. pos)
+    vim.cmd("!git blame % -L" .. pos .. "," .. pos)
 end, { nargs = 0 })
 vim.api.nvim_create_user_command("Format", function()
     if vim.bo.modified then

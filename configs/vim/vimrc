@@ -1,0 +1,117 @@
+let mapleader=" "
+
+let g:netrw_banner = 0
+let g:netrw_winsize = -35
+
+set completeopt=menu,menuone,popup
+set expandtab
+set ignorecase
+set laststatus=3
+set list
+set listchars=tab:»\ ,trail:*
+set mouse=
+set relativenumber
+set shiftwidth=4
+set noshowmode
+set signcolumn=no
+set smartcase
+set smartindent
+set splitbelow
+set splitright
+set tabstop=4
+set termguicolors
+set undofile
+
+if executable("rg")
+    set grepprg=rg\ --vimgrep
+    set grepformat=%f:%l:%c:%m
+endif
+
+nnoremap <C-b> <C-^>
+
+inoremap jk <Esc>
+inoremap Jk <Esc>
+tnoremap jk <C-\><C-n>
+
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+let s:modes = {
+\ 'n':  'NORMAL',
+\ 'no': 'NORMAL',
+\ 'v':  'VISUAL',
+\ 'V':  'VLINE',
+\ "\<C-v>": 'VBLOCK',
+\ 'i':  'INSERT',
+\ 'ic': 'INSERT',
+\ 'R':  'REPLACE',
+\ 'Rv': 'VREPLACE',
+\ 'c':  'COMMAND',
+\ 't':  'TERMINAL'
+\}
+
+function! StatusLine()
+    let current_mode = mode()
+    let pretty_mode = get(s:modes, current_mode, current_mode)
+
+    return ' ' . pretty_mode .
+        \ ' |%m %<%.50f %= %Y | %l:%c '
+endfunction
+
+set statusline=%!StatusLine()
+
+set background=dark
+syntax enable
+set termguicolors
+
+highlight Normal       ctermfg=223 ctermbg=235 guifg=#ebdbb2 guibg=#282828
+highlight Comment      ctermfg=244 guifg=#928374
+highlight Constant     ctermfg=175 guifg=#d3869b
+highlight String       ctermfg=142 guifg=#b8bb26
+
+highlight link Character Constant
+highlight link Number Constant
+highlight link Boolean Constant
+highlight link Float Constant
+
+highlight Identifier   ctermfg=223 guifg=#ebdbb2
+highlight Function     ctermfg=108 guifg=#8ec07c
+
+highlight Statement    ctermfg=167 guifg=#fb4934
+highlight Conditional  ctermfg=167 guifg=#fb4934
+highlight link Repeat Statement
+highlight link Label Statement
+
+highlight Operator     ctermfg=208 guifg=#e99624
+highlight Keyword      ctermfg=167 guifg=#fb4934
+
+highlight Type         ctermfg=214 guifg=#fabd2f
+highlight link StorageClass Type
+highlight link Structure Type
+highlight link Typedef Type
+
+highlight Special      ctermfg=208 guifg=#e99624
+highlight Delimiter    ctermfg=208 guifg=#e99624
+
+highlight CursorLine   ctermbg=237 guibg=#3c3836
+highlight CursorLineNr ctermfg=214 guifg=#fabd2f
+highlight LineNr       ctermfg=241 guifg=#7c6f64
+
+highlight Visual       ctermbg=239 guibg=#665c54
+highlight Search       ctermfg=214 ctermbg=235 guifg=#fabd2f guibg=#282828 gui=reverse
+highlight IncSearch    ctermfg=208 ctermbg=235 guifg=#e99624 guibg=#282828 gui=reverse
+
+highlight StatusLine   ctermfg=214 ctermbg=236 guifg=#fabd2f guibg=#32302f
+highlight StatusLineNC ctermfg=237 ctermbg=246 guifg=#3c3836 guibg=#a89984
+
+highlight NonText      ctermfg=239 guifg=#504945
+highlight link EndOfBuffer NonText
+
+highlight DiffAdd      ctermbg=22  guibg=#4F5431
+highlight DiffDelete   ctermbg=52  guibg=#722529
+highlight DiffChange   ctermbg=NONE
+highlight DiffText     ctermfg=235 ctermbg=214 guifg=#282828 guibg=#fabd2f
+
+highlight link vimOption Identifier

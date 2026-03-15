@@ -2,6 +2,8 @@
 vim.g.colors_name = "gruvbox"
 vim.g.c_syntax_for_h = true
 
+vim.fn.matchadd("TodoCustom", "\\v<(TODO|FIXME)>", 100)
+
 local colours = {
     bg0 = "#282828",
     bg1 = "#3c3836",
@@ -112,6 +114,7 @@ local groups = {
     { "String", { fg = colours.green } },
     { "Structure", { link = "Type" } },
     { "Title", { fg = colours.green } },
+    { "TodoCustom", { link = "Todo" } },
     { "Typedef", { link = "Type" } },
     { "Type", { fg = colours.yellow } },
     { "Underlined", { fg = colours.blue, underline = true } },
@@ -125,8 +128,8 @@ local groups = {
     { "@boolean", { link = "Boolean" } },
     { "@character", { link = "Character" } },
     { "@character.special", { link = "SpecialChar" } },
-    { "@comment.error", { link = "ErrorMsg" } },
     { "@comment", { link = "Comment" } },
+    { "@comment.error", { link = "ErrorMsg" } },
     { "@comment.note", { link = "SpecialComment" } },
     { "@comment.warning", { link = "WarningMsg" } },
     { "@conditional", { link = "Conditional" } },

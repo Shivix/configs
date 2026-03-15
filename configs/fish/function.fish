@@ -280,8 +280,17 @@ function ripgrep --description "Run ripgrep in a way closer to standard default 
     rg -uuu --no-config
 end
 
+function colourhex
+    set hex (string replace "#" "" $argv)
+
+    set r (math "0x"(string sub -s 1 -l 2 $hex))
+    set g (math "0x"(string sub -s 3 -l 2 $hex))
+    set b (math "0x"(string sub -s 5 -l 2 $hex))
+
+    printf "\e[48;2;%d;%d;%dm        \e[0m\n" $r $g $b
+end
+
 function init_fish --description "Sets universal variables for fish shell"
-    fish_add_path ~/.cargo/bin
     fish_add_path ~/.go/bin
 
     set -Ux EDITOR nvim

@@ -22,7 +22,10 @@ vim.api.nvim_create_user_command("Fd", function(opts)
 end, { nargs = "*" })
 
 vim.api.nvim_create_user_command("Fdp", function(opts)
-    local cmd = "fd --hidden --exclude .git --type file --full-path " .. opts.args .. " | fp -e " .. opts.args
+    local cmd = "fd --hidden --exclude .git --type file --full-path "
+        .. opts.args
+        .. " | fp -e "
+        .. opts.args
     quickfix_or_edit(cmd, "Fd: " .. opts.args)
 end, { nargs = 1 })
 
@@ -37,7 +40,7 @@ vim.api.nvim_create_user_command("Rg", function(opts)
         local row = tonumber(parts[2])
         local col = tonumber(parts[3])
         vim.cmd("edit " .. vim.fn.fnameescape(parts[1]))
-        vim.api.nvim_win_set_cursor(0, {row, col - 1})
+        vim.api.nvim_win_set_cursor(0, { row, col - 1 })
     end
 end, { nargs = "*" })
 
@@ -92,3 +95,21 @@ vim.api.nvim_create_user_command("Prefix", function()
 
     vim.lsp.util.open_floating_preview(lines, "dosini")
 end, { nargs = 0 })
+
+local ns = vim.api.nvim_create_namespace("hexcolors")
+vim.api.nvim_create_user_command("ColourHex", function(opts)
+    vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
+    if opts.args == "off" then
+        return
+    end
+    for lnum, line in ipairs(vim.api.nvim_buf_get_lines(0, 0, -1, false)) do
+        for s, hex in line:gmatch("()#(%x%x%x%x%x%x)") do
+            local group = "Hex_" .. hex
+            vim.api.nvim_set_hl(0, group, { bg = "#" .. hex })
+            vim.api.nvim_buf_set_extmark(0, ns, lnum - 1, s - 1, {
+                end_col = s + 6,
+                hl_group = group,
+            })
+        end
+    end
+end, { nargs = "?" })

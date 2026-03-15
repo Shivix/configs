@@ -82,15 +82,10 @@ vim.keymap.set("i", "<Tab>", function()
 end, { expr = true })
 
 vim.keymap.set("n", "gd", function()
-    if vim.bo.filetype ~= "man" then
-        return vim.lsp.buf.definition()
+    if vim.bo.filetype == "man" then
+        return vim.cmd.normal({ "K" })
     end
-    local word = vim.fn.expand("<cWORD>")
-    local match = word:match("[%w.@_-]+%(%w+%)")
-
-    if match then
-        vim.cmd("Man " .. match)
-    end
+    return vim.lsp.buf.definition()
 end)
 vim.keymap.set("n", "gh", ClangSwitchHeader)
 vim.keymap.set("n", "<C-n>", function()

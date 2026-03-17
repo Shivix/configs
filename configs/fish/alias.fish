@@ -14,6 +14,8 @@ abbr godebug "go build -gcflags=all='-N -l'"
 abbr cr "cargo run"
 abbr crr "cargo run --release"
 
+abbr startx "startx ~/.config/X11/.xinitrc"
+
 abbr rm "rm -i"
 abbr cp "cp -i"
 abbr mv "mv -i"

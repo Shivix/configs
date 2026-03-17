@@ -1,0 +1,11 @@
+#!/bin/sh
+
+setxkbmap gb
+# xmodmap after setxkbmap to avoid overwrite
+xmodmap "$HOME/.config/X11/xmodmap"
+xrdb -merge "$HOME/.config/X11/xresources"
+
+feh --no-fehbg --bg-scale "$HOME/Pictures/Wallpapers/sidcyberpunk.png" &
+status_bar &
+dunst &
+exec dwm

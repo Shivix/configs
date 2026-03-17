@@ -42,8 +42,7 @@ return {
         path = "~/.config/vim",
     },
     X11 = {
-        path = "~/",
-        hidden = true,
+        path = "~/.config/X11",
     },
     zathura = {
         path = "~/.config/zathura",

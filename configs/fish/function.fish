@@ -220,15 +220,10 @@ function count_includes
 end
 
 function connect_bluetooth
-    if not systemctl is-active bluetooth.service
-        sudo systemctl start bluetooth.service
-    end
-    sleep .5
     bluetoothctl connect (bluetoothctl devices | awk '/WF-1000XM5/ { print $2 }')
 end
 function disconnect_bluetooth
     bluetoothctl disconnect (bluetoothctl devices | awk '/WF-1000XM5/ { print $2 }')
-    sudo systemctl stop bluetooth.service
 end
 
 function findrej

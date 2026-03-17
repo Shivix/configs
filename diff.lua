@@ -1,7 +1,7 @@
 local configs = dofile("configs.lua")
 
 for name, config in pairs(configs) do
-    local ls <close> = assert(io.popen("fd '' --type file configs/" .. name))
+    local ls <close> = assert(io.popen("fd --hidden '' --type file configs/" .. name))
     for repo_path in ls:lines() do
         local file = repo_path:gsub("[^/]*/[^/]*/", "")
         if

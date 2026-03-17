@@ -46,6 +46,10 @@ abbr ap "ansible-playbook"
 
 abbr refresh "source ~/.config/fish/config.fish"
 
+abbr xi "sudo xbps-install"
+abbr xr "sudo xbps-remove"
+abbr xq xbps-query
+
 abbr trim_whitespace "git ls-files | xargs sed -i 's/[[:space:]]*\$//'"
 
 abbr --position=anywhere fix2pipe "sed 's/\x01/|/g'"

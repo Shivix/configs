@@ -7,6 +7,7 @@ vim.opt.expandtab = true
 vim.opt.icm = "split"
 vim.opt.ignorecase = true
 vim.opt.laststatus = 3
+vim.opt.textwidth = 100
 vim.opt.list = true
 vim.opt.listchars = "tab:» ,trail:*"
 vim.opt.mouse = ""

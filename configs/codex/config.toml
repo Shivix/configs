@@ -1,6 +1,8 @@
 model = "gpt-5.3-codex"
 model_reasoning_effort = "medium"
 
+approval_policy = "untrusted"
+
 [tui]
 animations = false
 status_line = ["model-with-reasoning", "current-dir", "context-used", "context-window-size", "five-hour-limit", "weekly-limit", "git-branch"]
@@ -8,7 +10,7 @@ theme = "gruvbox-dark"
 
 # Profiles
 [profiles.safeinteractive]
-approval_policy = "on-request"
+approval_policy = "untrusted"
 sandbox_mode = "read-only"
 
 [profiles.safenoninteractive]

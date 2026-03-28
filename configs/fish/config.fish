@@ -1,5 +1,6 @@
 if status is-login
-    set -Ue MOTD_WAS_SHOWN
+    clear
+    operator_fetch
 end
 
 if status --is-interactive
@@ -31,10 +32,5 @@ if status --is-interactive
 
     if status is-login
         return
-    end
-    # Only show if it hasn't already been shown this session
-    if not set -q MOTD_WAS_SHOWN
-        fastfetch
-        set -U MOTD_WAS_SHOWN yes
     end
 end

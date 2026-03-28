@@ -285,7 +285,23 @@ function colourhex
     printf "\e[48;2;%d;%d;%dm        \e[0m\n" $r $g $b
 end
 
+function lua_std
+    set -l url "https://www.lua.org/ftp/refman-5.5.tar.gz"
+    set -l dest "$HOME/Documents/LuaDocs"
+    set -l tar_dest "$HOME/Downloads/refman-5.5.tar.gz"
+
+    if not test -d "$dest"
+        curl -fL $url -o "$tar_dest"
+        mkdir -p "$dest"
+        tar xvf "$tar_dest" --strip-components=2 -C "$dest"
+        rm "$tar_dest"
+    end
+
+    firefox "$dest/contents.html"
+end
+
 function init_fish --description "Sets universal variables for fish shell"
+    fish_add_path ~/.local/bin
     fish_add_path ~/.go/bin
 
     set -Ux EDITOR nvim
@@ -293,9 +309,10 @@ function init_fish --description "Sets universal variables for fish shell"
     set -Ux MANPAGER "nvim -c Man!"
     set -Ux RIPGREP_CONFIG_PATH "$HOME/.config/rg/config"
     set -Ux VISUAL nvim
+    set -Ux XAUTHORITY "$HOME/.config/X11/xauthority"
 
     set -Ux fish_greeting
-    set -Ux fish_browser "firefox-developer-edition"
+    set -Ux fish_browser firefox
     set -U fish_autosuggestion_enabled 0
     set -U fish_handle_reflow 0
     set -U fish_transient_prompt 1

@@ -14,7 +14,7 @@ abbr godebug "go build -gcflags=all='-N -l'"
 abbr cr "cargo run"
 abbr crr "cargo run --release"
 
-abbr startx "startx ~/.config/X11/.xinitrc"
+abbr startx "startx ~/.config/X11/xinitrc"
 
 abbr rm "rm -i"
 abbr cp "cp -i"
@@ -47,7 +47,7 @@ abbr ap "ansible-playbook"
 abbr refresh "source ~/.config/fish/config.fish"
 
 abbr xi "sudo xbps-install"
-abbr xr "sudo xbps-remove"
+abbr xr "sudo xbps-remove -Ro"
 abbr xq xbps-query
 
 abbr trim_whitespace "git ls-files | xargs sed -i 's/[[:space:]]*\$//'"

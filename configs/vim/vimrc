@@ -21,6 +21,7 @@ set splitright
 set tabstop=4
 set termguicolors
 set undofile
+set viminfo='100,n~/.local/state/vim/viminfo
 
 if executable("rg")
     set grepprg=rg\ --vimgrep
@@ -115,3 +116,9 @@ highlight DiffChange   ctermbg=NONE
 highlight DiffText     ctermfg=235 ctermbg=214 guifg=#282828 guibg=#fabd2f
 
 highlight link vimOption Identifier
+
+highlight link shDeref Identifier
+highlight link shDerefVar Identifier
+highlight link shDerefSimple Identifier
+highlight link shCmdSubRegion Delimiter
+highlight link shCommandSub Function

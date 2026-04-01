@@ -29,6 +29,9 @@ return {
     gromit = {
         path = "~/",
     },
+    kakoune = {
+        path = "~/.config/kak",
+    },
     newsboat = {
         path = "~/.config/newsboat",
     },

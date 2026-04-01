@@ -1,0 +1,187 @@
+# Enable before colour scheme to avoid overwriting my colours.
+eval %sh{kak-lsp}
+
+source "%val{config}/colourscheme.kak"
+
+# Options
+# Prevent showing changelog on startup
+set-option global startup_info_version 10000000000000
+set-option global autowrap_column 100
+set-option global tabstop 4
+set-option global grepcmd "rg --vimgrep"
+set-option global autocomplete prompt
+set-option global modelinefmt '{{context_info}} {{mode_info}}'
+set-option -add global modelinefmt '%sh{
+    printf " | $kak_bufname"
+    if [ "$kak_modified" = "true" ]; then
+        printf " [+]"
+    fi
+    # TODO: language id doesnt mean server is enabled
+    if [ -n "$kak_opt_lsp_servers" ]; then
+        printf " | W:$kak_opt_lsp_diagnostic_warning_count E:$kak_opt_lsp_diagnostic_error_count"
+    fi
+    printf " | $kak_opt_filetype | $kak_cursor_line:$kak_cursor_char_column "
+}'
+
+# Keybinds
+hook global InsertChar k %{ try %{
+  exec -draft hH <a-k>jk<ret> d
+  exec -with-hooks <esc>
+}}
+
+hook global WinSetOption filetype=.* %{
+    evaluate-commands %sh{
+        case "$kak_opt_filetype" in
+            go|makefile) exit ;;
+            *) ;;
+        esac
+        echo 'map global insert <tab> <a-\;><a-gt>'
+    }
+}
+
+# TODO: instead, maybe instead of autowrap, just trigger = when leaving insert mode.
+hook global WinSetOption filetype=(git-commit|git-rebase|mail) %{
+    set window autowrap_column 72
+    autowrap-enable
+}
+
+# Allows me to have a single kak server handling multiple pwd
+hook global ModeChange .*:prompt %{
+    reset-pwd
+}
+hook global ClientCreate .* %{
+    reset-pwd
+}
+
+# Always select entire lines
+#map global normal J "Jx"
+#map global normal K "Kx"
+
+map global normal = '|fmt -w $kak_opt_autowrap_column<ret>'
+
+map global user y '<a-|>xsel --input --clipboard<ret>' -docstring 'System clipboard yank'
+map global user P '!xsel --output --clipboard<ret>' -docstring 'System clipboard print'
+map global user p '<a-!>xsel --output --clipboard<ret>' -docstring 'System clipboard print'
+map global user R '|xsel --output --clipboard<ret>' -docstring 'System clipboard replace'
+
+add-highlighter global/ number-lines -relative -separator " "
+add-highlighter global/ show-whitespaces -lf "" -tab » -spc " "
+
+# Softwrap
+add-highlighter global/ wrap -word -indent
+
+# LSP
+hook global WinSetOption filetype=(rust|python|go|zig|c|cpp|lua) %{
+    lsp-enable-window
+}
+
+map global user q ':lsp-code-actions<ret>' -docstring 'LSP code actions'
+map global user f ':lsp-formatting<ret>' -docstring 'LSP formatting'
+map global user k ':lsp-hover<ret>' -docstring 'LSP hover'
+map global user r ':lsp-rename-prompt<ret>' -docstring 'LSP rename'
+
+map global normal <c-n> ':lsp-find-error error warning<ret>' -docstring 'Goto next LSP error'
+map global normal <c-p> ':lsp-find-error --previous error warning<ret>' -docstring 'Goto previous LSP error'
+
+map global insert <c-k> '<a-;>:signature-help<ret>' -docstring 'Goto previous LSP error'
+
+map global goto d <esc>:lsp-definition<ret> -docstring 'LSP definition'
+map global goto r <esc>:lsp-references<ret> -docstring 'LSP references'
+
+map global object f '<a-semicolon>lsp-object Function Method<ret>' -docstring 'LSP function or method'
+map global object t '<a-semicolon>lsp-object Class Interface Module Namespace Struct<ret>' -docstring 'LSP class or module'
+map global object d '<a-semicolon>lsp-diagnostic-object error warning<ret>' -docstring 'LSP errors and warnings'
+
+define-command reset-pwd %{
+    cd %val{client_env_PWD}
+}
+
+define-command signature-help %{
+    set-face global Information default,bright-black
+    lsp-signature-help
+    hook -group once global ModeChange .* %{
+        set-face global Information default,default
+        remove-hooks global once
+    }
+}
+
+# quickfix lists
+define-command -hidden qf-jump %{
+    exec ',;xH'
+    evaluate-commands %sh{
+        IFS=':' set -- $kak_selection
+        file=$1
+        row=$2
+        col=$3
+        try %{
+            printf 'edit %s %s %s' "$file" "$row" "$col"
+        }
+    }
+}
+
+# TODO: have a single command passed in, then validate the command finds files. Consider naming scratch buffer based on command. Remember qf-open stuff.
+define-command -hidden -params 1.. qf-list %{
+    reg dquote %sh{
+        printf '%s\n' "$@"
+    } %arg{@}
+
+    edit -scratch "*qf list*"
+    exec '%R;'
+    map buffer normal <ret> ':qf-jump<ret>'
+}
+
+define-command qf-open %{
+    buffer "*qf list*"
+}
+
+define-command fp -params 1 %{
+    evaluate-commands %sh{
+        echo "qf-list $(fd --hidden --exclude .git --type file | fp --filter-scores -e $1 | tr '\n' ' ')"
+    }
+    exec 'gg'
+}
+
+define-command fd -params 1.. %{
+    evaluate-commands %sh{
+        echo "qf-list $(fd --hidden --exclude .git --type file $@ | tr '\n' ' ')"
+    }
+    exec 'gg'
+}
+
+# TODO: Experiment
+map global user f '<esc>:prompt -shell-script-candidates %{ fd --type f } file: %{ edit %val{text} }<ret>' -docstring "file"
+
+# Incrementing/ Decrementing
+define-command \
+    -params 2 \
+    -docstring "
+        inc-dec-number OP NUM
+
+        Apply the given operator (usually + or -) and NUM to each selected
+        number" \
+    inc-dec-number \
+%{
+    evaluate-commands -save-regs 'c' %{
+        # "c" stores the count we want to use (in decimal)
+        set-register c %sh{ echo $(( $2 == 0 ? 1 : $2 )) }
+
+        try %{
+            # Search for tokens that look like hex numbers.
+            execute-keys s (\A|\+|-|(?<=[^0-9]))0[Xx][0-9A-Fa-f]+ <ret>
+            # Apply our operator with shell arithmetic.
+            execute-keys | "read val; printf '0x%%0*X\n' $((${#val} - 2)) $(($val %arg{1} %reg{c}))" <ret>
+
+        } catch %{
+            # Search for tokens that look like unpadded decimal numbers.
+            execute-keys s (\A|\+|-|(?<=[^0-9]))[1-9][0-9]* <ret>
+            # Apply our operator with shell arithmetic.
+            execute-keys | "read val; printf '%%d\n' $(($val %arg{1} %reg{c}))" <ret>
+        } catch %{
+            fail "No numbers found in selection"
+        }
+    }
+}
+
+map global normal <c-a> ':inc-dec-number + 1<ret>'
+map global normal <c-x> ':inc-dec-number - 1<ret>'
+map global normal <c-a> ':inc-dec-number + 1<ret>'

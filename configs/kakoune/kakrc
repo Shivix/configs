@@ -14,22 +14,43 @@ set-option global modelinefmt '{{context_info}} {{mode_info}} | %val{bufname} | 
 
 # Keybinds
 hook global InsertChar k %{ try %{
-  exec -draft hH <a-k>jk<ret> d
-  exec -with-hooks <esc>
+  execute-keys -draft hH <a-k>jk<ret> d
+  execute-keys -with-hooks <esc>
 }}
 
-hook global WinSetOption filetype=.* %{
-    evaluate-commands %sh{
-        case "$kak_opt_filetype" in
-            go|makefile) exit ;;
-            *) ;;
-        esac
-        echo 'map global insert <tab> <a-\;><a-gt>'
-    }
+map global insert <tab> "<tab><a-;>h<a-;>@"
+hook global WinSetOption filetype=(go|makefile) %{
+    set-option window indentwidth 0
+    map window insert <tab> <tab>
 }
 
+define-command smart-pairs-after-ret %[
+    try %[
+        # Check previous line ends with {
+        execute-keys -draft <esc>s$<ret>
+        execute-keys -draft k<a-l><a-l>s\{<ret>
+        # Insert temporary . to prevent trailing whitespace getting removed when hitting <ret>
+        # -with-hooks to reenable hooks
+        execute-keys -with-hooks '.<ret>}<up><right><right><right><right><backspace>'
+    ] catch %[
+        try %[
+            execute-keys -draft <esc>s$<ret>
+            execute-keys -draft k<a-l><a-l>s\(<ret>
+            execute-keys -with-hooks '.<ret>)<up><right><right><right><right><backspace>'
+        ] catch %[
+            try %{
+                execute-keys -draft <esc>s$<ret>
+                execute-keys -draft k<a-l><a-l>s\[<ret>
+                execute-keys -with-hooks '.<ret>]<up><right><right><right><right><backspace>'
+            }
+        ]
+    ]
+]
+
+map global insert <ret> '<ret><a-;>:smart-pairs-after-ret<ret>'
+
 hook global WinSetOption filetype=(git-commit|git-rebase|mail) %{
-    set window autowrap_column 72
+    set-option window autowrap_column 72
     autowrap-enable
 }
 
@@ -69,7 +90,6 @@ hook global WinSetOption filetype=(rust|python|go|zig|c|cpp|lua) %{
 }
 
 map global user q ':lsp-code-actions<ret>' -docstring 'LSP code actions'
-map global user f ':lsp-formatting<ret>' -docstring 'LSP formatting'
 map global user k ':lsp-hover<ret>' -docstring 'LSP hover'
 map global user r ':lsp-rename-prompt<ret>' -docstring 'LSP rename'
 
@@ -113,6 +133,7 @@ define-command -hidden qf-jump %{
 }
 
 # TODO: have a single command passed in, then validate the command finds files. Consider naming scratch buffer based on command. Remember qf-open stuff.
+# TODO: If only one file, automatically enter without creating scratch buffer
 define-command -hidden -params 1.. qf-list %{
     reg dquote %sh{
         printf '%s\n' "$@"
@@ -168,3 +189,76 @@ define-command inc-dec-number -params 2 -docstring "
 }
 map global normal <c-a> ':inc-dec-number + 1<ret>'
 map global normal <c-x> ':inc-dec-number - 1<ret>'
+
+define-command gdb-breakpoint %{
+    evaluate-commands %sh{
+        echo "b $kak_bufname:$kak_cursor_line" | xsel --clipboard --input
+    }
+}
+
+define-command gh-link %{
+    evaluate-commands %sh{
+        remote=$(git remote get-url upstream 2>/dev/null || git remote get-url origin)
+
+        repo=$(echo "$remote" | sed -n 's#.*github.com[:/]\(.*\)\.git#\1#p')
+        [ -z "$repo" ] && { echo "echo -debug 'repo not found'"; exit; }
+
+        file=$kak_bufname
+        line=$kak_cursor_line
+        url="https://github.com/$repo/blob/master/$file#L$line"
+        echo "$url" | xsel --clipboard --input
+    }
+}
+
+define-command prefix %{
+    evaluate-commands %sh{
+        output=$(prefix -vor "$kak_selection")
+        escaped=$(printf '%s\n' "$output" | sed 's/\\/\\\\/g; s/"/\\"/g')
+        printf 'info "%s"\n' "$escaped"
+    }
+}
+
+hook global BufOpenFile .*\.([^.]+)\.j2$ %{
+    set-option buffer filetype %val{match[1]}
+}
+
+hook global BufSetOption filetype=rust %{
+    set-option buffer makecmd 'cargo build --message-format=short'
+    # Will change for other filetypes used by the same server, but the pattern still works for standard make errors.
+    set-option global make_error_pattern "^([^:\n]+):(\d+):(?:(\d+):)? error(?:\[.*\])?:([^\n]+)?"
+    set-option buffer formatcmd 'rustfmt'
+}
+
+hook global BufSetOption filetype=(c|cpp) %{
+    set-option buffer lintcmd 'clang-tidy'
+    set-option buffer formatcmd 'clang-format -i'
+
+    evaluate-commands %sh{
+        if [ -d "cmake-build-debug" ]; then
+            echo "set-option buffer makecmd 'make --no-print-directory -j -C cmake-build-debug'"
+        else
+            echo "set-option buffer makecmd 'make -j'"
+        fi
+    }
+}
+
+hook global BufSetOption filetype=go %{
+    set-option buffer formatcmd 'gofmt'
+}
+
+hook global BufSetOption filetype=lua %{
+#     set-option buffer lintcmd 'selene'
+    set-option buffer formatcmd 'stylua -'
+}
+
+hook global BufSetOption filetype=python %{
+    set-option buffer formatcmd 'ruff format -'
+}
+
+hook global BufSetOption filetype=zig %{
+    set-option buffer formatcmd 'zig fmt --stdin'
+}
+
+hook global BufOpenFile .*\.lus$ %{
+    set-option buffer filetype markdown
+}

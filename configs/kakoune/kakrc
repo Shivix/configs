@@ -10,18 +10,7 @@ set-option global autowrap_column 100
 set-option global tabstop 4
 set-option global grepcmd "rg --vimgrep"
 set-option global autocomplete prompt
-set-option global modelinefmt '{{context_info}} {{mode_info}}'
-set-option -add global modelinefmt '%sh{
-    printf " | $kak_bufname"
-    if [ "$kak_modified" = "true" ]; then
-        printf " [+]"
-    fi
-    # TODO: language id doesnt mean server is enabled
-    if [ -n "$kak_opt_lsp_servers" ]; then
-        printf " | W:$kak_opt_lsp_diagnostic_warning_count E:$kak_opt_lsp_diagnostic_error_count"
-    fi
-    printf " | $kak_opt_filetype | $kak_cursor_line:$kak_cursor_char_column "
-}'
+set-option global modelinefmt '{{context_info}} {{mode_info}} | %val{bufname} | W:%opt{lsp_diagnostic_warning_count} E:%opt{lsp_diagnostic_error_count} | %opt{filetype} | %val{cursor_line}:%val{cursor_char_column} '
 
 # Keybinds
 hook global InsertChar k %{ try %{
@@ -39,7 +28,6 @@ hook global WinSetOption filetype=.* %{
     }
 }
 
-# TODO: instead, maybe instead of autowrap, just trigger = when leaving insert mode.
 hook global WinSetOption filetype=(git-commit|git-rebase|mail) %{
     set window autowrap_column 72
     autowrap-enable
@@ -53,9 +41,20 @@ hook global ClientCreate .* %{
     reset-pwd
 }
 
-# Always select entire lines
-#map global normal J "Jx"
-#map global normal K "Kx"
+hook global BufCreate .* %{
+    add-highlighter buffer/linenumbers number-lines -relative -separator " "
+    add-highlighter buffer/whitespace show-whitespaces -lf "" -tab » -spc " "
+}
+hook global BufSetOption filetype=man %{
+    remove-highlighter buffer/linenumbers
+    remove-highlighter buffer/whitespace
+}
+
+# Softwrap
+add-highlighter global/ wrap -word -indent
+
+# Case insensitive by default, can simply delete the extra lines when case sensitive is wanted.
+map global normal / '/(?i)'
 
 map global normal = '|fmt -w $kak_opt_autowrap_column<ret>'
 
@@ -63,12 +62,6 @@ map global user y '<a-|>xsel --input --clipboard<ret>' -docstring 'System clipbo
 map global user P '!xsel --output --clipboard<ret>' -docstring 'System clipboard print'
 map global user p '<a-!>xsel --output --clipboard<ret>' -docstring 'System clipboard print'
 map global user R '|xsel --output --clipboard<ret>' -docstring 'System clipboard replace'
-
-add-highlighter global/ number-lines -relative -separator " "
-add-highlighter global/ show-whitespaces -lf "" -tab » -spc " "
-
-# Softwrap
-add-highlighter global/ wrap -word -indent
 
 # LSP
 hook global WinSetOption filetype=(rust|python|go|zig|c|cpp|lua) %{
@@ -148,40 +141,30 @@ define-command fd -params 1.. %{
     exec 'gg'
 }
 
-# TODO: Experiment
-map global user f '<esc>:prompt -shell-script-candidates %{ fd --type f } file: %{ edit %val{text} }<ret>' -docstring "file"
+define-command find -docstring "find files" -params 1 %{ edit %arg{1} }
+complete-command find shell-script-candidates %{ fd . --type f }
 
-# Incrementing/ Decrementing
-define-command \
-    -params 2 \
-    -docstring "
-        inc-dec-number OP NUM
-
-        Apply the given operator (usually + or -) and NUM to each selected
-        number" \
-    inc-dec-number \
-%{
+define-command inc-dec-number -params 2 -docstring "
+    inc-dec-number OP NUM
+    Apply the given operator (usually + or -) and NUM to each selected
+    number" %{
     evaluate-commands -save-regs 'c' %{
         # "c" stores the count we want to use (in decimal)
         set-register c %sh{ echo $(( $2 == 0 ? 1 : $2 )) }
 
         try %{
-            # Search for tokens that look like hex numbers.
+            # Hex
             execute-keys s (\A|\+|-|(?<=[^0-9]))0[Xx][0-9A-Fa-f]+ <ret>
-            # Apply our operator with shell arithmetic.
             execute-keys | "read val; printf '0x%%0*X\n' $((${#val} - 2)) $(($val %arg{1} %reg{c}))" <ret>
 
         } catch %{
-            # Search for tokens that look like unpadded decimal numbers.
+            # Decimal
             execute-keys s (\A|\+|-|(?<=[^0-9]))[1-9][0-9]* <ret>
-            # Apply our operator with shell arithmetic.
             execute-keys | "read val; printf '%%d\n' $(($val %arg{1} %reg{c}))" <ret>
         } catch %{
             fail "No numbers found in selection"
         }
     }
 }
-
 map global normal <c-a> ':inc-dec-number + 1<ret>'
 map global normal <c-x> ':inc-dec-number - 1<ret>'
-map global normal <c-a> ':inc-dec-number + 1<ret>'

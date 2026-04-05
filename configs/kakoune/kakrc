@@ -12,6 +12,13 @@ set-option global grepcmd "rg --vimgrep"
 set-option global autocomplete prompt
 set-option global modelinefmt '{{context_info}} {{mode_info}} | %val{bufname} | W:%opt{lsp_diagnostic_warning_count} E:%opt{lsp_diagnostic_error_count} | %opt{filetype} | %val{cursor_line}:%val{cursor_char_column} '
 
+# TODO: Instead of highlighting selections like I had in nvim, add a hot key or command for
+# adding a temp highlight for the provided/ selected word/ regex for current buffer.
+# Can give it a constistent name, then :noh removes it.
+
+# TODO: Consider closing all buffers when quitting and it's the last client open. Could save certain buffers such as qf buffer.
+#%sh{ set -- $kak_client_list; echo $#; }
+
 # Keybinds
 hook global InsertChar k %{ try %{
   execute-keys -draft hH <a-k>jk<ret> d
@@ -26,28 +33,29 @@ hook global WinSetOption filetype=(go|makefile) %{
 
 define-command smart-pairs-after-ret %[
     try %[
-        # Check previous line ends with {
-        execute-keys -draft <esc>s$<ret>
-        execute-keys -draft k<a-l><a-l>s\{<ret>
-        # Insert temporary . to prevent trailing whitespace getting removed when hitting <ret>
-        # -with-hooks to reenable hooks
-        execute-keys -with-hooks '.<ret>}<up><right><right><right><right><backspace>'
-    ] catch %[
-        try %[
-            execute-keys -draft <esc>s$<ret>
-            execute-keys -draft k<a-l><a-l>s\(<ret>
-            execute-keys -with-hooks '.<ret>)<up><right><right><right><right><backspace>'
-        ] catch %[
+        # Check lines ends with {
+        execute-keys -draft Hs\{$<ret>
+        execute-keys }<left>
+        execute-keys -with-hooks <ret><esc>O
+    ] catch %{
+        try %{
+            execute-keys -draft Hs\($<ret>
+            execute-keys )<left>
+            execute-keys -with-hooks <ret><esc>O
+        } catch %{
             try %{
-                execute-keys -draft <esc>s$<ret>
-                execute-keys -draft k<a-l><a-l>s\[<ret>
-                execute-keys -with-hooks '.<ret>]<up><right><right><right><right><backspace>'
+                execute-keys -draft Hs\[$<ret>
+                execute-keys ]<left>
+                execute-keys -with-hooks <ret><esc>O
+            } catch %{
+                # -with-hooks to reenable hooks and allow indenting hooks.
+                execute-keys -with-hooks <ret>
             }
-        ]
-    ]
+        }
+    }
 ]
 
-map global insert <ret> '<ret><a-;>:smart-pairs-after-ret<ret>'
+map global insert <ret> '<a-;>:smart-pairs-after-ret<ret>'
 
 hook global WinSetOption filetype=(git-commit|git-rebase|mail) %{
     set-option window autowrap_column 72
@@ -73,6 +81,12 @@ hook global BufSetOption filetype=man %{
 
 # Softwrap
 add-highlighter global/ wrap -word -indent
+
+# TODO: experiment with highlighting window and seelcting something, to get around easier
+define-command search-thingy %{
+    # TODO: Maybe something to make fixed string?
+    execute-keys gtGbxs
+}
 
 # Case insensitive by default, can simply delete the extra lines when case sensitive is wanted.
 map global normal / '/(?i)'
@@ -212,8 +226,7 @@ define-command gh-link %{
 define-command prefix %{
     evaluate-commands %sh{
         output=$(prefix -vor "$kak_selection")
-        escaped=$(printf '%s\n' "$output" | sed 's/\\/\\\\/g; s/"/\\"/g')
-        printf 'info "%s"\n' "$escaped"
+        printf 'info "%s"\n' "$output"
     }
 }
 

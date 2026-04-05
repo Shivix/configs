@@ -68,21 +68,21 @@ function fish_prompt
     set_color normal
 end
 
-function nvf
+function kf
     if test -z "$argv"
         return
     end
-    nvim -c "Fp $argv"
+    kek -e "fp $argv"
 end
 
-function nvrg
+function krg
     if test -z "$argv"
         return
     end
-    nvim -c "Rg $argv"
+    kek -e "grep $argv"
 end
 
-function nvrg_last
+function krglast
     set -l last_rg (history search --prefix rg --max 1)
 
     if test -z "$last_rg"
@@ -91,8 +91,22 @@ function nvrg_last
     end
 
     set -l args (string replace -r '^rg\s+' '' "$last_rg")
+    kek -e "grep $args"
+end
 
-    nvim -c "silent grep $args" -c "copen"
+function kcmd
+    if test (count $argv) -eq 0
+        echo "usage: run_or_kak <command...>"
+        return 2
+    end
+
+    set -l tmp_name "/tmp/kak_cmd_buffer"
+
+    $argv | kek -e "rename-buffer -file $tmp_name"
+    if test -e "$tmp_name"
+        cat "$tmp_name"
+        rm "$tmp_name"
+    end
 end
 
 function fix_vwap
@@ -300,16 +314,21 @@ function lua_std
     firefox "$dest/contents.html"
 end
 
+function kman
+    kek -e "man $argv"
+end
+
 function init_fish --description "Sets universal variables for fish shell"
     fish_add_path ~/.local/bin
     fish_add_path ~/.go/bin
 
-    set -Ux EDITOR nvim
+    set -Ux EDITOR kek
     set -Ux GOPATH ~/.go
-    set -Ux MANPAGER "nvim -c Man!"
     set -Ux RIPGREP_CONFIG_PATH "$HOME/.config/rg/config"
-    set -Ux VISUAL nvim
+    set -Ux VISUAL kek
     set -Ux XAUTHORITY "$HOME/.config/X11/xauthority"
+    set -Ux INPUTRC "$HOME/.config/readline/inputrc"
+    set -Ux HISTFILE ""
 
     set -Ux fish_greeting
     set -Ux fish_browser firefox

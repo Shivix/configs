@@ -4,23 +4,7 @@ if status is-login
 end
 
 if status --is-interactive
-    fish_vi_key_bindings
-    if test "$fish_key_bindings" = "fish_vi_key_bindings"
-        for mode in insert default
-            bind \cl -M $mode ""
-            bind \cd -M $mode ""
-            bind \es -M $mode ""
-        end
-        bind \cr -M default "redo"
-        bind U -M visual "togglecase-selection"
-        bind _ -M default "beginning-of-line"
-        for mode in insert replace
-            bind jk -M $mode -m default ""
-        end
-        # Switch back to line style cursor after
-        bind -M insert \ce "edit_command_buffer; printf '\e[6 q'"
-    end
-
+    source ~/.config/fish/keybinds.fish
     source ~/.config/fish/alias.fish
     source ~/.config/fish/function.fish
 
@@ -29,8 +13,4 @@ if status --is-interactive
     end
 
     set -gx GPG_TTY (tty)
-
-    if status is-login
-        return
-    end
 end

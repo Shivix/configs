@@ -16,7 +16,7 @@ local lsp_status
 
 vim.lsp.handlers["$/progress"] = function(_, progress, _)
     lsp_status = progress
-    vim.api.nvim_command("redrawstatus!")
+    vim.cmd("redrawstatus!")
 end
 
 function StatusLine()

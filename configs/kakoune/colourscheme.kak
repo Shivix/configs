@@ -6,14 +6,6 @@ add-highlighter global/ regex (\+|-|\*|&|=|\?|%|\^|\|-|!|\||->|<|>|\^|~=|\[|\]|\
 add-highlighter global/ regex <[a-zA-Z0-9/\.]+> 0:includepath
 add-highlighter global/ regex '"[a-zA-Z0-9/\.]+"' 0:includepath
 
-# Colour search matches based on / registers
-#hook global RegisterModified '/' %{
-#    add-highlighter global/search dynregex '%reg{/}' 0:search
-#}
-#define-command noh %{
-#    remove-highlighter global/search
-#}
-
 # Seems to be another similar one existing, should overwrite it.
 add-highlighter global/ regex \b(TODO|FIXME): 1:default+rb
 

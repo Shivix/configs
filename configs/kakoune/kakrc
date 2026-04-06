@@ -12,13 +12,6 @@ set-option global grepcmd "rg --vimgrep"
 set-option global autocomplete prompt
 set-option global modelinefmt '{{context_info}} {{mode_info}} | %val{bufname} | W:%opt{lsp_diagnostic_warning_count} E:%opt{lsp_diagnostic_error_count} | %opt{filetype} | %val{cursor_line}:%val{cursor_char_column} '
 
-# TODO: Instead of highlighting selections like I had in nvim, add a hot key or command for
-# adding a temp highlight for the provided/ selected word/ regex for current buffer.
-# Can give it a constistent name, then :noh removes it.
-
-# TODO: Consider closing all buffers when quitting and it's the last client open. Could save certain buffers such as qf buffer.
-#%sh{ set -- $kak_client_list; echo $#; }
-
 # Keybinds
 hook global InsertChar k %{ try %{
   execute-keys -draft hH <a-k>jk<ret> d
@@ -35,7 +28,8 @@ define-command smart-pairs-after-ret %[
     try %[
         # Check lines ends with {
         execute-keys -draft Hs\{$<ret>
-        execute-keys }<left>
+        # Leave and re-enter insert mode to reset whitespace
+        execute-keys <esc>i}<left>
         execute-keys -with-hooks <ret><esc>O
     ] catch %{
         try %{
@@ -82,11 +76,14 @@ hook global BufSetOption filetype=man %{
 # Softwrap
 add-highlighter global/ wrap -word -indent
 
-# TODO: experiment with highlighting window and seelcting something, to get around easier
-define-command search-thingy %{
-    # TODO: Maybe something to make fixed string?
-    execute-keys gtGbxs
+define-command -params 1 highlight-word %{
+    add-highlighter -override buffer/hl-word regex %arg{1} 0:search
 }
+alias global hl highlight-word
+define-command nohlsearch %{
+    remove-highlighter buffer/hl-word
+}
+alias global noh nohlsearch
 
 # Case insensitive by default, can simply delete the extra lines when case sensitive is wanted.
 map global normal / '/(?i)'

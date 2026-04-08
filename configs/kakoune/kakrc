@@ -116,10 +116,6 @@ map global object f '<a-semicolon>lsp-object Function Method<ret>' -docstring 'L
 map global object t '<a-semicolon>lsp-object Class Interface Module Namespace Struct<ret>' -docstring 'LSP class or module'
 map global object d '<a-semicolon>lsp-diagnostic-object error warning<ret>' -docstring 'LSP errors and warnings'
 
-define-command reset-pwd %{
-    cd %val{client_env_PWD}
-}
-
 define-command signature-help %{
     set-face global Information default,bright-black
     lsp-signature-help
@@ -128,6 +124,33 @@ define-command signature-help %{
         remove-hooks global once
     }
 }
+
+define-command reset-pwd %{
+    cd %val{client_env_PWD}
+}
+
+# To avoid dataloss when using a sessions, always warn about modified buffers when closing clients
+# to ensure they are not forgotten about.
+define-command q-guard %{
+    declare-option -hidden str q_guard_modified ""
+    # TODO: Only warn if only client open?
+    evaluate-commands -buffer * %{
+        evaluate-commands %sh{
+            if [ "$kak_modified" = "true" ]; then
+                printf "set-option global q_guard_modified %s\n" "$kak_quoted_bufname"
+            fi
+        }
+    }
+    evaluate-commands %sh{
+        if [ -n "$kak_opt_q_guard_modified" ]; then
+            printf "buffer %s\n" "$kak_quoted_opt_q_guard_modified"
+            printf "echo modified buffer: $kak_opt_q_guard_modified\n"
+        else
+            printf "quit\n"
+        fi
+    }
+}
+alias global q q-guard
 
 # quickfix lists
 define-command -hidden qf-jump %{

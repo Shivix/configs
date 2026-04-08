@@ -66,6 +66,17 @@ function fish_prompt
     printf \n
     printf (set_color bryellow)'$ '
     set_color normal
+    # End selection if leftover from kakoune movement.
+    commandline -f end-selection
+end
+
+function kek
+    set -l session_name "main_kak_session"
+    if not kak -l | grep -Fxq "$session_name"
+        setsid kak -d -s "$session_name" &
+        sleep 0.1
+    end
+    kak -c "$session_name" "$argv"
 end
 
 function kf
@@ -318,14 +329,19 @@ function kman
     kek -e "man $argv"
 end
 
+function paste_editor
+    set -l tmpfile (mktemp /tmp/paste_editor_XXXXXX.sh)
+    kek -e "e -scratch scrollback; set buffer filetype scrollback; execute-keys '%d!xsel -ob<ret>;'"
+end
+
 function init_fish --description "Sets universal variables for fish shell"
     fish_add_path ~/.local/bin
     fish_add_path ~/.go/bin
 
-    set -Ux EDITOR kek
+    set -Ux EDITOR kak
+    set -Ux VISUAL kak
     set -Ux GOPATH ~/.go
     set -Ux RIPGREP_CONFIG_PATH "$HOME/.config/rg/config"
-    set -Ux VISUAL kek
     set -Ux XAUTHORITY "$HOME/.config/X11/xauthority"
     set -Ux INPUTRC "$HOME/.config/readline/inputrc"
     set -Ux HISTFILE ""

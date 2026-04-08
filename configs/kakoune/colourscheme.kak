@@ -19,6 +19,11 @@ hook global ModeChange (push|pop):.*:insert %{
     set-face global PrimaryCursor      black,yellow,+f
 }
 
+hook global BufSetOption filetype=scrollback %{
+    # Shell prompt
+    add-highlighter buffer/ regex 'shivix@[^$]*\$' 0:bright-yellow
+}
+
 # Custom
 set-face global search black,bright-yellow,+f
 

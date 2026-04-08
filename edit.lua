@@ -21,4 +21,4 @@ end
 
 local repo_path = match
 local system_path = config.path .. "/" .. file
-os.execute(string.format("vim -d %s %s", repo_path, system_path))
+os.execute(string.format("kak -e 'new-diff %q %q'", repo_path, system_path))

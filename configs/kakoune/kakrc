@@ -195,6 +195,16 @@ define-command qf-open %{
     buffer "*qf list*"
 }
 
+define-command -params 2 new-diff %{
+    edit -scratch "*configs diff*"
+    set-option buffer filetype diff
+    execute-keys '%d'
+    set-register | "diff -u %arg{1} %arg{2}"
+    execute-keys "!<ret>"
+    map buffer normal <ret> ":diff-jump<ret>"
+    map buffer normal <a-ret> ":diff-jump -<ret>"
+}
+
 define-command find -docstring "find files" -params 1 %{ edit %arg{1} }
 complete-command find shell-script-candidates %{ fd . --type f }
 

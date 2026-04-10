@@ -76,7 +76,11 @@ function kek
         setsid kak -d -s "$session_name" &
         sleep 0.1
     end
-    kak -c "$session_name" $argv
+    if test -z "$argv"
+        kak -c "$session_name" -e "edit -scratch *scratch*"
+    else
+        kak -c "$session_name" $argv
+    end
 end
 
 function kf

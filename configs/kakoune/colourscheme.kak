@@ -43,15 +43,11 @@ set-face global meta          bright-magenta
 set-face global builtin       keyword
 
 # Markdown highlighting
-#set-face global title     bright-cyan+b
 set-face global header    bright-green+b
 set-face global mono      bright-magenta
-#set-face global block     bright-cyan
 set-face global link      bright-blue
 set-face global bullet    yellow
-#set-face global list      ${fg}
 
-#set-face global Default            default
 set-face global PrimarySelection   black,white+fg
 set-face global SecondarySelection white,bright-black+fg
 set-face global PrimaryCursor      black,bright-white
@@ -59,11 +55,9 @@ set-face global SecondaryCursor    black,white
 set-face global PrimaryCursorEol   PrimarySelection
 set-face global SecondaryCursorEol SecondarySelection
 set-face global LineNumbers        white
-#set-face global LineNumberCursor   default
 set-face global LineNumbersWrapped black
 set-face global MenuForeground     default,+r
 set-face global MenuBackground     default,bright-black
-#set-face global MenuInfo           default,default
 set-face global Information        default
 set-face global Error              +u
 set-face global DiagnosticError    +u
@@ -71,9 +65,5 @@ set-face global DiagnosticWarning  yellow
 set-face global StatusLine         default
 set-face global StatusLineMode     default
 set-face global StatusLineInfo     default
-#set-face global StatusLineValue    bright-yellow
-#set-face global StatusCursor       bright-yellow
-#set-face global Prompt             bright-yellow
-#set-face global MatchingChar       ${fg},${bg3}+b
 set-face global BufferPadding      bright-black
 set-face global Whitespace         bright-black,+f

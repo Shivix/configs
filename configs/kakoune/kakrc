@@ -96,8 +96,21 @@ map global user p '<a-!>xsel --output --clipboard<ret>' -docstring 'System clipb
 map global user R '|xsel --output --clipboard<ret>' -docstring 'System clipboard replace'
 
 # LSP
-hook global WinSetOption filetype=(rust|python|go|zig|c|cpp|lua) %{
+hook global WinSetOption filetype=(c|cpp|go|lua|python|rust|zig) %{
     lsp-enable-window
+    hook window -group semantic-tokens BufReload .* lsp-semantic-tokens
+    hook window -group semantic-tokens NormalIdle .* lsp-semantic-tokens
+    hook -once -always window WinSetOption filetype=.* %{
+        remove-hooks window semantic-tokens
+    }
+    set-option global lsp_semantic_tokens %{
+        [
+            {face="type", token="class"},
+            {face="type", token="enum"},
+            {face="type", token="struct"},
+            {face="type", token="typeAlias"},
+        ]
+    }
 }
 
 map global user q ':lsp-code-actions<ret>' -docstring 'LSP code actions'

@@ -76,7 +76,7 @@ function kek
         setsid kak -d -s "$session_name" &
         sleep 0.1
     end
-    kak -c "$session_name" "$argv"
+    kak -c "$session_name" $argv
 end
 
 function kf
@@ -332,39 +332,4 @@ end
 function paste_editor
     set -l tmpfile (mktemp /tmp/paste_editor_XXXXXX.sh)
     kek -e "e -scratch scrollback; set buffer filetype scrollback; execute-keys '%d!xsel -ob<ret>;'"
-end
-
-function init_fish --description "Sets universal variables for fish shell"
-    fish_add_path ~/.local/bin
-    fish_add_path ~/.go/bin
-
-    set -Ux EDITOR kak
-    set -Ux VISUAL kak
-    set -Ux GOPATH ~/.go
-    set -Ux RIPGREP_CONFIG_PATH "$HOME/.config/rg/config"
-    set -Ux XAUTHORITY "$HOME/.config/X11/xauthority"
-    set -Ux INPUTRC "$HOME/.config/readline/inputrc"
-    set -Ux HISTFILE ""
-
-    set -Ux fish_greeting
-    set -Ux fish_browser firefox
-    set -U fish_autosuggestion_enabled 0
-    set -U fish_handle_reflow 0
-    set -U fish_transient_prompt 1
-
-    set -U fish_color_autosuggestion grey
-    set -U fish_color_cancel brwhite
-    set -U fish_color_command brcyan
-    set -U fish_color_comment grey
-    set -U fish_color_end brorange
-    set -U fish_color_error --underline
-    set -U fish_color_escape brorange
-    set -U fish_color_keyword brred
-    set -U fish_color_normal brwhite
-    set -U fish_color_operator yellow
-    set -U fish_color_param brwhite
-    set -U fish_color_quote brgreen
-    set -U fish_color_redirection brmagenta
-    set -U fish_color_selection --background=grey black
-    return 0
 end

@@ -34,12 +34,13 @@ function fp-history --description "Search shell history using fp"
     set -l cmdline (commandline -c)
 
     if test -z "$cmdline"
-        set -f result (history search | fp)
+        # Null delimiters since some history values will contain multiple lines.
+        set -f result (history search --null | fp --read-null)
     else
-        set -f result (history --prefix "$cmdline" | fp)
+        set -f result (history search --null --prefix "$cmdline" | fp --read-null)
     end
 
-    commandline -r -- (string join -- " " $result)
+    commandline -r -- (string join \n $result)
     commandline -f repaint
 end
 bind \cr -M insert fp-history

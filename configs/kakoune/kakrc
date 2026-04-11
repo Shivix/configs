@@ -146,7 +146,6 @@ define-command reset-pwd %{
 # to ensure they are not forgotten about.
 define-command q-guard %{
     declare-option -hidden str q_guard_modified ""
-    # TODO: Only warn if only client open?
     evaluate-commands -buffer * %{
         evaluate-commands %sh{
             if [ "$kak_modified" = "true" ]; then

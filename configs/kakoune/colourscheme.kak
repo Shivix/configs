@@ -43,10 +43,15 @@ set-face global meta          bright-magenta
 set-face global builtin       keyword
 
 # Markdown highlighting
-set-face global header    bright-green+b
-set-face global mono      bright-magenta
-set-face global link      bright-blue
-set-face global bullet    yellow
+set-face global header bright-green+b
+set-face global mono   bright-magenta
+set-face global link   bright-blue
+set-face global bullet yellow
+
+# Info box
+set-face global InfoBlock bright-magenta
+set-face global InfoDiagnosticError bright-red
+set-face global InfoDiagnosticWarning yellow
 
 set-face global PrimarySelection   black,white+fg
 set-face global SecondarySelection white,bright-black+fg

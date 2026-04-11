@@ -29,18 +29,15 @@ define-command smart-pairs-after-ret %[
         # Check lines ends with {
         execute-keys -draft Hs\{$<ret>
         # Leave and re-enter insert mode to reset whitespace
-        execute-keys <esc>i}<left>
-        execute-keys -with-hooks <ret><esc>O
+        execute-keys -with-hooks <ret>}<esc>O
     ] catch %{
         try %{
             execute-keys -draft Hs\($<ret>
-            execute-keys )<left>
-            execute-keys -with-hooks <ret><esc>O
+            execute-keys -with-hooks <ret>)<esc>O
         } catch %{
             try %{
                 execute-keys -draft Hs\[$<ret>
-                execute-keys ]<left>
-                execute-keys -with-hooks <ret><esc>O
+                execute-keys -with-hooks <ret>]<esc>O
             } catch %{
                 # -with-hooks to reenable hooks and allow indenting hooks.
                 execute-keys -with-hooks <ret>

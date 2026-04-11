@@ -38,6 +38,9 @@ return {
     nvim = {
         path = "~/.config/nvim",
     },
+    readline = {
+        path = "~/.config/readline",
+    },
     rg = {
         path = "~/.config/rg",
     },

@@ -8,4 +8,5 @@ end
 local configs = dofile("configs.lua")
 
 local repo_path, system_path = find_match(configs, input)
-os.execute(string.format("kak -e 'new-diff %q %q'", repo_path, system_path))
+local expanded = system_path:gsub("~", os.getenv("HOME"))
+os.execute(string.format("cp %q %q", expanded, repo_path))

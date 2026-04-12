@@ -172,19 +172,11 @@ function wt_status --description "Prints the status of each worktree in a repo"
 end
 
 function grebase --description "Rebase branch keeping changes intact"
-   if not git rev-parse --is-inside-work-tree >/dev/null
-       return 1
-   end
-
-    set -l should_stash (git status --short --ignore-submodules --untracked=no --porcelain)
-    if test -n "$should_stash"
-        git stash
+    if not git rev-parse --is-inside-work-tree >/dev/null
+        return 1
     end
     set -l master (git branch -l master main | cut -c 3-)
-    git rebase -i upstream/$master
-    if test -n "$should_stash"
-        git stash pop
-    end
+    git rebase -i "upstream/$master" --autostash
 end
 
 function checkout_pr

@@ -106,6 +106,7 @@ hook global WinSetOption filetype=(c|cpp|go|lua|python|rust|zig) %{
             {face="type", token="enum"},
             {face="type", token="struct"},
             {face="type", token="typeAlias"},
+            {face="type", token="type"},
         ]
     }
 }

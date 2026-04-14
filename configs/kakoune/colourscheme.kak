@@ -1,9 +1,9 @@
 # Relies on terminal colours
 
-add-highlighter global/ regex \b(\w+)(::)?(<\w+>)?\( 1:function
+add-highlighter global/ regex \b(\w+)(::)?(<[\w:]+>)?\( 1:function
 add-highlighter global/ regex (\+|-|\*|&|=|\?|%|\^|\|-|!|\||->|<|>|\^|~=|\[|\]|\(|\)|\{|\}|,|\.|:) 0:operator
 # include paths
-add-highlighter global/ regex '#include ([<>"\w.]+)' 1:includepath
+add-highlighter global/ regex '#include ([<>"\w./]+)' 1:includepath
 
 # Seems to be another similar one existing, should overwrite it.
 add-highlighter global/ regex \b(TODO|FIXME): 1:default+rb

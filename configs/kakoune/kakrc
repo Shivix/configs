@@ -62,7 +62,7 @@ hook global ClientCreate .* %{
 }
 
 hook global BufCreate .* %{
-    add-highlighter buffer/linenumbers number-lines -relative -separator " "
+    add-highlighter buffer/linenumbers number-lines -full-relative -separator " "
     add-highlighter buffer/whitespace show-whitespaces -lf "" -tab » -spc " "
 }
 hook global BufSetOption filetype=man %{

@@ -73,14 +73,10 @@ end
 
 function kek
     set -l session_name "main_kak_session"
-    if not kak -l | grep -Fxq "$session_name"
-        setsid kak -d -s "$session_name" &
-        sleep 0.1
-    end
     if test -z "$argv"
-        kak -c "$session_name" -e "edit -scratch *scratch*"
+        kak -C "$session_name" -e "edit -scratch *scratch*"
     else
-        kak -c "$session_name" $argv
+        kak -C "$session_name" $argv
     end
 end
 

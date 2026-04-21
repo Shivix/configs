@@ -1,0 +1,15 @@
+configs/codex/*
+!configs/codex/config.toml
+!configs/codex/AGENTS.md
+
+configs/fish/completions/*
+configs/fish/conf.d/*
+configs/fish/fish_variables
+configs/fish/functions/*
+
+configs/X11/xauthority
+
+configs/nvim/.luarc.json
+configs/nvim/stylua.toml
+
+configs/vim/.netrwhist

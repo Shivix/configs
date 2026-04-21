@@ -26,9 +26,6 @@ return {
     git = {
         path = "~/.config/git",
     },
-    gromit = {
-        path = "~/",
-    },
     kakoune = {
         path = "~/.config/kak",
     },

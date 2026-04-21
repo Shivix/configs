@@ -2,7 +2,7 @@ function fp-complete --description "Provides fuzzy commandline completion"
     set -l cmdline (commandline -c)
     set -l cmd (string split ' ' $cmdline)
 
-    if test $cmd[1] = "sudo" -o $cmd[1] = "env"
+    if test $cmd[1] = "sudo" -o $cmd[1] = "doas" -o $cmd[1] = "env"
         return
     end
 
@@ -261,11 +261,11 @@ function findrej
 end
 
 function darken
-    echo "3000" | sudo tee /sys/class/backlight/intel_backlight/brightness >/dev/null
+    echo "3000" | doas tee /sys/class/backlight/intel_backlight/brightness >/dev/null
     redshift -P -O 4000
 end
 function brighten
-    echo "13000" | sudo tee /sys/class/backlight/intel_backlight/brightness >/dev/null
+    echo "13000" | doas tee /sys/class/backlight/intel_backlight/brightness >/dev/null
     redshift -x
 end
 

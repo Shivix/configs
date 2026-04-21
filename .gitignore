@@ -7,9 +7,11 @@ configs/fish/conf.d/*
 configs/fish/fish_variables
 configs/fish/functions/*
 
-configs/X11/xauthority
+configs/git/userconfig
 
 configs/nvim/.luarc.json
 configs/nvim/stylua.toml
 
 configs/vim/.netrwhist
+
+configs/X11/xauthority

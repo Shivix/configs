@@ -19,7 +19,6 @@
     diffFilter = delta --color-only
 [merge]
     conflictstyle = zdiff3
-    tool = nvimdiff
 [pull]
     rebase = true
 [rebase]

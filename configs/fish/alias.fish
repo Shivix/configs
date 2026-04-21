@@ -31,7 +31,7 @@ abbr gblame "git blame -wCCC"
 abbr wt "git worktree"
 abbr --command=git --position=anywhere -- --fwl "--force-with-lease"
 abbr gitlscpp "git ls-files '*.cpp' '*.hpp' '*.cxx' '*.hxx'"
-abbr gdiff "git difftool"
+abbr gdiff "kak -e 'git diff'"
 
 abbr kc "kubectl"
 abbr --command=kubectl --position=anywhere rr "rollout restart"

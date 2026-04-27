@@ -1,6 +1,6 @@
 #!/bin/sh
 
-setxkbmap gb
+setxkbmap us
 # xmodmap after setxkbmap to avoid overwrite
 xmodmap "$HOME/.config/X11/xmodmap"
 xrdb -merge "$HOME/.config/X11/xresources"

@@ -42,12 +42,12 @@ white = "#efe2c1"
 
 [keyboard]
 bindings = [
-    { key = "Y", mods = "Control|Shift", action = "ToggleViMode" },
-    { key = "Y", mods = "Control|Shift", action = "ScrollToTop" },
-    { key = "Y", mods = "Control|Shift", action = "ToggleLineSelection" },
-    { key = "Y", mods = "Control|Shift", action = "ScrollToBottom" },
-    { key = "Y", mods = "Control|Shift", action = "Copy" },
-    { key = "Y", mods = "Control|Shift", action = "ClearSelection" },
-    { key = "Y", mods = "Control|Shift", action = "ToggleViMode" },
-    { key = "Y", mods = "Control|Shift", chars = "paste_editor\n" },
+    { key = "Y", mods = "Alt|Shift", action = "ToggleViMode" },
+    { key = "Y", mods = "Alt|Shift", action = "ScrollToTop" },
+    { key = "Y", mods = "Alt|Shift", action = "ToggleLineSelection" },
+    { key = "Y", mods = "Alt|Shift", action = "ScrollToBottom" },
+    { key = "Y", mods = "Alt|Shift", action = "Copy" },
+    { key = "Y", mods = "Alt|Shift", action = "ClearSelection" },
+    { key = "Y", mods = "Alt|Shift", action = "ToggleViMode" },
+    { key = "Y", mods = "Alt|Shift", chars = "paste_editor\n" },
 ]

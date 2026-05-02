@@ -1,0 +1,2 @@
+- Use `fd` for finding files; fall back to `find` only if needed.
+- Prefer trusted, safe, readonly commands where possible.

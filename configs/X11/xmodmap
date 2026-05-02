@@ -1,5 +1,29 @@
 keycode 66 = Mode_switch
+
 keysym h = h H Left
-keysym l = l L Right
-keysym k = k K Up
 keysym j = j J Down
+keysym k = k K Up
+keysym l = l L Right
+
+keysym e = e E backslash
+keysym r = r R exclam
+
+keysym u = u U parenleft
+keysym i = i I parenright
+
+keysym f = f F bar
+keysym g = g G asciitilde
+
+keysym y = y Y BackSpace
+keysym t = t T Delete
+
+keysym n = n N apostrophe
+keysym m = m M braceleft
+keysym comma = comma less braceright
+
+keysym b = b B quotedbl
+keysym v = v V bracketright
+keysym c = c C bracketleft
+
+keysym backslash = Return Return
+keysym apostrophe = Return Return

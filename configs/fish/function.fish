@@ -330,3 +330,8 @@ function paste_editor
     set -l tmpfile (mktemp /tmp/paste_editor_XXXXXX.sh)
     kek -e "e -scratch scrollback; set buffer filetype scrollback; execute-keys '%d!xsel -ob<ret>;'"
 end
+
+function paste_last_prompt_results
+    xsel -ob | sed '1,2d;$d' | xsel -ib
+    kek -e "e -scratch scrollback; set buffer filetype scrollback; execute-keys '%d!xsel -ob<ret>;'"
+end

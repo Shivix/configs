@@ -50,4 +50,15 @@ bindings = [
     { key = "Y", mods = "Alt|Shift", action = "ClearSelection" },
     { key = "Y", mods = "Alt|Shift", action = "ToggleViMode" },
     { key = "Y", mods = "Alt|Shift", chars = "paste_editor\n" },
+
+    { key = "P", mods = "Alt|Shift", action = "ToggleViMode" },
+    { key = "P", mods = "Alt|Shift", action = "SearchBackward" },
+    { key = "P", mods = "Alt|Shift", chars = "^shivix@" },
+    { key = "P", mods = "Alt|Shift", action = "SearchConfirm" },
+    { key = "P", mods = "Alt|Shift", action = "ToggleLineSelection" },
+    { key = "P", mods = "Alt|Shift", action = "SearchNext" },
+    { key = "P", mods = "Alt|Shift", action = "Copy" },
+    { key = "P", mods = "Alt|Shift", action = "ClearSelection" },
+    { key = "P", mods = "Alt|Shift", action = "ToggleViMode" },
+    { key = "P", mods = "Alt|Shift", chars = "paste_last_prompt_results\n" },
 ]

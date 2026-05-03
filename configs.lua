@@ -41,6 +41,9 @@ return {
     rg = {
         path = "~/.config/rg",
     },
+    sh = {
+        path = "~/.config/sh",
+    },
     vim = {
         path = "~/.config/vim",
     },

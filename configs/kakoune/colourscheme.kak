@@ -1,7 +1,7 @@
 # Relies on terminal colours
 
 add-highlighter global/ regex \b(\w+)(::)?(<[\w:]+>)?\( 1:function
-add-highlighter global/ regex (\+|-|\*|&|=|\?|%|\^|\|-|!|\||->|<|>|\^|~=|\[|\]|\(|\)|\{|\}|,|\.|:) 0:operator
+add-highlighter global/ regex ([-+*&=?%^!|<>,.:\;\\/()\[\]{}]|->|~=) 0:operator
 # include paths
 add-highlighter global/ regex '#include ([<>"\w./]+)' 1:includepath
 

@@ -8,5 +8,6 @@ for name, config in pairs(configs) do
     local exists, _, _ = os.execute("test -e " .. dest)
     if not exists then
         assert(os.execute(string.format("ln -s %q %q", src, dest)))
+        print("created symlink at: " .. dest)
     end
 end

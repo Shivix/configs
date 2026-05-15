@@ -34,6 +34,8 @@ PS1="\u@\h | \w \n\\$ "
 # search path for cd(1)
 # CDPATH=:$HOME
 
+HISTFILE="$HOME/.local/state/sh_history"
+
 export XAUTHORITY="$HOME/.config/X11/xauthority"
 export PATH="$PATH:$HOME/.local/bin"
 export EDITOR="kak"

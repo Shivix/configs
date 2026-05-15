@@ -299,6 +299,8 @@ hook global BufSetOption filetype=(c|cpp) %{
 
 hook global BufSetOption filetype=go %{
     set-option buffer formatcmd 'gofmt'
+    # Use Kakoune's builtin autopairing for Go.
+    map buffer insert <ret> "<ret>"
 }
 
 hook global BufSetOption filetype=lua %{

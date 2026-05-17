@@ -276,6 +276,9 @@ hook global BufOpenFile '.*\.([^.]+)\.j2$' %{
 hook global BufSetOption filetype=yml %{
     set-option buffer filetype yaml
 }
+hook global BufOpenFile '.*\.lus' %{
+    set-option buffer filetype markdown
+}
 
 hook global BufSetOption filetype=rust %{
     set-option buffer makecmd 'cargo build --message-format=short'

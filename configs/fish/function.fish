@@ -261,11 +261,19 @@ function findrej
 end
 
 function darken
-    echo "3000" | doas tee /sys/class/backlight/intel_backlight/brightness >/dev/null
+    if test -e filename
+        echo "3000" | doas tee /sys/class/backlight/intel_backlight/brightness >/dev/null
+    else
+        backlight 15
+    end
     redshift -P -O 4000
 end
 function brighten
-    echo "13000" | doas tee /sys/class/backlight/intel_backlight/brightness >/dev/null
+    if test -e filename
+        echo "13000" | doas tee /sys/class/backlight/intel_backlight/brightness >/dev/null
+    else
+        backlight 50
+    end
     redshift -x
 end
 
